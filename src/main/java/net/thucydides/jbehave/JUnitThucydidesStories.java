@@ -31,7 +31,6 @@ public abstract class JUnitThucydidesStories extends JUnitStories {
 
     @Override
     public Configuration configuration() {
-        ThucydidesWebDriverSupport.initialize();
         configure();
         return ThucydidesJBehave.defaultConfiguration(getSystemConfiguration());
     }

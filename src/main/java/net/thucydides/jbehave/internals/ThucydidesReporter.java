@@ -48,10 +48,13 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void beforeStory(Story story, boolean b) {
+        ThucydidesWebDriverSupport.initialize();
+
         String storyName = removeSuffixFrom(story.getName());
         String storyTitle = NameConverter.humanize(storyName);
         reportService  = ThucydidesReports.getReportService(systemConfiguration);
-        thucydidesListeners = ThucydidesReports.setupListeners(systemConfiguration);
+        thucydidesListeners = ThucydidesReports.setupListeners(systemConfiguration)
+                                               .withDriver(ThucydidesWebDriverSupport.getDriver());
         StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withId(storyName, storyTitle));
         registerStoryIssues(story.getMeta());
         registerStoryFeatures(story.getMeta());
