@@ -32,6 +32,7 @@ public class StorySteps {
 
     @Given("the scenario fails")
     public void givenTheScenarioFails() {
+        System.out.println("Deliberately failing a scenario.");
         assertThat(true,is(false));
     }
 

@@ -25,7 +25,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>release-0.9.0-alpha-5</version>
+            <version>0.9.0-alpha-7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>

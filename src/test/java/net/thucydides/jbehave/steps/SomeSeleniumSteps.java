@@ -3,8 +3,8 @@ package net.thucydides.jbehave.steps;
 import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.ManagedPages;
 import net.thucydides.core.pages.Pages;
+import net.thucydides.jbehave.pages.StaticSitePage;
 import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Pending;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebDriver;
@@ -31,12 +31,21 @@ public class SomeSeleniumSteps {
 
     @When("I run the web scenario")
     public void whenIRunTheWebScenario() {
-        // PENDING
+        assertThat(pages, is(notNullValue()));
+        StaticSitePage indexPage = pages.get(StaticSitePage.class);
+        System.out.println("indexPage = " + indexPage);
+//        indexPage.open();
+//        indexPage.setFirstName("Joe");
+//        assertThat(indexPage.firstName().getValue(), is("Joe"));
     }
 
-    @Then("the webdriver and pages variables should be correctly instantiated")
-    public void thenTheWebdriverAndPagesVariablesShouldBeCorrectlyInstantiated() {
+    @Then("the webdriver variable should be correctly instantiated")
+    public void thenTheWebdriverVariableShouldBeCorrectlyInstantiated() {
         assertThat(webDriver, is(notNullValue()));
+    }
+
+    @Then("the pages variable should be correctly instantiated")
+    public void thenThePagesVariableShouldBeCorrectlyInstantiated() {
         assertThat(pages, is(notNullValue()));
     }
 

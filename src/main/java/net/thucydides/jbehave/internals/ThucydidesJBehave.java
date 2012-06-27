@@ -13,12 +13,12 @@ import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
 
 /**
- * A convenience class designed to make it easier to set up JBehave tests with Thucydides.
+ * A convenience class designed to make it easier to set up JBehave tests with ThucydidesWebdriverIntegration.
  */
 public class ThucydidesJBehave {
 
     /**
-     * Returns a default JBehave configuration object suitable for Thucydides tests.
+     * Returns a default JBehave configuration object suitable for ThucydidesWebdriverIntegration tests.
      *
      * @return
      */

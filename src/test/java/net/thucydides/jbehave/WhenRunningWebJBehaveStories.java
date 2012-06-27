@@ -35,7 +35,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    @Ignore("This is for alpha-2")
     public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() throws Throwable {
 
         // Given

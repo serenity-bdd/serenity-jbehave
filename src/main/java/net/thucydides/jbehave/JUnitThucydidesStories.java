@@ -1,8 +1,8 @@
 package net.thucydides.jbehave;
 
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.core.util.MockEnvironmentVariables;
+import net.thucydides.core.steps.StepEventBus;
+import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.jbehave.internals.ThucydidesJBehave;
 import net.thucydides.jbehave.internals.ThucydidesStepFactory;
 import org.codehaus.plexus.util.StringUtils;
@@ -16,7 +16,7 @@ import java.util.List;
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 
 /**
- * A JUnit-runnable test case designed to run a set of Thucydides-enabled JBehave stories in a given package.
+ * A JUnit-runnable test case designed to run a set of ThucydidesWebdriverIntegration-enabled JBehave stories in a given package.
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
  * You can redefine these constraints as follows:
  */
@@ -31,6 +31,7 @@ public abstract class JUnitThucydidesStories extends JUnitStories {
 
     @Override
     public Configuration configuration() {
+        ThucydidesWebDriverSupport.initialize();
         configure();
         return ThucydidesJBehave.defaultConfiguration(getSystemConfiguration());
     }
@@ -47,8 +48,6 @@ public abstract class JUnitThucydidesStories extends JUnitStories {
 
     @Override
     protected List<String> storyPaths() {
-        System.out.println("Story path: " + getStoryPath());
-        System.out.println("Path root: " + codeLocationFromClass(this.getClass()));
         return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), getStoryPath(), "");
     }
 
@@ -92,7 +91,7 @@ public abstract class JUnitThucydidesStories extends JUnitStories {
     }
 
     /**
-     * Use this to override the default Thucydides configuration - for testing purposes only.
+     * Use this to override the default ThucydidesWebdriverIntegration configuration - for testing purposes only.
      */
     public void setSystemConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;

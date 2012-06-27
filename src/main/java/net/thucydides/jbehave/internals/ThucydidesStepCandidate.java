@@ -3,6 +3,7 @@ package net.thucydides.jbehave.internals;
 import com.thoughtworks.paranamer.Paranamer;
 import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
+import net.thucydides.core.webdriver.ThucydidesWebdriverManager;
 import net.thucydides.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
@@ -18,12 +19,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A description goes here.
- * User: johnsmart
- * Date: 15/05/12
- * Time: 9:28 PM
- */
 public class ThucydidesStepCandidate extends StepCandidate {
 
     private final StepCandidate stepCandidate;

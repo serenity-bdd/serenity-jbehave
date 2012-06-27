@@ -6,6 +6,7 @@ import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
 import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
+import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
@@ -30,13 +31,9 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
 
     public ThucydidesStepFactory(Configuration configuration, String rootPackage) {
         super(configuration);
-        this.thucydidesStepProxyFactory = newStepProxyFactory();
+        this.thucydidesStepProxyFactory = ThucydidesWebDriverSupport.getStepFactory();
         this.context = new ThucydidesStepContext();
         this.rootPackage = rootPackage;
-    }
-
-    private StepFactory newStepProxyFactory() {
-        return new StepFactory();
     }
 
     public List<CandidateSteps> createCandidateSteps() {
@@ -85,6 +82,7 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     public Object createInstanceOfType(Class<?> type) {
         Object stepsInstance = context.newInstanceOf(type);
         StepAnnotations.injectScenarioStepsInto(stepsInstance, thucydidesStepProxyFactory);
+        ThucydidesWebDriverSupport.initializeFieldsIn(stepsInstance);
         return stepsInstance;
     }
 
