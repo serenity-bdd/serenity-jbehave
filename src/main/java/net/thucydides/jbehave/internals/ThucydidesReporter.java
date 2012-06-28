@@ -2,6 +2,7 @@ package net.thucydides.jbehave.internals;
 
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesListeners;
@@ -48,7 +49,8 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void beforeStory(Story story, boolean b) {
-        ThucydidesWebDriverSupport.initialize();
+        String requestedDriver = getRequestedDriver(story.getMeta());
+        ThucydidesWebDriverSupport.initialize(requestedDriver);
 
         String storyName = removeSuffixFrom(story.getName());
         String storyTitle = NameConverter.humanize(storyName);
@@ -59,6 +61,10 @@ public class ThucydidesReporter implements StoryReporter {
         registerStoryIssues(story.getMeta());
         registerStoryFeatures(story.getMeta());
         registerStoryTags(story.getMeta());
+    }
+
+    private String getRequestedDriver(Meta metaData) {
+        return metaData.getProperty("driver");
     }
 
     private List<String> getIssueOrIssuesPropertyValues(Meta metaData) {

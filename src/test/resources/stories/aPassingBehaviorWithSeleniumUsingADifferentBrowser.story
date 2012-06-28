@@ -1,5 +1,8 @@
 Scenario: A scenario that uses selenium
 
+Meta:
+@driver htmlunit
+
 Given I am on the test page
 When I enter the first name <firstname>
 And I enter the last name <lastname>
