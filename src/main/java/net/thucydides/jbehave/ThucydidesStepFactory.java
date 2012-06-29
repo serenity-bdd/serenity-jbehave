@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.internals;
+package net.thucydides.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.collect.Lists;

@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.internals;
+package net.thucydides.jbehave;
 
 public class ThucydidesStepInitializationError extends RuntimeException {
     public ThucydidesStepInitializationError(Exception cause) {

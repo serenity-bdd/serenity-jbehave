@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.internals;
+package net.thucydides.jbehave;
 
 /**
  * Keeps track of instantiated JBehave step libraries used in ThucydidesWebdriverIntegration tests.

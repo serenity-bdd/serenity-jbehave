@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.internals;
+package net.thucydides.jbehave;
 
 import com.thoughtworks.paranamer.Paranamer;
 import net.thucydides.core.steps.StepAnnotations;

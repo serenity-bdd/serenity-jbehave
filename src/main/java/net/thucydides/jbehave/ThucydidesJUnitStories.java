@@ -1,10 +1,6 @@
 package net.thucydides.jbehave;
 
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.steps.StepEventBus;
-import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import net.thucydides.jbehave.internals.ThucydidesJBehave;
-import net.thucydides.jbehave.internals.ThucydidesStepFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
@@ -20,7 +16,7 @@ import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
  * You can redefine these constraints as follows:
  */
-public abstract class JUnitThucydidesStories extends JUnitStories {
+public abstract class ThucydidesJUnitStories extends JUnitStories {
 
     public static final String DEFAULT_STORY_NAME =  "**/*.story";
 
