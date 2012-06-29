@@ -17,7 +17,7 @@
         <embeddables>**/*Stories.java</embeddables>
     </properties>
     <scm>
-        <connection>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</connection>
+        <connection>scm:git:git@gtomithub.com:thucydides-webtests/thucydides-jbehave.git</connection>
         <developerConnection>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</developerConnection>
         <url>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</url>
     </scm>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>0.9.0-alpha-7-SNAPSHOT</version>
+            <version>0.9.0-beta-2</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>
