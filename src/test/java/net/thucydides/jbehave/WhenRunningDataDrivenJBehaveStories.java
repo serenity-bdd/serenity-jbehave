@@ -18,7 +18,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     public void a_data_driven_test_should_produce_a_set_of_steps_per_line_of_data() throws Throwable {
 
         // Given
-        JUnitThucydidesStories story = new AStorySample("aDataDrivenBehavior.story");
+        ThucydidesJUnitStories story = new AStorySample("aDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
         story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
@@ -36,7 +36,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     public void a_data_driven_test_should_produce_a_steps_with_the_data_values_in_the_titles() throws Throwable {
 
         // Given
-        JUnitThucydidesStories story = new AStorySample("aDataDrivenBehavior.story");
+        ThucydidesJUnitStories story = new AStorySample("aDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
         story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
@@ -56,7 +56,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     public void a_data_driven_test_should_produce_a_successful_result_if_all_rows_are_successful() throws Throwable {
 
         // Given
-        JUnitThucydidesStories story = new AStorySample("aDataDrivenBehavior.story");
+        ThucydidesJUnitStories story = new AStorySample("aDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
         story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
@@ -73,7 +73,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     public void a_failing_step_in_a_data_driven_test_should_not_affect_subsequent_steps() throws Throwable {
 
         // Given
-        JUnitThucydidesStories story = new AStorySample("aFailingDataDrivenBehavior.story");
+        ThucydidesJUnitStories story = new AStorySample("aFailingDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
         story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
@@ -96,7 +96,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     public void steps_in_an_example_after_a_failing_step_should_be_skipped() throws Throwable {
 
         // Given
-        JUnitThucydidesStories story = new AStorySample("aFailingDataDrivenBehavior.story");
+        ThucydidesJUnitStories story = new AStorySample("aFailingDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
         story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);

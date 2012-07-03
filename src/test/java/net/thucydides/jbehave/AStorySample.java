@@ -1,15 +1,9 @@
 package net.thucydides.jbehave;
 
-import net.thucydides.jbehave.JUnitThucydidesStories;
+import net.thucydides.jbehave.ThucydidesJUnitStories;
 
-public class AStorySample extends JUnitThucydidesStories {
-    private final String storyName;
-
+public class AStorySample extends ThucydidesJUnitStories {
     public AStorySample(String storyName) {
-        this.storyName = storyName;
-    }
-
-    public void configure() {
         findStoriesCalled(storyName);
     }
 }

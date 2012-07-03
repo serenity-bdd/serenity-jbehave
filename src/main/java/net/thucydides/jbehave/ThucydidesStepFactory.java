@@ -86,7 +86,7 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         return stepsInstance;
     }
 
-    public static ThucydidesStepFactory withStoriesFromPackage(String rootPackage) {
+    public static ThucydidesStepFactory withStepsFromPackage(String rootPackage) {
         return new ThucydidesStepFactory(ThucydidesJBehave.defaultConfiguration(), rootPackage);
     }
 

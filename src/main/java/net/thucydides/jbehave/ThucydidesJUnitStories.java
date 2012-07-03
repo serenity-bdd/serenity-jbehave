@@ -1,5 +1,7 @@
 package net.thucydides.jbehave;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import net.thucydides.core.guice.Injectors;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
@@ -27,23 +29,24 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
 
     @Override
     public Configuration configuration() {
-        configure();
         return ThucydidesJBehave.defaultConfiguration(getSystemConfiguration());
     }
 
-    /**
-     * Override this method to customize the stories to be executed.
-     */
-    public void configure() {}
-
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return ThucydidesStepFactory.withStoriesFromPackage(getRootPackage());
+        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage());
     }
 
     @Override
     protected List<String> storyPaths() {
-        return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), getStoryPath(), "");
+        List<String> storyPaths = Lists.newArrayList();
+
+        Iterable<String> pathExpressions = getStoryPathExpressions();
+        StoryFinder storyFinder = new StoryFinder();
+        for(String pathExpression : pathExpressions) {
+            storyPaths.addAll(storyFinder.findPaths(codeLocationFromClass(this.getClass()), pathExpression, ""));
+        }
+        return storyPaths;
     }
 
     /**
@@ -53,16 +56,13 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
         return this.getClass().getPackage().getName();
     }
 
-    protected String getStoryFolder()  {
-        return storyFolder;
+    protected Iterable<String> getStoryPathExpressions() {
+        return Splitter.on(';').trimResults().split(getStoryPath());
     }
 
-    protected String getStoryNamePattern() {
-        return storyNamePattern;
-    }
-    /**
-     * The root package on the classpath containing the JBehave stories to be run.
-     */
+        /**
+        * The root package on the classpath containing the JBehave stories to be run.
+        */
     protected String getStoryPath() {
         return (StringUtils.isEmpty(storyFolder)) ? storyNamePattern : storyFolder + "/" + storyNamePattern;
     }

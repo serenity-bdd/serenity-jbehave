@@ -1,8 +1,8 @@
 package net.thucydides.jbehave;
 
-public class APassingWebTestSample extends JUnitThucydidesStories {
+public class APassingWebTestSample extends ThucydidesJUnitStories {
 
-    public void configure() {
+    public APassingWebTestSample() {
         findStoriesCalled("aPassingBehaviorWithSelenium.story");
     }
 }

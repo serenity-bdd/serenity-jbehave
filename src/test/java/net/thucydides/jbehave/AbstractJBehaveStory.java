@@ -46,7 +46,7 @@ public class AbstractJBehaveStory {
     }
 
 
-    protected void run(JUnitThucydidesStories stories) {
+    protected void run(ThucydidesJUnitStories stories) {
         try {
             stories.run();
         } catch(Throwable e) {
