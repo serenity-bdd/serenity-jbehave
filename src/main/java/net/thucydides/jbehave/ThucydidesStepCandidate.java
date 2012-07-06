@@ -1,8 +1,12 @@
 package net.thucydides.jbehave;
 
 import com.thoughtworks.paranamer.Paranamer;
+import net.thucydides.core.guice.Injectors;
+import net.thucydides.core.steps.DependencyInjector;
 import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
+import net.thucydides.core.steps.di.ClasspathDependencyInjectorService;
+import net.thucydides.core.steps.di.DependencyInjectorService;
 import net.thucydides.core.webdriver.ThucydidesWebdriverManager;
 import net.thucydides.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
@@ -23,6 +27,7 @@ public class ThucydidesStepCandidate extends StepCandidate {
 
     private final StepCandidate stepCandidate;
     private final StepFactory thucydidesStepProxyFactory;
+    private final DependencyInjectorService dependencyInjectorService;
 
     /*
         public StepCandidate(String patternAsString, int priority, StepType stepType, Method method, Class<?> stepsType,
@@ -43,6 +48,7 @@ public class ThucydidesStepCandidate extends StepCandidate {
                 new ParameterControls());
         this.stepCandidate = stepCandidate;
         this.thucydidesStepProxyFactory = thucydidesStepProxyFactory;
+        this.dependencyInjectorService = Injectors.getInjector().getInstance(DependencyInjectorService.class);
     }
 
     @Override
@@ -64,7 +70,15 @@ public class ThucydidesStepCandidate extends StepCandidate {
     public Object getStepsInstance() {
         Object stepInstance = super.getStepsInstance();
         StepAnnotations.injectScenarioStepsInto(stepInstance, thucydidesStepProxyFactory);
+        injectDependencies(stepInstance);
         return stepInstance;
+    }
+
+    private void injectDependencies(Object stepInstance) {
+        List<DependencyInjector> dependencyInjectors = dependencyInjectorService.findDependencyInjectors();
+        for(DependencyInjector injector : dependencyInjectors) {
+            injector.injectDependenciesInto(stepInstance);
+        }
     }
 
     @Override

@@ -2,7 +2,6 @@ package net.thucydides.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesListeners;
@@ -17,6 +16,7 @@ import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
+import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.GivenStories;
 import org.jbehave.core.model.Meta;
@@ -50,7 +50,9 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void beforeStory(Story story, boolean b) {
         String requestedDriver = getRequestedDriver(story.getMeta());
-        ThucydidesWebDriverSupport.initialize(requestedDriver);
+        if (StringUtils.isNotEmpty(requestedDriver)) {
+            ThucydidesWebDriverSupport.initialize(requestedDriver);
+        }
 
         String storyName = removeSuffixFrom(story.getName());
         String storyTitle = NameConverter.humanize(storyName);
@@ -59,7 +61,7 @@ public class ThucydidesReporter implements StoryReporter {
                                                .withDriver(ThucydidesWebDriverSupport.getDriver());
         StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withId(storyName, storyTitle));
         registerStoryIssues(story.getMeta());
-        registerStoryFeatures(story.getMeta());
+        registerStoryFeaturesAndEpics(story.getMeta());
         registerStoryTags(story.getMeta());
     }
 
@@ -74,6 +76,11 @@ public class ThucydidesReporter implements StoryReporter {
     private List<TestTag> getFeatureOrFeaturesPropertyValues(Meta metaData) {
         List<String> features = getTagPropertyValues(metaData, "feature");
         return convert(features, toFeatureTags());
+    }
+
+    private List<TestTag> getEpicOrEpicsPropertyValues(Meta metaData) {
+        List<String> epics = getTagPropertyValues(metaData, "epic");
+        return convert(epics, toEpicTags());
     }
 
     private List<TestTag> getTagOrTagsPropertyValues(Meta metaData) {
@@ -96,6 +103,15 @@ public class ThucydidesReporter implements StoryReporter {
             @Override
             public TestTag convert(String featureName) {
                 return TestTag.withName(featureName).andType("feature");
+            }
+        };
+    }
+
+    private Converter<String, TestTag> toEpicTags() {
+        return new Converter<String, TestTag>() {
+            @Override
+            public TestTag convert(String featureName) {
+                return TestTag.withName(featureName).andType("epic");
             }
         };
     }
@@ -126,19 +142,26 @@ public class ThucydidesReporter implements StoryReporter {
         }
     }
 
-    private void registerFeatures(Meta metaData) {
-        List<TestTag> features = getFeatureOrFeaturesPropertyValues(metaData);
+    private void registerFeaturesAndEpics(Meta metaData) {
+        List<TestTag> featuresAndEpics = featureAndEpicTags(metaData);
 
-        if (!features.isEmpty()) {
-            StepEventBus.getEventBus().addTagsToCurrentTest(features);
+        if (!featuresAndEpics.isEmpty()) {
+            StepEventBus.getEventBus().addTagsToCurrentTest(featuresAndEpics);
         }
     }
 
-    private void registerStoryFeatures(Meta metaData) {
-        List<TestTag> features = getFeatureOrFeaturesPropertyValues(metaData);
+    private List<TestTag> featureAndEpicTags(Meta metaData) {
+        List<TestTag> featuresAndEpics = Lists.newArrayList();
+        featuresAndEpics.addAll(getFeatureOrFeaturesPropertyValues(metaData));
+        featuresAndEpics.addAll(getEpicOrEpicsPropertyValues(metaData));
+        return featuresAndEpics;
+    }
 
-        if (!features.isEmpty()) {
-            StepEventBus.getEventBus().addTagsToCurrentStory(features);
+    private void registerStoryFeaturesAndEpics(Meta metaData) {
+        List<TestTag> featuresAndEpics = featureAndEpicTags(metaData);
+
+        if (!featuresAndEpics.isEmpty()) {
+            StepEventBus.getEventBus().addTagsToCurrentStory(featuresAndEpics);
         }
     }
 
@@ -182,7 +205,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void scenarioMeta(Meta meta) {
         registerIssues(meta);
-        registerFeatures(meta);
+        registerFeaturesAndEpics(meta);
         registerTags(meta);
     }
 

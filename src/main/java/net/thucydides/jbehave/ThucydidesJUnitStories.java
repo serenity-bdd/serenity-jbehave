@@ -3,6 +3,7 @@ package net.thucydides.jbehave;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.guice.Injectors;
+import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
@@ -97,5 +98,10 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
             systemConfiguration = Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
         }
         return systemConfiguration;
+    }
+
+    protected void useDriver(String driver) {
+        System.setProperty("webdriver.driver", driver);
+        ThucydidesWebDriverSupport.initialize(driver);
     }
 }

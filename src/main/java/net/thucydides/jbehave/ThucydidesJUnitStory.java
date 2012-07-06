@@ -21,7 +21,7 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
     }
 
     private String camelCaseStoryName() {
-        return simpleClassName() + ".story";
+        return "**/" + simpleClassName() + ".story";
     }
 
     private String simpleClassName() {
@@ -29,7 +29,7 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
     }
 
     private String underscoreStoryName() {
-        return Inflector.getInstance().of(simpleClassName()).withUnderscores() + ".story";
+        return "**/" + Inflector.getInstance().of(simpleClassName()).withUnderscores() + ".story";
     }
 
 }

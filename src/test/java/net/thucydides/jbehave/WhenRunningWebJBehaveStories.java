@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
 public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
@@ -22,6 +23,58 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Given
         ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSelenium.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+
+    @Test
+    public void web_tests_should_take_screenshots() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSelenium.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
+    }
+
+    @Test
+    public void web_tests_should_take_screenshots_for_multiple_tests() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSelenium*.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
+    }
+
+    @Test
+    public void a_test_should_use_a_different_browser_if_requested() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumUsingADifferentBrowser.story");
 
         story.setSystemConfiguration(systemConfiguration);
         story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);

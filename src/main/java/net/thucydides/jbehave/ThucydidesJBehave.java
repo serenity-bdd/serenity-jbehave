@@ -5,8 +5,9 @@ import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 
-import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
+import static org.jbehave.core.reporters.Format.TXT;
+import static org.jbehave.core.reporters.Format.XML;
 
 /**
  * A convenience class designed to make it easier to set up JBehave tests with ThucydidesWebdriverIntegration.
@@ -21,7 +22,7 @@ public class ThucydidesJBehave {
     public static Configuration defaultConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
         return new ParanamerConfiguration()
                 .useStoryReporterBuilder(new StoryReporterBuilder().withDefaultFormats()
-                        .withFormats(CONSOLE, HTML)
+                        .withFormats(TXT, HTML, XML)
                         .withReporters(new ThucydidesReporter(systemConfiguration)));
     }
 
