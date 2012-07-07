@@ -2,6 +2,8 @@ package net.thucydides.jbehave;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import net.thucydides.core.ThucydidesSystemProperties;
+import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.codehaus.plexus.util.StringUtils;
@@ -28,9 +30,14 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
     private String storyFolder = "";
     private String storyNamePattern = DEFAULT_STORY_NAME;
 
+    private Configuration configuration;
+
     @Override
     public Configuration configuration() {
-        return ThucydidesJBehave.defaultConfiguration(getSystemConfiguration());
+        if (configuration == null) {
+            configuration = ThucydidesJBehave.defaultConfiguration(getSystemConfiguration());
+        }
+        return configuration;
     }
 
     @Override
@@ -101,7 +108,24 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
     }
 
     protected void useDriver(String driver) {
-        System.setProperty("webdriver.driver", driver);
+        getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.DRIVER.getPropertyName(), driver);
         ThucydidesWebDriverSupport.initialize(driver);
+    }
+
+    public ThucydidesConfigurationBuilder runThucydides() {
+        return new ThucydidesConfigurationBuilder(this);
+    }
+
+    public class ThucydidesConfigurationBuilder {
+        private final ThucydidesJUnitStories thucydidesJUnitStories;
+
+        public ThucydidesConfigurationBuilder(ThucydidesJUnitStories thucydidesJUnitStories) {
+            this.thucydidesJUnitStories = thucydidesJUnitStories;
+        }
+
+        public ThucydidesConfigurationBuilder withDriver(String driver) {
+            useDriver(driver);
+            return this;
+        }
     }
 }

@@ -9,6 +9,7 @@ import net.thucydides.core.ThucydidesReports;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestTag;
 import net.thucydides.core.reports.ReportService;
+import net.thucydides.core.steps.BaseStepListener;
 import net.thucydides.core.steps.ExecutedStepDescription;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.steps.StepFailure;
@@ -34,35 +35,75 @@ import static ch.lambdaj.Lambda.convert;
 
 public class ThucydidesReporter implements StoryReporter {
 
-    private ThucydidesListeners thucydidesListeners;
-    private ReportService reportService;
+    private ThreadLocal<ThucydidesListeners> thucydidesListenersThreadLocal;
+    private ThreadLocal<ReportService> reportServiceThreadLocal;
+    private List<BaseStepListener> baseStepListeners;
+
     private final Configuration systemConfiguration;
 
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
+        thucydidesListenersThreadLocal = new ThreadLocal<ThucydidesListeners>();
+        reportServiceThreadLocal = new ThreadLocal<ReportService>();
+        baseStepListeners = Lists.newArrayList();
+    }
+
+    protected void clearListeners() {
+        thucydidesListenersThreadLocal.remove();
+        reportServiceThreadLocal.remove();
+    }
+
+    protected ThucydidesListeners getThucydidesListeners() {
+        if (thucydidesListenersThreadLocal.get() == null) {
+            ThucydidesListeners listeners = ThucydidesReports.setupListeners(systemConfiguration);
+            thucydidesListenersThreadLocal.set(listeners);
+            baseStepListeners.add(listeners.getBaseStepListener());
+        }
+        return thucydidesListenersThreadLocal.get();
+    }
+
+    protected ReportService getReportService() {
+        if (reportServiceThreadLocal.get() == null) {
+            reportServiceThreadLocal.set(ThucydidesReports.getReportService(systemConfiguration));
+        }
+        return reportServiceThreadLocal.get();
     }
 
     public void storyNotAllowed(Story story, String s) {
     }
 
     public void storyCancelled(Story story, StoryDuration storyDuration) {
+        System.out.println("story cancelled " + story.getName());
     }
 
-    public void beforeStory(Story story, boolean b) {
-        String requestedDriver = getRequestedDriver(story.getMeta());
-        if (StringUtils.isNotEmpty(requestedDriver)) {
-            ThucydidesWebDriverSupport.initialize(requestedDriver);
-        }
+    private Story currentStory;
 
-        String storyName = removeSuffixFrom(story.getName());
-        String storyTitle = NameConverter.humanize(storyName);
-        reportService  = ThucydidesReports.getReportService(systemConfiguration);
-        thucydidesListeners = ThucydidesReports.setupListeners(systemConfiguration)
-                                               .withDriver(ThucydidesWebDriverSupport.getDriver());
-        StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withId(storyName, storyTitle));
-        registerStoryIssues(story.getMeta());
-        registerStoryFeaturesAndEpics(story.getMeta());
-        registerStoryTags(story.getMeta());
+    public void beforeStory(Story story, boolean b) {
+        System.out.println("Before story " + story.getName() + " " + Thread.currentThread());
+        currentStory = story;
+        if (!isFixture(story)) {
+            String requestedDriver = getRequestedDriver(story.getMeta());
+            if (StringUtils.isNotEmpty(requestedDriver)) {
+                ThucydidesWebDriverSupport.initialize(requestedDriver);
+            } else {
+                ThucydidesWebDriverSupport.initialize();
+            }
+
+//        reportService  = ThucydidesReports.getReportService(systemConfiguration);
+//        thucydidesListeners = ThucydidesReports.setupListeners(systemConfiguration)
+//                                               .withDriver(ThucydidesWebDriverSupport.getDriver());
+            getThucydidesListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
+            String storyName = removeSuffixFrom(story.getName());
+            String storyTitle = NameConverter.humanize(storyName);
+            StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withId(storyName, storyTitle));
+            registerStoryIssues(story.getMeta());
+            registerStoryFeaturesAndEpics(story.getMeta());
+            registerStoryTags(story.getMeta());
+        }
+    }
+
+    private boolean isFixture(Story story) {
+        return (story.getName().equals("BeforeStories") || story.getName().equals("AfterStories"));
     }
 
     private String getRequestedDriver(Meta metaData) {
@@ -184,13 +225,28 @@ public class ThucydidesReporter implements StoryReporter {
         return (name.contains(".")) ? name.substring(0, name.indexOf(".")) :  name;
     }
 
-    public void afterStory(boolean b) {
-        StepEventBus.getEventBus().testSuiteFinished();
-        generateReportsFor(thucydidesListeners.getResults());
+    public void afterStory(boolean given) {
+        System.out.println("After story " + currentStory.getName());
+        if (isAfterStory(currentStory)) {
+            generateReportsFor(baseStepListeners);
+        } else if (!isFixture(currentStory)) {
+            StepEventBus.getEventBus().testSuiteFinished();
+            clearListeners();
+        }
     }
 
-    private void generateReportsFor(final List<TestOutcome> testRunResults) {
-        reportService.generateReportsFor(testRunResults);
+    private boolean isAfterStory(Story currentStory) {
+        return (currentStory.getName().equals("AfterStories"));
+    }
+
+//    private void generateReportsFor(final List<TestOutcome> testRunResults) {
+//        getReportService().generateReportsFor(testRunResults);
+//    }
+
+    private void generateReportsFor(final List<BaseStepListener> baseStepListeners) {
+        for(BaseStepListener listener : baseStepListeners) {
+            getReportService().generateReportsFor(listener.getTestOutcomes());
+        }
     }
 
     public void narrative(Narrative narrative) {
@@ -210,6 +266,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterScenario() {
+        System.out.println("after scenario " + currentStory.getName());
         StepEventBus.getEventBus().testFinished();
     }
 
@@ -236,26 +293,32 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void successful(String title) {
+        System.out.println("successful " + title);
         StepEventBus.getEventBus().updateCurrentStepTitle(title);
         StepEventBus.getEventBus().stepFinished();
     }
 
     public void ignorable(String title) {
+        System.out.println("ignorable " + title);
         StepEventBus.getEventBus().updateCurrentStepTitle(title);
         StepEventBus.getEventBus().stepIgnored();
     }
 
     public void pending(String stepTitle) {
+        System.out.println("Pending " + stepTitle);
+        (new Exception()).printStackTrace();
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(stepTitle));
         StepEventBus.getEventBus().stepPending();
     }
 
     public void notPerformed(String stepTitle) {
+        System.out.println("notPerformed " + stepTitle);
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(stepTitle));
         StepEventBus.getEventBus().stepIgnored();
     }
 
     public void failed(String stepTitle, Throwable cause) {
+        System.out.println("failed " + stepTitle);
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
         StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(stepTitle), cause));
     }

@@ -1,4 +1,4 @@
-package stories
+Scenario: A data-driven test
 Given a stock of <symbol> and a threshold of <threshold>
 When the stock is traded at <price>
 Then the alert status should be <status>

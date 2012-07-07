@@ -62,7 +62,7 @@ public class StorySteps {
     public void thenTheAlertStatusShouldBestatus(@Named("status") String status) {
         System.out.println("Expected status: " + status);
         if (status.equals("FAIL")) {
-            throw new AssertionError();
+            throw new AssertionError("Expected failure");
         }
     }
 

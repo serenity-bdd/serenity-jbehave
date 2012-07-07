@@ -3,6 +3,7 @@ package net.thucydides.jbehave.steps;
 import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.ManagedPages;
 import net.thucydides.core.pages.Pages;
+import net.thucydides.core.webdriver.WebDriverFacade;
 import net.thucydides.jbehave.pages.StaticSitePage;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -12,6 +13,7 @@ import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebDriver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -34,10 +36,6 @@ public class SomeSeleniumSteps {
     @When("I run the web scenario")
     public void whenIRunTheWebScenario() {
         StaticSitePage indexPage = pages.get(StaticSitePage.class);
-        System.out.println("indexPage = " + indexPage);
-//        indexPage.open();
-//        indexPage.setFirstName("Joe");
-//        assertThat(indexPage.firstName().getValue(), is("Joe"));
     }
 
     @Then("the webdriver variable should be correctly instantiated")
@@ -55,22 +53,36 @@ public class SomeSeleniumSteps {
         StaticSitePage indexPage = pages.get(StaticSitePage.class);
     }
 
-    @When("I enter the first name <firstname>")
-    public void whenIEnterTheFirstName(@Named("firstname") String firstname) {
+    @When("I enter the first name $firstname")
+    public void whenIEnterTheFirstName(String firstname) {
         pages.get(StaticSitePage.class).setFirstName(firstname);
     }
 
-    @When("I enter the last name <lastname>")
-    public void whenIEnterTheLastName(@Named("lastname") String lastname) {
+    @When("I enter the last name $lastname")
+    public void whenIEnterTheLastName(String lastname) {
         pages.get(StaticSitePage.class).setLastName(lastname);
     }
 
-    @Then("I should see <firstname> and <lastname> in the names fields")
-    public void thenIShouldSeeInTheNamesFields(@Named("firstname") String firstname,
-                                               @Named("lastname") String lastname) {
+    @Then("I should see $firstname and $lastname in the names fields")
+    public void thenIShouldSeeInTheNamesFields(String firstname,
+                                               String lastname) {
         assertThat(pages.get(StaticSitePage.class).firstName().getValue(), is(firstname));
         assertThat(pages.get(StaticSitePage.class).lastName().getValue(), is(lastname));
     }
 
+    @Then("I should see first name $firstname on the screen")
+    public void thenIShouldSeeFirstNameOnTheScreen(String firstname) {
+        assertThat(pages.get(StaticSitePage.class).firstName().getValue(), is(firstname));
+    }
+
+    @Then("I should see last name $lastname on the screen")
+    public void thenIShouldSeeLastNameOnTheScreen(String lastname) {
+        assertThat(pages.get(StaticSitePage.class).lastName().getValue(), is(lastname));
+    }
+
+    @Then("I should be using HtmlUnit")
+    public void andIShouldBeUsingHtmlUnit() {
+        assertThat(((WebDriverFacade)webDriver).getDriverClass().getName(), containsString("HtmlUnitDriver"));
+    }
 
 }

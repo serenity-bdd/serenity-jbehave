@@ -28,7 +28,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.size(), is(2));
         assertThat(outcomes.get(0).getTestSteps().size(), is(9));
     }
 
@@ -67,6 +67,41 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void should_be_able_to_specifiy_the_browser_in_the_story() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumUsingADifferentBrowser.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void should_be_able_to_specifiy_the_browser_in_the_base_test() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new APassingWebTestSampleWithASpecifiedBrowser();
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }
 
     @Test
@@ -90,31 +125,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         assertThat(steps.get(10).getResult(), is(TestResult.SUCCESS));
 
         assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
-    }
-
-    @Test
-    public void steps_in_an_example_after_a_failing_step_should_be_skipped() throws Throwable {
-
-        // Given
-        ThucydidesJUnitStories story = new AStorySample("aFailingDataDrivenBehavior.story");
-
-        story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-
-        List<TestStep> steps = outcomes.get(0).getTestSteps();
-        assertThat(steps.get(2).getResult(), is(TestResult.SUCCESS));
-        assertThat(steps.get(6).getResult(), is(TestResult.FAILURE));
-        assertThat(steps.get(7).getResult(), is(TestResult.SKIPPED));
-        assertThat(steps.get(10).getResult(), is(TestResult.SUCCESS));
-
-        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
-
     }
 
 }
