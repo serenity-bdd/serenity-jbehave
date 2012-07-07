@@ -6,7 +6,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
-import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestTag;
 import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
@@ -40,6 +39,8 @@ public class ThucydidesReporter implements StoryReporter {
     private List<BaseStepListener> baseStepListeners;
 
     private final Configuration systemConfiguration;
+    private static final String OPEN_PARAM_CHAR =  "\uff5f";
+    private static final String CLOSE_PARAM_CHAR = "\uff60";
 
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
@@ -73,13 +74,11 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void storyCancelled(Story story, StoryDuration storyDuration) {
-        System.out.println("story cancelled " + story.getName());
     }
 
     private Story currentStory;
 
     public void beforeStory(Story story, boolean b) {
-        System.out.println("Before story " + story.getName() + " " + Thread.currentThread());
         currentStory = story;
         if (!isFixture(story)) {
             String requestedDriver = getRequestedDriver(story.getMeta());
@@ -88,10 +87,6 @@ public class ThucydidesReporter implements StoryReporter {
             } else {
                 ThucydidesWebDriverSupport.initialize();
             }
-
-//        reportService  = ThucydidesReports.getReportService(systemConfiguration);
-//        thucydidesListeners = ThucydidesReports.setupListeners(systemConfiguration)
-//                                               .withDriver(ThucydidesWebDriverSupport.getDriver());
             getThucydidesListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
             String storyName = removeSuffixFrom(story.getName());
             String storyTitle = NameConverter.humanize(storyName);
@@ -226,7 +221,6 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterStory(boolean given) {
-        System.out.println("After story " + currentStory.getName());
         if (isAfterStory(currentStory)) {
             generateReportsFor(baseStepListeners);
         } else if (!isFixture(currentStory)) {
@@ -238,10 +232,6 @@ public class ThucydidesReporter implements StoryReporter {
     private boolean isAfterStory(Story currentStory) {
         return (currentStory.getName().equals("AfterStories"));
     }
-
-//    private void generateReportsFor(final List<TestOutcome> testRunResults) {
-//        getReportService().generateReportsFor(testRunResults);
-//    }
 
     private void generateReportsFor(final List<BaseStepListener> baseStepListeners) {
         for(BaseStepListener listener : baseStepListeners) {
@@ -266,7 +256,6 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterScenario() {
-        System.out.println("after scenario " + currentStory.getName());
         StepEventBus.getEventBus().testFinished();
     }
 
@@ -277,15 +266,12 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void beforeExamples(List<String> strings, ExamplesTable examplesTable) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void example(Map<String, String> stringStringMap) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void afterExamples() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void beforeStep(String stepTitle) {
@@ -293,49 +279,44 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void successful(String title) {
-        System.out.println("successful " + title);
-        StepEventBus.getEventBus().updateCurrentStepTitle(title);
+        StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
         StepEventBus.getEventBus().stepFinished();
     }
 
     public void ignorable(String title) {
-        System.out.println("ignorable " + title);
-        StepEventBus.getEventBus().updateCurrentStepTitle(title);
+        StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
         StepEventBus.getEventBus().stepIgnored();
     }
 
     public void pending(String stepTitle) {
-        System.out.println("Pending " + stepTitle);
-        (new Exception()).printStackTrace();
-        StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(stepTitle));
+        StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepPending();
     }
 
     public void notPerformed(String stepTitle) {
-        System.out.println("notPerformed " + stepTitle);
-        StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(stepTitle));
+        StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepIgnored();
     }
 
     public void failed(String stepTitle, Throwable cause) {
-        System.out.println("failed " + stepTitle);
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
-        StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(stepTitle), cause));
+        StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), cause));
     }
 
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void restarted(String s, Throwable throwable) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void dryRun() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void pendingMethods(List<String> strings) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    private String normalized(String value) {
+        return value.replaceAll(OPEN_PARAM_CHAR, "{").replaceAll(CLOSE_PARAM_CHAR,"}");
+
     }
 }

@@ -43,6 +43,9 @@ public class AbstractJBehaveStory {
         output = new ByteArrayOutputStream();
         printOutput = new TxtOutput(new PrintStream(output));
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
+
+
+        System.out.println("Report directory:" + this.outputDirectory);
     }
 
 

@@ -6,15 +6,21 @@ import net.thucydides.core.ThucydidesSystemProperties;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
+import org.apache.log4j.net.SMTPAppender;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
+import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
+import static org.jbehave.core.reporters.Format.CONSOLE;
+import static org.jbehave.core.reporters.Format.HTML;
+import static org.jbehave.core.reporters.Format.XML;
 
 /**
  * A JUnit-runnable test case designed to run a set of ThucydidesWebdriverIntegration-enabled JBehave stories in a given package.
@@ -31,18 +37,19 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
     private String storyNamePattern = DEFAULT_STORY_NAME;
 
     private Configuration configuration;
+    private List<Format> formats = Arrays.asList(CONSOLE, HTML, XML);
 
     @Override
     public Configuration configuration() {
         if (configuration == null) {
-            configuration = ThucydidesJBehave.defaultConfiguration(getSystemConfiguration());
+            configuration = ThucydidesJBehave.defaultConfiguration(getSystemConfiguration(), formats);
         }
         return configuration;
     }
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage());
+        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), formats);
     }
 
     @Override
@@ -83,6 +90,9 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
         this.storyFolder = storyFolder;
     }
 
+    public void useFormats(Format... formats) {
+        this.formats = Arrays.asList(formats);
+    }
 
     public void findStoriesCalled(String storyName) {
         if (storyName.startsWith("**/")) {
@@ -126,6 +136,35 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
         public ThucydidesConfigurationBuilder withDriver(String driver) {
             useDriver(driver);
             return this;
+        }
+
+        public ThucydidesPropertySetter withProperty(ThucydidesSystemProperty property) {
+            return new ThucydidesPropertySetter(thucydidesJUnitStories, property);
+        }
+    }
+
+    public class ThucydidesPropertySetter {
+        private final ThucydidesJUnitStories thucydidesJUnitStories;
+        private final ThucydidesSystemProperty propertyToSet;
+
+        public ThucydidesPropertySetter(ThucydidesJUnitStories thucydidesJUnitStories,
+                                        ThucydidesSystemProperty propertyToSet) {
+            this.thucydidesJUnitStories = thucydidesJUnitStories;
+            this.propertyToSet = propertyToSet;
+        }
+
+        public void setTo(boolean value) {
+            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet.getPropertyName(),
+                    Boolean.toString(value));
+        }
+
+        public void setTo(String value) {
+            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet.getPropertyName(), value);
+        }
+
+        public void setTo(Integer value) {
+            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet.getPropertyName(),
+                    Integer.toString(value));
         }
     }
 }

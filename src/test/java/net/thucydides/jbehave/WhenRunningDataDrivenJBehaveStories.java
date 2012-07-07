@@ -88,23 +88,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_be_able_to_specifiy_the_browser_in_the_base_test() throws Throwable {
-
-        // Given
-        ThucydidesJUnitStories story = new APassingWebTestSampleWithASpecifiedBrowser();
-
-        story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-    }
-
-    @Test
     public void a_failing_step_in_a_data_driven_test_should_not_affect_subsequent_steps() throws Throwable {
 
         // Given

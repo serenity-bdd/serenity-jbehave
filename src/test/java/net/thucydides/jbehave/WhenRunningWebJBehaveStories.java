@@ -106,4 +106,41 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }
 
+    @Test
+    public void should_be_able_to_specifiy_the_browser_in_the_base_test() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new APassingWebTestSampleWithASpecifiedBrowser();
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void should_be_able_to_set_thucydides_properties_in_the_base_test() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new APassingWebTestSampleWithThucydidesPropertiesDefined();
+
+        //story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+
+        assertThat(story.getSystemConfiguration().getBaseUrl(), is("some-base-url"));
+        assertThat(story.getSystemConfiguration().getElementTimeout(), is(5));
+        assertThat(story.getSystemConfiguration().getUseUniqueBrowser(), is(true));
+    }
+
+
 }

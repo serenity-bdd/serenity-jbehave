@@ -8,6 +8,7 @@ import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.jbehave.core.configuration.Configuration;
+import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
 
@@ -86,8 +87,8 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         return stepsInstance;
     }
 
-    public static ThucydidesStepFactory withStepsFromPackage(String rootPackage) {
-        return new ThucydidesStepFactory(ThucydidesJBehave.defaultConfiguration(), rootPackage);
+    public static ThucydidesStepFactory withStepsFromPackage(String rootPackage, List<Format> formats) {
+        return new ThucydidesStepFactory(ThucydidesJBehave.defaultConfiguration(formats), rootPackage);
     }
 
     public ThucydidesStepFactory andConfiguration(Configuration configuration) {
