@@ -107,6 +107,23 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
+    public void a_jbehave_step_library_can_use_page_objects_directly() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumPageObjects.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
     public void should_be_able_to_specifiy_the_browser_in_the_base_test() throws Throwable {
 
         // Given
