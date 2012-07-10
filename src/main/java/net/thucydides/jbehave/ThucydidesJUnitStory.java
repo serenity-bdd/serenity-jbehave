@@ -1,6 +1,8 @@
 package net.thucydides.jbehave;
 
 import net.thucydides.core.util.Inflector;
+import org.codehaus.plexus.util.StringUtils;
+import org.jbehave.core.embedder.Embedder;
 
 /**
  * Run an individual JBehave story in JUnit, where the name of the story is derived from the name of the test.
@@ -13,15 +15,19 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
 
     @Override
     public void run() throws Throwable {
-        super.run();    //To change body of overridden methods use File | Settings | File Templates.
+        super.run();
     }
 
     protected String storynamesDerivedFromClassName() {
-        return camelCaseStoryName() + ";" + underscoreStoryName();
+        return camelCaseStoryName() + ";" + underscoreStoryName() + ";" + camelCaseStartingWithLowercaseStoryName();
     }
 
     private String camelCaseStoryName() {
         return "**/" + simpleClassName() + ".story";
+    }
+
+    private String camelCaseStartingWithLowercaseStoryName() {
+        return "**/" + StringUtils.uncapitalise(simpleClassName())  + ".story";
     }
 
     private String simpleClassName() {

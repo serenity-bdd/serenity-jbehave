@@ -2,17 +2,17 @@ package net.thucydides.jbehave;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import net.thucydides.core.ThucydidesSystemProperties;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import org.apache.log4j.net.SMTPAppender;
 import org.codehaus.plexus.util.StringUtils;
+import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
+import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.io.StoryFinder;
-import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +27,7 @@ import static org.jbehave.core.reporters.Format.XML;
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
  * You can redefine these constraints as follows:
  */
-public abstract class ThucydidesJUnitStories extends JUnitStories {
+public class ThucydidesJUnitStories extends ConfigurableEmbedder {
 
     public static final String DEFAULT_STORY_NAME =  "**/*.story";
 
@@ -38,6 +38,17 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
 
     private Configuration configuration;
     private List<Format> formats = Arrays.asList(CONSOLE, HTML, XML);
+
+    @Test
+    public void run() throws Throwable {
+        Embedder embedder = configuredEmbedder();
+        embedder.embedderControls().doIgnoreFailureInView(true);
+        try {
+            embedder.runStoriesAsPaths(storyPaths());
+        } finally {
+            embedder.generateCrossReference();
+        }
+    }
 
     @Override
     public Configuration configuration() {
@@ -52,7 +63,6 @@ public abstract class ThucydidesJUnitStories extends JUnitStories {
         return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), formats);
     }
 
-    @Override
     protected List<String> storyPaths() {
         List<String> storyPaths = Lists.newArrayList();
 

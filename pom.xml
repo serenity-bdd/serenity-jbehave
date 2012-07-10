@@ -51,5 +51,10 @@
             <version>0.3b</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+            <version>4.10</version>
+        </dependency>
     </dependencies>
 </project>
