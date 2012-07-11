@@ -87,6 +87,25 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
         assertThat(outcomes.get(1).getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(2).getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(3).getScreenshots().size(), greaterThan(0));
+    }
+
+    @Test
+    public void web_tests_should_take_screenshots_with_nested_step_libraries() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("**/aPassingWebTestSampleWithNestedSteps.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
     }
 
     @Test

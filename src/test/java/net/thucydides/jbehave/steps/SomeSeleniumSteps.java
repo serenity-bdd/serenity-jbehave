@@ -2,6 +2,7 @@ package net.thucydides.jbehave.steps;
 
 import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.ManagedPages;
+import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.webdriver.WebDriverFacade;
 import net.thucydides.jbehave.pages.StaticSitePage;
@@ -24,6 +25,9 @@ public class SomeSeleniumSteps {
 
     @ManagedPages
     public Pages pages;
+
+    @Steps
+    SomeNestedSeleniumSteps the_user;
 
     @Given("I have an implemented JBehave scenario that uses selenium")
     public void givenIHaveAnImplementedJBehaveScenarioThatUsesSelenium() {
@@ -61,6 +65,16 @@ public class SomeSeleniumSteps {
     @When("I enter the last name $lastname")
     public void whenIEnterTheLastName(String lastname) {
         pages.get(StaticSitePage.class).setLastName(lastname);
+    }
+
+    @When("I type in the first name $firstname")
+    public void whenITypeInTheFirstName(String firstname) {
+        the_user.enters_the_first_name(firstname);
+    }
+
+    @When("I type in the last name $lastname")
+    public void whenITypeInTheLastName(String lastname) {
+        the_user.enters_the_last_name(lastname);
     }
 
     @Then("I should see $firstname and $lastname in the names fields")

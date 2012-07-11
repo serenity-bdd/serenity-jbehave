@@ -4,7 +4,6 @@ import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.model.TestTag;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -294,6 +293,22 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.get(0).getIssueKeys(), hasItems("MYPROJ-3", "MYPROJ-4", "MYPROJ-5"));
 
+    }
+
+    @Test(expected = AssertionError.class)
+    public void a_test_running_a_failing_story_should_fail() throws Throwable {
+        ThucydidesJUnitStories stories = new AFailingBehavior();// ASetOfBehaviorsContainingFailures();
+        stories.setSystemConfiguration(systemConfiguration);
+        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+        stories.run();
+    }
+
+    @Test(expected = AssertionError.class)
+    public void a_test_running_a_failing_story_among_several_should_fail() throws Throwable {
+        ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingFailures();
+        stories.setSystemConfiguration(systemConfiguration);
+        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+        stories.run();
     }
 
     @Test

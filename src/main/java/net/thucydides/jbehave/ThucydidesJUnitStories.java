@@ -45,6 +45,8 @@ public class ThucydidesJUnitStories extends ConfigurableEmbedder {
         embedder.embedderControls().doIgnoreFailureInView(true);
         try {
             embedder.runStoriesAsPaths(storyPaths());
+        } catch (Embedder.RunningStoriesFailed e) {
+            throw new AssertionError("JBehave story failure: " + e.getMessage());
         } finally {
             embedder.generateCrossReference();
         }
@@ -129,7 +131,7 @@ public class ThucydidesJUnitStories extends ConfigurableEmbedder {
 
     protected void useDriver(String driver) {
         getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.DRIVER.getPropertyName(), driver);
-        ThucydidesWebDriverSupport.initialize(driver);
+        //ThucydidesWebDriverSupport.initialize(driver);
     }
 
     public ThucydidesConfigurationBuilder runThucydides() {

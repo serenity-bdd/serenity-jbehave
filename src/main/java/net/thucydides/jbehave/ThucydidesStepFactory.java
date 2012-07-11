@@ -32,9 +32,16 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
 
     public ThucydidesStepFactory(Configuration configuration, String rootPackage) {
         super(configuration);
-        this.thucydidesStepProxyFactory = ThucydidesWebDriverSupport.getStepFactory();
         this.context = new ThucydidesStepContext();
         this.rootPackage = rootPackage;
+    }
+
+    private StepFactory getStepFactory() {
+        return ThucydidesWebDriverSupport.getStepFactory();
+//        if (thucydidesStepProxyFactory == null) {
+//            thucydidesStepProxyFactory = ThucydidesWebDriverSupport.getStepFactory();
+//        }
+//        return thucydidesStepProxyFactory;
     }
 
     public List<CandidateSteps> createCandidateSteps() {
@@ -75,14 +82,14 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     private Converter<CandidateSteps, CandidateSteps> toThucydidesCandidateSteps() {
         return new Converter<CandidateSteps, CandidateSteps>() {
             public CandidateSteps convert(CandidateSteps candidateSteps) {
-                return new ThucydidesCandidateSteps(candidateSteps, thucydidesStepProxyFactory);
+                return new ThucydidesCandidateSteps(candidateSteps, getStepFactory());
             }
         };
     }
 
     public Object createInstanceOfType(Class<?> type) {
         Object stepsInstance = context.newInstanceOf(type);
-        StepAnnotations.injectScenarioStepsInto(stepsInstance, thucydidesStepProxyFactory);
+        StepAnnotations.injectScenarioStepsInto(stepsInstance, getStepFactory());
         ThucydidesWebDriverSupport.initializeFieldsIn(stepsInstance);
         return stepsInstance;
     }
