@@ -11,5 +11,5 @@ And I should be using HtmlUnit
 
 Examples:
 |firstname|lastname|
-|Joe      | Bloggs|
+|Joe      | Blo|
 |John     | Doe   |

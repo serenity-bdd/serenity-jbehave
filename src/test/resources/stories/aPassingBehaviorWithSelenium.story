@@ -7,5 +7,5 @@ Then I should see <firstname> and <lastname> in the names fields
 
 Examples:
 |firstname|lastname|
-|Joe      | Bloggs|
+|Joe      | Brown |
 |John     | Doe   |

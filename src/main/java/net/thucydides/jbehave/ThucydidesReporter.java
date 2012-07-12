@@ -81,20 +81,29 @@ public class ThucydidesReporter implements StoryReporter {
     public void beforeStory(Story story, boolean b) {
         currentStory = story;
         if (!isFixture(story)) {
+            System.out.println("beforeStory " + story.getName());
             String requestedDriver = getRequestedDriver(story.getMeta());
             if (StringUtils.isNotEmpty(requestedDriver)) {
                 ThucydidesWebDriverSupport.initialize(requestedDriver);
             } else {
                 ThucydidesWebDriverSupport.initialize();
             }
+            ThucydidesStepFactory.resetContext();
+
             getThucydidesListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
+
             String storyName = removeSuffixFrom(story.getName());
             String storyTitle = NameConverter.humanize(storyName);
             StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withId(storyName, storyTitle));
-            registerStoryIssues(story.getMeta());
-            registerStoryFeaturesAndEpics(story.getMeta());
-            registerStoryTags(story.getMeta());
+
+            registerTags(story);
         }
+    }
+
+    private void registerTags(Story story) {
+        registerStoryIssues(story.getMeta());
+        registerStoryFeaturesAndEpics(story.getMeta());
+        registerStoryTags(story.getMeta());
     }
 
     private boolean isFixture(Story story) {
@@ -222,6 +231,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void afterStory(boolean given) {
         if (isAfterStory(currentStory)) {
+            ThucydidesWebDriverSupport.closeAllDrivers();
             generateReportsFor(baseStepListeners);
         } else if (!isFixture(currentStory)) {
             StepEventBus.getEventBus().testSuiteFinished();

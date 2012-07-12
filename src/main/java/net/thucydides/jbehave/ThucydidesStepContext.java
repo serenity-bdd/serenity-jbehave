@@ -1,11 +1,13 @@
 package net.thucydides.jbehave;
 
+import com.google.common.collect.Maps;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.Map;
 
 /**
  * Keeps track of instantiated JBehave step libraries used in ThucydidesWebdriverIntegration tests.
@@ -14,19 +16,28 @@ public class ThucydidesStepContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ThucydidesStepContext.class);
 
+    private Map<Class<?>, Object> stepInstances = Maps.newHashMap();
+
     public ThucydidesStepContext() {
     }
 
     public Object newInstanceOf(final Class<?> type) {
-        try {
-            ThucydidesWebDriverSupport.getPages();
-            if (hasConstructorWithPagesParameter(type)) {
-                return createNewPageEnabledStepCandidate(type);
-            } else {
-                return type.newInstance();
+        if (stepInstances.containsKey(type)) {
+            return stepInstances.get(type);
+        } else {
+            Object newInstance = null;
+            try {
+                ThucydidesWebDriverSupport.getPages();
+                if (hasConstructorWithPagesParameter(type)) {
+                    newInstance = createNewPageEnabledStepCandidate(type);
+                } else {
+                    newInstance = type.newInstance();
+                }
+            } catch (Exception e) {
+                throw new ThucydidesStepInitializationError(e);
             }
-        } catch (Exception e) {
-            throw new ThucydidesStepInitializationError(e);
+            stepInstances.put(type, newInstance);
+            return newInstance;
         }
     }
 
@@ -55,5 +66,8 @@ public class ThucydidesStepContext {
         return newInstance;
     }
 
+    public void reset() {
+        stepInstances.clear();
+    }
 }
 

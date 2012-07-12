@@ -120,6 +120,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.size(), is(1));
         assertThat(outcomes.get(0).getStepCount(), is(4));
     }
+
     @Test
     public void implemented_pending_stories_should_be_reported_as_pending() throws Throwable {
 
@@ -154,6 +155,43 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(1));
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void state_should_be_conserved_between_steps() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStoryWithState = new AStorySample("aPassingBehaviorWithState.story");
+
+        passingStoryWithState.setSystemConfiguration(systemConfiguration);
+        passingStoryWithState.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(passingStoryWithState);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void state_should_not_be_conserved_between_stories() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStoryWithState = new AStorySample("*PassingBehaviorWithState.story");
+
+        passingStoryWithState.setSystemConfiguration(systemConfiguration);
+        passingStoryWithState.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(passingStoryWithState);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
     }
 
     @Test

@@ -20,28 +20,17 @@ import static ch.lambdaj.Lambda.convert;
 
 public class ThucydidesStepFactory extends AbstractStepsFactory {
 
-    /**
-     * Provides a proxy of the ScenarioSteps object used to invoke the test steps.
-     * This proxy notifies the test runner about individual step outcomes.
-     */
-    private StepFactory thucydidesStepProxyFactory;
-
-    private final ThucydidesStepContext context;
+    private static final ThreadLocal<ThucydidesStepContext> context = new ThreadLocal<ThucydidesStepContext>();
 
     private final String rootPackage;
 
     public ThucydidesStepFactory(Configuration configuration, String rootPackage) {
         super(configuration);
-        this.context = new ThucydidesStepContext();
         this.rootPackage = rootPackage;
     }
 
     private StepFactory getStepFactory() {
         return ThucydidesWebDriverSupport.getStepFactory();
-//        if (thucydidesStepProxyFactory == null) {
-//            thucydidesStepProxyFactory = ThucydidesWebDriverSupport.getStepFactory();
-//        }
-//        return thucydidesStepProxyFactory;
     }
 
     public List<CandidateSteps> createCandidateSteps() {
@@ -88,10 +77,21 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     }
 
     public Object createInstanceOfType(Class<?> type) {
-        Object stepsInstance = context.newInstanceOf(type);
+        Object stepsInstance = getContext().newInstanceOf(type);
         StepAnnotations.injectScenarioStepsInto(stepsInstance, getStepFactory());
         ThucydidesWebDriverSupport.initializeFieldsIn(stepsInstance);
         return stepsInstance;
+    }
+
+    public ThucydidesStepContext getContext() {
+        if (context.get() == null) {
+            context.set(new ThucydidesStepContext());
+        }
+        return context.get();
+    }
+
+    public static void resetContext() {
+        context.remove();
     }
 
     public static ThucydidesStepFactory withStepsFromPackage(String rootPackage, List<Format> formats) {
