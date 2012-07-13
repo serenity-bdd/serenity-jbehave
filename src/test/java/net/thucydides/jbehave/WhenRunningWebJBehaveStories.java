@@ -53,6 +53,18 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
     }
 
+    @Test(expected = AssertionError.class)
+    public void a_failing_story_should_fail_in_junit() throws Throwable {
+
+        ThucydidesJUnitStories story = new AStorySample("aFailingBehaviorWithSelenium.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        story.run();
+    }
+
+
     @Test
     public void web_tests_should_take_screenshots_with_multiple_scenarios() throws Throwable {
 
@@ -177,6 +189,20 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(story.getSystemConfiguration().getElementTimeout(), is(5));
         assertThat(story.getSystemConfiguration().getUseUniqueBrowser(), is(true));
     }
+
+    @Test(expected = AssertionError.class)
+    public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehaviorWithSelenium.story");
+
+        failingStory.setSystemConfiguration(systemConfiguration);
+        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        failingStory.run();
+    }
+
 
 
 }

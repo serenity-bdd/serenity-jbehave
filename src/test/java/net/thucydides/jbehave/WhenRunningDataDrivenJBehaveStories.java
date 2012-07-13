@@ -110,4 +110,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
     }
 
+
+
 }

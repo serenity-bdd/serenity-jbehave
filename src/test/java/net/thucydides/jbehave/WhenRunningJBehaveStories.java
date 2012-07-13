@@ -495,4 +495,47 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0), havingTag(TestTag.withName("iteration 1").andType("iteration")));
     }
 
+    @Test(expected = AssertionError.class)
+    public void failing_stories_run_in_junit_should_fail() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehavior.story");
+
+        failingStory.setSystemConfiguration(systemConfiguration);
+        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        failingStory.run();
+    }
+
+    @Test(expected = AssertionError.class)
+    public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories failingStory = new AStorySample("aBehaviorThrowingAnException.story");
+
+        failingStory.setSystemConfiguration(systemConfiguration);
+        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        failingStory.run();
+    }
+
+    @Test
+    public void stories_with_errors_should_be_reported_as_failing() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories failingStory = new AStorySample("aBehaviorThrowingAnException.story");
+
+        failingStory.setSystemConfiguration(systemConfiguration);
+        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+
+        // When
+        run(failingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
+    }
 }

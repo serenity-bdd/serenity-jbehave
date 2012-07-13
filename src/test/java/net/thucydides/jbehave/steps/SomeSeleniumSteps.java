@@ -11,6 +11,7 @@ import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Pending;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -97,6 +98,11 @@ public class SomeSeleniumSteps {
     @Then("I should be using HtmlUnit")
     public void andIShouldBeUsingHtmlUnit() {
         assertThat(((WebDriverFacade)webDriver).getDriverClass().getName(), containsString("HtmlUnitDriver"));
+    }
+
+    @Given("the scenario throws an exception")
+    public void throwAnException() {
+        throw new ElementNotVisibleException("Oops");
     }
 
 }
