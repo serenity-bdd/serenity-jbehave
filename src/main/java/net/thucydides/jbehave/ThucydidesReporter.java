@@ -311,6 +311,7 @@ public class ThucydidesReporter implements StoryReporter {
     public void failed(String stepTitle, Throwable cause) {
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
         StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), cause));
+        ThucydidesWebDriverSupport.closeAllDrivers();
     }
 
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {

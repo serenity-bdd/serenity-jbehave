@@ -1,7 +1,3 @@
-As a: User
-I want: to do something
-So that: I can get payed
-
 Scenario: A scenario that works
 Meta:
 @issue MYPROJ-456
