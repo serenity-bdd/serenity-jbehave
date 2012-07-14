@@ -35,15 +35,8 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
         // Given
         ThucydidesJUnitStories stories = new AllStoriesSample();
-        stories.setSystemConfiguration(systemConfiguration);
-        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
-
-        // When
-        run(stories);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(greaterThan(10)));
+        assertThat(stories.getRootPackage(), is("net.thucydides.jbehave"));
+        assertThat(stories.getStoryPath(), is("**/*.story"));
     }
 
     final static class StoriesInTheSubsetFolderSample extends ThucydidesJUnitStories {
@@ -66,7 +59,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Then
 
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.size(), is(5));
     }
 
     @Test
@@ -82,7 +75,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(3));
+        assertThat(outcomes.size(), is(6));
     }
 
     @Test

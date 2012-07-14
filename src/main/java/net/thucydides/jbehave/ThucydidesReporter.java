@@ -56,9 +56,13 @@ public class ThucydidesReporter implements StoryReporter {
 
     protected ThucydidesListeners getThucydidesListeners() {
         if (thucydidesListenersThreadLocal.get() == null) {
+            System.out.println("Initialize listeners");
             ThucydidesListeners listeners = ThucydidesReports.setupListeners(systemConfiguration);
             thucydidesListenersThreadLocal.set(listeners);
-            baseStepListeners.add(listeners.getBaseStepListener());
+            synchronized(baseStepListeners) {
+                baseStepListeners.add(listeners.getBaseStepListener());
+            }
+            System.out.println("Initialize listeners done");
         }
         return thucydidesListenersThreadLocal.get();
     }
@@ -232,7 +236,7 @@ public class ThucydidesReporter implements StoryReporter {
     public void afterStory(boolean given) {
         if (isAfterStory(currentStory)) {
             ThucydidesWebDriverSupport.closeAllDrivers();
-            generateReportsFor(baseStepListeners);
+            generateReports();
         } else if (!isFixture(currentStory)) {
             StepEventBus.getEventBus().testSuiteFinished();
             clearListeners();
@@ -243,10 +247,14 @@ public class ThucydidesReporter implements StoryReporter {
         return (currentStory.getName().equals("AfterStories"));
     }
 
-    private void generateReportsFor(final List<BaseStepListener> baseStepListeners) {
-        for(BaseStepListener listener : baseStepListeners) {
-            getReportService().generateReportsFor(listener.getTestOutcomes());
+    private synchronized void generateReports() {
+        System.out.println("generateReports");
+        synchronized(baseStepListeners) {
+            for(BaseStepListener listener : baseStepListeners) {
+                getReportService().generateReportsFor(listener.getTestOutcomes());
+            }
         }
+        System.out.println("generateReports done");
     }
 
     public void narrative(Narrative narrative) {
