@@ -2,6 +2,7 @@ package net.thucydides.jbehave;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import de.codecentric.jbehave.junit.monitoring.JUnitReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
@@ -10,9 +11,11 @@ import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.io.StoryFinder;
+import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +30,8 @@ import static org.jbehave.core.reporters.Format.XML;
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
  * You can redefine these constraints as follows:
  */
-public class ThucydidesJUnitStories extends ConfigurableEmbedder {
+@RunWith(JUnitReportingRunner.class)
+public class ThucydidesJUnitStories extends JUnitStories {// ConfigurableEmbedder {
 
     public static final String DEFAULT_STORY_NAME =  "**/*.story";
 
@@ -65,7 +69,7 @@ public class ThucydidesJUnitStories extends ConfigurableEmbedder {
         return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), formats);
     }
 
-    protected List<String> storyPaths() {
+    public List<String> storyPaths() {
         List<String> storyPaths = Lists.newArrayList();
 
         Iterable<String> pathExpressions = getStoryPathExpressions();
