@@ -21,7 +21,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -39,7 +38,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -59,7 +57,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -77,7 +74,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumUsingADifferentBrowser.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -94,7 +90,6 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aFailingDataDrivenBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);

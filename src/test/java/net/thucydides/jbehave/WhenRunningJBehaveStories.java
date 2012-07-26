@@ -15,7 +15,6 @@ import static net.thucydides.core.model.TestResult.SKIPPED;
 import static net.thucydides.core.model.TestResult.SUCCESS;
 import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.havingTag;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -51,7 +50,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Given
         ThucydidesJUnitStories stories = new StoriesInTheSubsetFolderSample();
         stories.setSystemConfiguration(systemConfiguration);
-        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(stories);
@@ -68,7 +66,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Given
         ThucydidesJUnitStories stories = new AStorySample("*PassingBehavior.story");
         stories.setSystemConfiguration(systemConfiguration);
-        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(stories);
@@ -85,7 +82,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories pendingStory = new AStorySample("aPendingBehavior.story");
 
         pendingStory.setSystemConfiguration(systemConfiguration);
-        pendingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(pendingStory);
@@ -103,7 +99,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories pendingStory = new AStorySample("aPendingBehavior.story");
 
         pendingStory.setSystemConfiguration(systemConfiguration);
-        pendingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(pendingStory);
@@ -121,7 +116,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories pendingStory = new AStorySample("aPendingImplementedBehavior.story");
 
         pendingStory.setSystemConfiguration(systemConfiguration);
-        pendingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(pendingStory);
@@ -139,7 +133,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories passingStory = new AStorySample("aPassingBehavior.story");
 
         passingStory.setSystemConfiguration(systemConfiguration);
-        passingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(passingStory);
@@ -157,7 +150,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories passingStoryWithState = new AStorySample("aPassingBehaviorWithState.story");
 
         passingStoryWithState.setSystemConfiguration(systemConfiguration);
-        passingStoryWithState.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(passingStoryWithState);
@@ -175,7 +167,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories passingStoryWithState = new AStorySample("*PassingBehaviorWithState.story");
 
         passingStoryWithState.setSystemConfiguration(systemConfiguration);
-        passingStoryWithState.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(passingStoryWithState);
@@ -194,7 +185,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories passingStory = new AStorySample("aPassingBehaviorWithSteps.story");
 
         passingStory.setSystemConfiguration(systemConfiguration);
-        passingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(passingStory);
@@ -213,7 +203,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories passingStory = new AStorySample("aPassingBehaviorWithSteps.story");
 
         passingStory.setSystemConfiguration(systemConfiguration);
-        passingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(passingStory);
@@ -235,7 +224,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehavior.story");
 
         failingStory.setSystemConfiguration(systemConfiguration);
-        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(failingStory);
@@ -253,7 +241,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aComplexFailingBehavior.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -273,7 +260,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithAPendingStep.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -296,7 +282,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithAnIssue.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -315,7 +300,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleIssues.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -330,7 +314,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_running_a_failing_story_should_fail() throws Throwable {
         ThucydidesJUnitStories stories = new AFailingBehavior();// ASetOfBehaviorsContainingFailures();
         stories.setSystemConfiguration(systemConfiguration);
-        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
         stories.run();
     }
 
@@ -338,7 +321,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_running_a_failing_story_among_several_should_fail() throws Throwable {
         ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingFailures();
         stories.setSystemConfiguration(systemConfiguration);
-        stories.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
         stories.run();
     }
 
@@ -349,7 +331,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleIssues.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -366,7 +347,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithIssues.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -386,7 +366,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithAnIssue.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -403,7 +382,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithFeatures.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -420,7 +398,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithFeatures.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -439,7 +416,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleFeatures.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -459,7 +435,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithTags.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -476,7 +451,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithTags.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -495,7 +469,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehavior.story");
 
         failingStory.setSystemConfiguration(systemConfiguration);
-        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         failingStory.run();
@@ -508,7 +481,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories failingStory = new AStorySample("aBehaviorThrowingAnException.story");
 
         failingStory.setSystemConfiguration(systemConfiguration);
-        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         failingStory.run();
@@ -521,7 +493,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories failingStory = new AStorySample("aBehaviorThrowingAnException.story");
 
         failingStory.setSystemConfiguration(systemConfiguration);
-        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(failingStory);

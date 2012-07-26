@@ -98,7 +98,9 @@ public class ThucydidesReporter implements StoryReporter {
 
             String storyName = removeSuffixFrom(story.getName());
             String storyTitle = NameConverter.humanize(storyName);
-            StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withId(storyName, storyTitle));
+            StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withIdAndPath(storyName,
+                                                                                                      storyTitle,
+                                                                                                      story.getPath()));
 
             registerTags(story);
         }
@@ -234,6 +236,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterStory(boolean given) {
+        System.out.println("afterStory");
         if (isAfterStory(currentStory)) {
             ThucydidesWebDriverSupport.closeAllDrivers();
             generateReports();
@@ -249,19 +252,13 @@ public class ThucydidesReporter implements StoryReporter {
 
     private synchronized void generateReports() {
         System.out.println("generateReports");
-        synchronized(baseStepListeners) {
-            for(BaseStepListener listener : baseStepListeners) {
-                getReportService().generateReportsFor(listener.getTestOutcomes());
-            }
+        for(BaseStepListener listener : baseStepListeners) {
+            getReportService().generateReportsFor(listener.getTestOutcomes());
         }
         System.out.println("generateReports done");
     }
 
-    public void narrative(Narrative narrative) {
-        try {
-        Thread.sleep(1000);
-        } catch(InterruptedException e) {}
-    }
+    public void narrative(Narrative narrative) {}
 
     public void scenarioNotAllowed(Scenario scenario, String s) {
     }
@@ -320,9 +317,9 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void failed(String stepTitle, Throwable cause) {
+
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
         StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), cause));
-        //
     }
 
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {

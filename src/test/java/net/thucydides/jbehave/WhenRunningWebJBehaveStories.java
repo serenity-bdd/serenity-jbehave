@@ -25,7 +25,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSelenium.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -43,7 +42,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSelenium.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -59,7 +57,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aFailingBehaviorWithSelenium.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         story.run();
     }
@@ -72,7 +69,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSeleniumAndSeveralScenarios.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -90,7 +86,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("*PassingBehaviorWithSeleniumAndSeveralScenarios.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -110,7 +105,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("**/aPassingWebTestSampleWithNestedSteps.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -127,7 +121,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumUsingADifferentBrowser.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+//        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -144,7 +138,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumPageObjects.story");
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -161,7 +154,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new APassingWebTestSampleWithASpecifiedBrowser();
 
         story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -175,10 +167,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     public void should_be_able_to_set_thucydides_properties_in_the_base_test() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new APassingWebTestSampleWithThucydidesPropertiesDefined();
-
-        //story.setSystemConfiguration(systemConfiguration);
-        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
+        ThucydidesJUnitStories story = new APassingWebTestSampleWithThucydidesPropertiesDefined(systemConfiguration);
 
         // When
         run(story);
@@ -197,12 +186,29 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehaviorWithSelenium.story");
 
         failingStory.setSystemConfiguration(systemConfiguration);
-        failingStory.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         failingStory.run();
     }
 
+    @Test
+    public void stories_with_errors_in_one_scenario_should_still_run_subsequent_scenarios() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("failingAndPassingBehaviorsWithSelenium.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+
+    }
 
 
 }

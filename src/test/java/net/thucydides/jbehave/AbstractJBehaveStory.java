@@ -21,8 +21,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AbstractJBehaveStory {
-    protected OutputStream output;
-    protected StoryReporter printOutput;
 
     protected MockEnvironmentVariables environmentVariables;
     protected Configuration systemConfiguration;
@@ -39,9 +37,6 @@ public class AbstractJBehaveStory {
 
         outputDirectory = temporaryFolder.newFolder("output");
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
-
-        output = new ByteArrayOutputStream();
-        printOutput = new TxtOutput(new PrintStream(output));
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
 
 
