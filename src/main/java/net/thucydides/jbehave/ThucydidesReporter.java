@@ -98,9 +98,11 @@ public class ThucydidesReporter implements StoryReporter {
 
             String storyName = removeSuffixFrom(story.getName());
             String storyTitle = NameConverter.humanize(storyName);
-            StepEventBus.getEventBus().testSuiteStarted(net.thucydides.core.model.Story.withIdAndPath(storyName,
-                                                                                                      storyTitle,
-                                                                                                      story.getPath()));
+
+            net.thucydides.core.model.Story userStory
+                        = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
+                                                         .withNarrative(story.getNarrative().asA());
+            StepEventBus.getEventBus().testSuiteStarted(userStory);
 
             registerTags(story);
         }

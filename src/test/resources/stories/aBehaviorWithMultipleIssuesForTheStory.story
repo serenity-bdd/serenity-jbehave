@@ -1,4 +1,5 @@
-
+Meta:
+@issues MYPROJ-8
 
 Scenario: Another scenario that works
 Meta:

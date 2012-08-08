@@ -306,7 +306,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getIssueKeys(), hasItems("MYPROJ-3", "MYPROJ-4", "MYPROJ-5"));
+        assertThat(outcomes.get(0).getIssueKeys(), hasItems("MYPROJ-6", "MYPROJ-7"));
 
     }
 
@@ -328,7 +328,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_story_can_be_associated_with_several_issues() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleIssues.story");
+        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleIssuesForTheStory.story");
 
         story.setSystemConfiguration(systemConfiguration);
 
@@ -337,7 +337,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getIssueKeys(), hasItems("MYPROJ-1","MYPROJ-2","MYPROJ-3","MYPROJ-4","MYPROJ-5"));
+        assertThat(outcomes.get(0).getIssueKeys(), hasItems("MYPROJ-6","MYPROJ-7","MYPROJ-8"));
 
     }
     @Test
