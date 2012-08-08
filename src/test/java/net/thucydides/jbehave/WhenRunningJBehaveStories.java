@@ -328,7 +328,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_story_can_be_associated_with_several_issues() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleIssuesForTheStory.story");
+        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithOneStoryAndMultipleIssues.story");
 
         story.setSystemConfiguration(systemConfiguration);
 
