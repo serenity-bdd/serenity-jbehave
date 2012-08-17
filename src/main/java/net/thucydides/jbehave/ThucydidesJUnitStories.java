@@ -2,6 +2,7 @@ package net.thucydides.jbehave;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import de.codecentric.jbehave.junit.monitoring.JUnitReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
@@ -10,6 +11,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.Embedder;
+import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
@@ -17,10 +19,18 @@ import org.jbehave.core.steps.InjectableStepsFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
+import static org.jbehave.core.io.CodeLocations.codeLocationFromPath;
+import static org.jbehave.core.io.CodeLocations.getPathFromURL;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.XML;
@@ -66,18 +76,38 @@ public class ThucydidesJUnitStories extends JUnitStories {// ConfigurableEmbedde
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), formats);
+        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), formats).andClassLoader(getClassLoader());
+    }
+
+    /**
+     * The class loader used to obtain the JBehave and Step implementation classes.
+     * You normally don't need to worry about this, but you may need to override it if your application
+     * is doing funny business with the class loaders.
+     */
+    public ClassLoader getClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
     }
 
     public List<String> storyPaths() {
-        List<String> storyPaths = Lists.newArrayList();
+        Set<String> storyPaths = Sets.newHashSet();
 
         Iterable<String> pathExpressions = getStoryPathExpressions();
         StoryFinder storyFinder = new StoryFinder();
         for(String pathExpression : pathExpressions) {
-            storyPaths.addAll(storyFinder.findPaths(codeLocationFromClass(this.getClass()), pathExpression, ""));
+            List<URL> classpathRoots = findAllClasspathRoots();
+            for(URL classpathRootUrl : classpathRoots) {
+                storyPaths.addAll(storyFinder.findPaths(classpathRootUrl, pathExpression, ""));
+            }
         }
-        return storyPaths;
+        return Lists.newArrayList(storyPaths);
+    }
+
+    private ArrayList<URL> findAllClasspathRoots() {
+        try {
+            return Collections.list(Thread.currentThread().getContextClassLoader().getResources("."));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not load the classpath roots when looking for story files",e);
+        }
     }
 
     /**

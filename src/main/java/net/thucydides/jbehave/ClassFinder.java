@@ -13,8 +13,18 @@ import java.util.List;
  */
 public class ClassFinder {
 
+    private final ClassLoader classLoader;
+
+    public ClassFinder(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
     public static ClassFinder loadClasses() {
-        return new ClassFinder();
+        return new ClassFinder(getDefaultClassLoader());
+    }
+
+    public ClassFinder withClassLoader(ClassLoader classLoader) {
+        return new ClassFinder(classLoader);
     }
 
     /**
@@ -24,9 +34,8 @@ public class ClassFinder {
      * @return The classes
      */
     public List<Class> fromPackage(String packageName) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = packageName.replace('.', '/');
-        Enumeration<URL> resources = classResourcesOn(classLoader, path);
+        Enumeration<URL> resources = classResourcesOn(path);
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
@@ -39,9 +48,9 @@ public class ClassFinder {
         return classes;
     }
 
-    private Enumeration<URL> classResourcesOn(ClassLoader classLoader, String path) {
+    private Enumeration<URL> classResourcesOn(String path) {
         try {
-            return classLoader.getResources(path);
+            return getClassLoader().getResources(path);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not access class path at " + path, e);
         }
@@ -60,11 +69,13 @@ public class ClassFinder {
             return classes;
         }
         File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                classes.addAll(findClasses(file, packageName + "." + file.getName()));
-            } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
-                classes.add(correspondingClass(packageName, file));
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    classes.addAll(findClasses(file, packageName + "." + file.getName()));
+                } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
+                    classes.add(correspondingClass(packageName, file));
+                }
             }
         }
         return classes;
@@ -72,14 +83,26 @@ public class ClassFinder {
 
     private Class<?> correspondingClass(String packageName, File file) {
         try {
-            return Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
+            String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);
+            return getClassLoader().loadClass(fullyQualifiedClassName);
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Could not find or access class for " + file, e);
         }
+    }
+
+    private static ClassLoader getDefaultClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
+    private String simpleClassNameOf(File file) {
+        return file.getName().substring(0, file.getName().length() - 6);
     }
 
     private boolean isNotAnInnerClass(String className) {
         return (!className.contains("$"));
     }
 
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
 }
