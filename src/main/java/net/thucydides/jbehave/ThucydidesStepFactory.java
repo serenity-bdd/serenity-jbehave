@@ -2,12 +2,6 @@ package net.thucydides.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.collect.Lists;
-import net.sf.extcos.ComponentQuery;
-import net.sf.extcos.ComponentScanner;
-import net.sf.extcos.internal.TypeFilterBasedReturning;
-import net.sf.extcos.selector.DirectReturning;
-import net.sf.extcos.selector.ExtendingTypeFilter;
-import net.sf.extcos.selector.TypeFilter;
 import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
@@ -15,10 +9,10 @@ import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
+import org.jbehave.core.steps.InjectableStepsFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static ch.lambdaj.Lambda.convert;
 
@@ -27,10 +21,12 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     private static final ThreadLocal<ThucydidesStepContext> context = new ThreadLocal<ThucydidesStepContext>();
 
     private final String rootPackage;
+    private ClassLoader classLoader;
 
-    public ThucydidesStepFactory(Configuration configuration, String rootPackage) {
+    public ThucydidesStepFactory(Configuration configuration, String rootPackage, ClassLoader classLoader) {
         super(configuration);
         this.rootPackage = rootPackage;
+        this.classLoader = classLoader;
     }
 
     private StepFactory getStepFactory() {
@@ -55,7 +51,7 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
 
     private List<Class> getCandidateClasses() {
 
-        List<Class> allClassesUnderRootPackage = ClassFinder.loadClasses().fromPackage(rootPackage);
+        List<Class> allClassesUnderRootPackage = ClassFinder.loadClasses().withClassLoader(classLoader).fromPackage(rootPackage);
         List<Class> candidateClasses = Lists.newArrayList();
         for(Class<?> classUnderRootPackage : allClassesUnderRootPackage) {
             if (hasAnnotatedMethods(classUnderRootPackage)) {
@@ -64,10 +60,6 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         }
 
         return candidateClasses;
-    }
-
-    private TypeFilterBasedReturning userCreatedClassesOnly() {
-        return new TypeFilterBasedReturning(new ClassNameExlusionFilter());
     }
 
     private Converter<CandidateSteps, CandidateSteps> toThucydidesCandidateSteps() {
@@ -97,31 +89,19 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     }
 
     public static ThucydidesStepFactory withStepsFromPackage(String rootPackage, List<Format> formats) {
-        return new ThucydidesStepFactory(ThucydidesJBehave.defaultConfiguration(formats), rootPackage);
+        return new ThucydidesStepFactory(ThucydidesJBehave.defaultConfiguration(formats), rootPackage, defaultClassLoader());
+    }
+
+    private static ClassLoader defaultClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
     }
 
     public ThucydidesStepFactory andConfiguration(Configuration configuration) {
-        return new ThucydidesStepFactory(configuration, this.rootPackage);
+        return new ThucydidesStepFactory(configuration, this.rootPackage, this.classLoader);
     }
 
-    private class ClassNameExlusionFilter implements ExtendingTypeFilter {
-        public ClassNameExlusionFilter() {
-
-        }
-
-        @Override
-        public Class<?> getClazz() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public int hashCode() {
-            return 0;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return false;  //To change body of implemented methods use File | Settings | File Templates.
-        }
+    public InjectableStepsFactory andClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        return this;
     }
 }
