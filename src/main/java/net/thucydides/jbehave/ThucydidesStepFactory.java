@@ -88,8 +88,8 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         context.remove();
     }
 
-    public static ThucydidesStepFactory withStepsFromPackage(String rootPackage, List<Format> formats) {
-        return new ThucydidesStepFactory(ThucydidesJBehave.defaultConfiguration(formats), rootPackage, defaultClassLoader());
+    public static ThucydidesStepFactory withStepsFromPackage(String rootPackage, Configuration configuration) {
+        return new ThucydidesStepFactory(configuration, rootPackage, defaultClassLoader());
     }
 
     private static ClassLoader defaultClassLoader() {

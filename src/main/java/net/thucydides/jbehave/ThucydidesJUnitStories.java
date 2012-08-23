@@ -94,14 +94,14 @@ public class ThucydidesJUnitStories extends JUnitStories {
     @Override
     public Configuration configuration() {
         if (configuration == null) {
-            configuration = ThucydidesJBehave.defaultConfiguration(getSystemConfiguration(), formats);
+            configuration = ThucydidesJBehave.defaultConfiguration(getSystemConfiguration(), formats, this);
         }
         return configuration;
     }
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), formats).andClassLoader(getClassLoader());
+        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), configuration()).andClassLoader(getClassLoader());
     }
 
     /**
