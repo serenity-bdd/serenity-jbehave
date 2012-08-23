@@ -312,7 +312,17 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
     @Test(expected = AssertionError.class)
     public void a_test_running_a_failing_story_should_fail() throws Throwable {
-        ThucydidesJUnitStories stories = new AFailingBehavior();// ASetOfBehaviorsContainingFailures();
+        ThucydidesJUnitStories stories = new AFailingBehavior();
+        stories.setSystemConfiguration(systemConfiguration);
+        stories.run();
+    }
+
+    @Test
+    public void a_test_running_a_failing_story_should_not_fail_if_ignore_failures_in_stories_is_set_to_true() throws Throwable {
+
+        environmentVariables.setProperty("ignore.failures.in.stories","true");
+
+        ThucydidesJUnitStories stories = new AFailingBehavior(environmentVariables);
         stories.setSystemConfiguration(systemConfiguration);
         stories.run();
     }
@@ -502,4 +512,38 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.size(), is(1));
         assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
     }
-}
+
+    @Test
+    public void environment_specific_stories_should_be_executed_if_the_corresponding_environment_variable_is_set() throws Throwable {
+
+        // Given
+        environmentVariables.setProperty("metafilter","+environment uat");
+        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(environmentVariables);
+
+        uatStory.setSystemConfiguration(systemConfiguration);
+
+        // When
+        run(uatStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void environment_specific_stories_should_not_be_executed_if_a_filter_excludes_it() throws Throwable {
+
+        environmentVariables.setProperty("metafilter","-environment uat");
+        // Given
+        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(environmentVariables);
+
+        uatStory.setSystemConfiguration(systemConfiguration);
+
+        // When
+        run(uatStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(0));
+    }}

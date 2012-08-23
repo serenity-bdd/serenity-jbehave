@@ -6,12 +6,10 @@ import com.google.common.collect.Sets;
 import de.codecentric.jbehave.junit.monitoring.JUnitReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
+import net.thucydides.core.util.EnvironmentVariables;
 import org.codehaus.plexus.util.StringUtils;
-import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.Embedder;
-import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
@@ -27,10 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.apache.commons.lang.StringUtils.removeEnd;
-import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
-import static org.jbehave.core.io.CodeLocations.codeLocationFromPath;
-import static org.jbehave.core.io.CodeLocations.getPathFromURL;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.XML;
@@ -41,11 +37,12 @@ import static org.jbehave.core.reporters.Format.XML;
  * You can redefine these constraints as follows:
  */
 @RunWith(JUnitReportingRunner.class)
-public class ThucydidesJUnitStories extends JUnitStories {// ConfigurableEmbedder {
+public class ThucydidesJUnitStories extends JUnitStories {
 
     public static final String DEFAULT_STORY_NAME =  "**/*.story";
 
     private net.thucydides.core.webdriver.Configuration systemConfiguration;
+    private EnvironmentVariables environmentVariables;
 
     private String storyFolder = "";
     private String storyNamePattern = DEFAULT_STORY_NAME;
@@ -53,10 +50,24 @@ public class ThucydidesJUnitStories extends JUnitStories {// ConfigurableEmbedde
     private Configuration configuration;
     private List<Format> formats = Arrays.asList(CONSOLE, HTML, XML);
 
+    public ThucydidesJUnitStories() {
+        this(Injectors.getInjector().getInstance(EnvironmentVariables.class));
+    }
+
+    public ThucydidesJUnitStories(EnvironmentVariables environmentVariables) {
+        super();
+        this.environmentVariables = environmentVariables;
+    }
+
+
     @Test
     public void run() throws Throwable {
         Embedder embedder = configuredEmbedder();
         embedder.embedderControls().doIgnoreFailureInView(true);
+        embedder.embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
+        if (metaFiltersAreDefined()) {
+            embedder.useMetaFilters(getMetaFilters());
+        }
         try {
             embedder.runStoriesAsPaths(storyPaths());
         } catch (Embedder.RunningStoriesFailed e) {
@@ -64,6 +75,20 @@ public class ThucydidesJUnitStories extends JUnitStories {// ConfigurableEmbedde
         } finally {
             embedder.generateCrossReference();
         }
+    }
+
+    private boolean metaFiltersAreDefined() {
+        String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
+        return !StringUtils.isEmpty(metaFilters);
+    }
+
+    protected boolean getIgnoreFailuresInStories() {
+        return environmentVariables.getPropertyAsBoolean(IGNORE_FAILURES_IN_STORIES.getName(),false);
+    }
+
+    protected List<String> getMetaFilters() {
+        String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
+        return Lists.newArrayList(Splitter.on(",").trimResults().split(metaFilters));
     }
 
     @Override

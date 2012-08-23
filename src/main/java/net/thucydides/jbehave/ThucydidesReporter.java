@@ -85,13 +85,9 @@ public class ThucydidesReporter implements StoryReporter {
     public void beforeStory(Story story, boolean b) {
         currentStory = story;
         if (!isFixture(story)) {
-            System.out.println("beforeStory " + story.getName());
-            String requestedDriver = getRequestedDriver(story.getMeta());
-            if (StringUtils.isNotEmpty(requestedDriver)) {
-                ThucydidesWebDriverSupport.initialize(requestedDriver);
-            } else {
-                ThucydidesWebDriverSupport.initialize();
-            }
+
+            configureDriver(story);
+
             ThucydidesStepFactory.resetContext();
 
             getThucydidesListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
@@ -105,6 +101,15 @@ public class ThucydidesReporter implements StoryReporter {
             StepEventBus.getEventBus().testSuiteStarted(userStory);
 
             registerTags(story);
+        }
+    }
+
+    private void configureDriver(Story story) {
+        String requestedDriver = getRequestedDriver(story.getMeta());
+        if (StringUtils.isNotEmpty(requestedDriver)) {
+            ThucydidesWebDriverSupport.initialize(requestedDriver);
+        } else {
+            ThucydidesWebDriverSupport.initialize();
         }
     }
 

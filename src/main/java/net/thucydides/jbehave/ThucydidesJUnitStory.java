@@ -1,5 +1,6 @@
 package net.thucydides.jbehave;
 
+import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.embedder.Embedder;
@@ -10,6 +11,11 @@ import org.jbehave.core.embedder.Embedder;
  */
 public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
     public ThucydidesJUnitStory() {
+        findStoriesCalled(storynamesDerivedFromClassName());
+    }
+
+    public ThucydidesJUnitStory(EnvironmentVariables environmentVariables) {
+        super(environmentVariables);
         findStoriesCalled(storynamesDerivedFromClassName());
     }
 
