@@ -243,7 +243,6 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterStory(boolean given) {
-        System.out.println("afterStory");
         if (isAfterStory(currentStory)) {
             ThucydidesWebDriverSupport.closeAllDrivers();
             generateReports();
@@ -281,6 +280,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterScenario() {
+        System.out.println("After scenario");
         StepEventBus.getEventBus().testFinished();
     }
 
@@ -294,6 +294,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void example(Map<String, String> stringStringMap) {
+        StepEventBus.getEventBus().clearStepFailures();
     }
 
     public void afterExamples() {

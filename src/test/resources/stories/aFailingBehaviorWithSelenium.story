@@ -1,6 +1,11 @@
 Scenario: A scenario that uses selenium
 
 Given I am on the test page
-When I enter the first name Joe
-And I enter the last name Smith
-Then I should see Jack and Black in the names fields
+When I type in the first name <firstname>
+And I type in the last name <lastname>
+Then I should see entered values of <expectedFirstname> and <expectedLastname>
+
+Examples:
+|firstname|lastname| expectedFirstname | expectedLastname |
+|Joe      | Blanc  | Jack              | Black            |
+|John     | Doe    | John              | Doe              |

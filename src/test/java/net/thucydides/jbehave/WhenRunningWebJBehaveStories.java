@@ -2,6 +2,7 @@ package net.thucydides.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
+import net.thucydides.core.model.TestStep;
 import org.junit.Test;
 
 import java.util.List;
@@ -210,5 +211,23 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
     }
 
+    @Test
+    public void stories_with_errors_in_one_external_data_scenario_should_still_run_subsequent_scenarios() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("dataDrivenBehaviorWithSelenium.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestStep> outcomes = loadTestOutcomes().get(0).getTestSteps().get(2).getChildren();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+
+    }
 
 }

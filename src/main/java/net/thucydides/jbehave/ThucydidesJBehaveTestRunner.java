@@ -18,7 +18,6 @@ public class ThucydidesJBehaveTestRunner extends Suite {
 
     @Override
     protected List<Runner> getChildren() {
-        System.out.println("getChildren for " + testClass.getName());
         return super.getChildren();    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

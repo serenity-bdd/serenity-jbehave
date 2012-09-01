@@ -30,6 +30,12 @@ public class SomeSeleniumSteps {
     @Steps
     SomeNestedSeleniumSteps the_user;
 
+    StaticSitePage page;
+    public SomeSeleniumSteps(Pages pages) {
+        this.pages = pages;
+        page = pages.get(StaticSitePage.class);
+    }
+
     @Given("I have an implemented JBehave scenario that uses selenium")
     public void givenIHaveAnImplementedJBehaveScenarioThatUsesSelenium() {
     }
@@ -40,7 +46,7 @@ public class SomeSeleniumSteps {
 
     @When("I run the web scenario")
     public void whenIRunTheWebScenario() {
-        StaticSitePage indexPage = pages.get(StaticSitePage.class);
+        page.open();
     }
 
     @Then("the webdriver variable should be correctly instantiated")
@@ -55,44 +61,45 @@ public class SomeSeleniumSteps {
 
     @Given("I am on the test page")
     public void givenIAmOnTheTestPage() {
-        StaticSitePage indexPage = pages.get(StaticSitePage.class);
+        page.open();
     }
 
     @When("I enter the first name $firstname")
     public void whenIEnterTheFirstName(String firstname) {
-        pages.get(StaticSitePage.class).setFirstName(firstname);
+        page.setFirstName(firstname);
     }
 
     @When("I enter the last name $lastname")
     public void whenIEnterTheLastName(String lastname) {
-        pages.get(StaticSitePage.class).setLastName(lastname);
+        page.setLastName(lastname);
     }
 
-    @When("I type in the first name $firstname")
+    @When("I type in the first name <firstname>")
     public void whenITypeInTheFirstName(String firstname) {
         the_user.enters_the_first_name(firstname);
     }
 
-    @When("I type in the last name $lastname")
+    @When("I type in the last name <lastname>")
     public void whenITypeInTheLastName(String lastname) {
         the_user.enters_the_last_name(lastname);
     }
 
-    @Then("I should see $firstname and $lastname in the names fields")
-    public void thenIShouldSeeInTheNamesFields(String firstname,
-                                               String lastname) {
-        assertThat(pages.get(StaticSitePage.class).firstName().getValue(), is(firstname));
-        assertThat(pages.get(StaticSitePage.class).lastName().getValue(), is(lastname));
+    @Then("I should see entered values of <expectedFirstname> and <expectedLastname>")
+    public void thenIShouldSeeInTheNamesFields(String expectedFirstname,
+                                               String expectedLastname) {
+        StaticSitePage indexPage = page;
+        assertThat(page.firstName().getValue(), is(expectedFirstname));
+        assertThat(page.lastName().getValue(), is(expectedLastname));
     }
 
-    @Then("I should see first name $firstname on the screen")
-    public void thenIShouldSeeFirstNameOnTheScreen(String firstname) {
-        assertThat(pages.get(StaticSitePage.class).firstName().getValue(), is(firstname));
+    @Then("I should see first name $expectedFirstname on the screen")
+    public void thenIShouldSeeFirstNameOnTheScreen(String $expectedFirstname) {
+        assertThat(page.firstName().getValue(), is($expectedFirstname));
     }
 
-    @Then("I should see last name $lastname on the screen")
-    public void thenIShouldSeeLastNameOnTheScreen(String lastname) {
-        assertThat(pages.get(StaticSitePage.class).lastName().getValue(), is(lastname));
+    @Then("I should see last name $expectedLastname on the screen")
+    public void thenIShouldSeeLastNameOnTheScreen(String $expectedLastname) {
+        assertThat(page.lastName().getValue(), is($expectedLastname));
     }
 
     @Then("I should be using HtmlUnit")

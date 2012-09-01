@@ -35,7 +35,7 @@ public class StoryStepsWithPageObjects {
         indexPage.setLastName(lastname);
     }
 
-    @Then("I should see the $firstname and $lastname in the names fields")
+    @Then("I should see the $firstname and $lastname")
     public void thenIShouldSeeInTheNamesFields(String firstname,
                                                String lastname) {
         assertThat(indexPage.firstName().getValue(), is(firstname));
