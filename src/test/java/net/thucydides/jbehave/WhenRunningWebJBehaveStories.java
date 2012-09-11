@@ -3,6 +3,7 @@ package net.thucydides.jbehave;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
+@Ignore
 public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
     final static class AStorySample extends ThucydidesJUnitStories {
@@ -35,7 +37,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }
 
-
     @Test
     public void web_tests_should_take_screenshots() throws Throwable {
 
@@ -49,6 +50,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
+        Thread.sleep(1000);
         assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
     }
 
