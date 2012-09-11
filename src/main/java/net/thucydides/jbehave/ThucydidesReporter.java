@@ -325,9 +325,9 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void failed(String stepTitle, Throwable cause) {
-
+        Throwable rootCause = cause.getCause() != null ? cause.getCause() : cause;
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
-        StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), cause));
+        StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), rootCause));
     }
 
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {

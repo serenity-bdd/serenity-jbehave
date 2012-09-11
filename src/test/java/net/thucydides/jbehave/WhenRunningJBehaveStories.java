@@ -4,9 +4,11 @@ import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.model.TestTag;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.CancellationException;
 
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.FAILURE;
@@ -331,6 +333,31 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_running_a_failing_story_among_several_should_fail() throws Throwable {
         ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingFailures();
         stories.setSystemConfiguration(systemConfiguration);
+        stories.run();
+    }
+
+    @Test(expected = AssertionError.class)
+    public void a_test_running_a_slow_story_should_fail_if_it_timesout() throws Throwable {
+        environmentVariables.setProperty("story.timeout.in.secs","1");
+        ThucydidesJUnitStories stories = new ABehaviorContainingSlowTests(environmentVariables);
+
+        stories.run();
+    }
+
+    @Test
+    public void a_test_running_a_slow_story_should_not_fail_if_it_does_not_timeout() throws Throwable {
+        environmentVariables.setProperty("story.timeout.in.secs","100");
+        ThucydidesJUnitStories stories = new ABehaviorContainingSlowTests(environmentVariables);
+
+        stories.run();
+    }
+
+    @Ignore("Will run JBehave stories individually one day, maybe")
+    @Test
+    public void timeouts_refer_only_in_individual_stories() throws Throwable {
+        environmentVariables.setProperty("story.timeout.in.secs","3");
+        ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingSlowTests(environmentVariables);
+
         stories.run();
     }
 

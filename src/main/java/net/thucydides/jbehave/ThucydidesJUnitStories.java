@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
@@ -65,6 +66,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
         Embedder embedder = configuredEmbedder();
         embedder.embedderControls().doIgnoreFailureInView(true);
         embedder.embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
+        embedder.embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
         if (metaFiltersAreDefined()) {
             embedder.useMetaFilters(getMetaFilters());
         }
@@ -84,6 +86,10 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     protected boolean getIgnoreFailuresInStories() {
         return environmentVariables.getPropertyAsBoolean(IGNORE_FAILURES_IN_STORIES.getName(),false);
+    }
+
+    protected int getStoryTimeoutInSecs() {
+        return environmentVariables.getPropertyAsInteger(STORY_TIMEOUT_IN_SECS.getName(), 300);
     }
 
     protected List<String> getMetaFilters() {
@@ -190,7 +196,6 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     protected void useDriver(String driver) {
         getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.DRIVER.getPropertyName(), driver);
-        //ThucydidesWebDriverSupport.initialize(driver);
     }
 
     public ThucydidesConfigurationBuilder runThucydides() {

@@ -68,5 +68,14 @@ public class StorySteps {
 
     @Then("some other stuff should also work")
     public void someOtherStuffShouldWork() {}
+
+    @Given("the scenario runs slowly")
+    public void givenTheScenarioRunsSlowly() throws InterruptedException {
+        Thread.currentThread().sleep(2000);
+    }
+
+    @Then("the test should time out")
+    public void thenTheTestShouldTimeOut() {
+    }
 }
 
