@@ -12,7 +12,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-@Ignore
 public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
     final static class AStorySample extends ThucydidesJUnitStories {

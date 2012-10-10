@@ -1,9 +1,11 @@
 package net.thucydides.jbehave;
 
+import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.model.TestTag;
+import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -45,6 +47,22 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
             findStoriesIn("stories/subset");
         }
     }
+
+
+    @Test
+    public void a_story_should_read_properties_from_the_thucydides_properties_file() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories stories = new StoriesInTheSubsetFolderSample();
+
+        // When
+        run(stories);
+
+        // Then
+        EnvironmentVariables environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class);
+        assertThat(environmentVariables.getProperty("story.timeout.in.secs"), is("350"));
+    }
+
 
     @Test
     public void a_subset_of_the_stories_can_be_run_individually() throws Throwable {

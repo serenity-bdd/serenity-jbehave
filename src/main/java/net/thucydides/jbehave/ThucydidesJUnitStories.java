@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.codecentric.jbehave.junit.monitoring.JUnitReportingRunner;
+import net.thucydides.core.Thucydides;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
@@ -59,7 +60,6 @@ public class ThucydidesJUnitStories extends JUnitStories {
         super();
         this.environmentVariables = environmentVariables;
     }
-
 
     @Test
     public void run() throws Throwable {

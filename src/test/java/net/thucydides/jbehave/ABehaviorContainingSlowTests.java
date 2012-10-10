@@ -7,4 +7,9 @@ public class ABehaviorContainingSlowTests extends ThucydidesJUnitStories {
         super(environmentVariables);
         findStoriesCalled("**/aSlowBehavior.story");
     }
+
+    public ABehaviorContainingSlowTests() {
+        findStoriesCalled("**/aSlowBehavior.story");
+    }
+
 }
