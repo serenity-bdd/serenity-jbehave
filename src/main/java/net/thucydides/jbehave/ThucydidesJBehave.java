@@ -9,6 +9,7 @@ import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
+import org.jbehave.core.steps.ParameterConverters;
 
 import java.util.List;
 import java.util.Properties;
@@ -41,6 +42,9 @@ public class ThucydidesJBehave {
         viewResources.put("decorateNonHtml", "true");
 
         return new ParanamerConfiguration()
+                .useParameterConverters(
+                        new ParameterConverters().addConverters(new ParameterConverters.EnumConverter(),
+                                                                new ParameterConverters.EnumListConverter()))
                 .useStoryReporterBuilder(
                         new StoryReporterBuilder()
                                 .withDefaultFormats()
