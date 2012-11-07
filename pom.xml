@@ -4,16 +4,15 @@
     <parent>
         <artifactId>thucydides</artifactId>
         <groupId>net.thucydides</groupId>
-        <version>0.9.28</version>
+        <version>0.9.71</version>
     </parent>
     <groupId>net.thucydides</groupId>
     <artifactId>thucydides-jbehave-plugin</artifactId>
-    <version>0.9.29-SNAPSHOT</version>
+    <version>0.9.71-SNAPSHOT</version>
     <name>thucydides-jbehave-plugin</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jbehave.core.version>3.6.8</jbehave.core.version>
-        <jbehave.site.version>3.1.1</jbehave.site.version>
+        <jbehave.core.version>3.7.1</jbehave.core.version>
         <embeddables>**/*Stories.java</embeddables>
     </properties>
     <scm>
@@ -25,7 +24,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>0.9.22</version>
+            <version>0.9.71</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>
