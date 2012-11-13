@@ -19,7 +19,7 @@
         <connection>scm:git:git@gtomithub.com:thucydides-webtests/thucydides-jbehave.git</connection>
         <developerConnection>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</developerConnection>
         <url>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</url>
-
+    </scm>
     <dependencies>
         <dependency>
             <groupId>net.thucydides</groupId>
