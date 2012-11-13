@@ -20,6 +20,46 @@
         <developerConnection>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</developerConnection>
         <url>scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git</url>
     </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <showDeprecation>false</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <optimize>true</optimize>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin
+                </artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <source>1.6</source>
+                    <aggregate>true</aggregate>
+                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>org.umlgraph</groupId>
+                        <artifactId>doclet</artifactId>
+                        <version>5.1</version>
+                    </docletArtifact>
+                    <additionalparam>-views -all -inferrel
+                        -inferdep
+                        -inferdepvis public
+                        -inferdepinpackage
+                        -hide java.*
+                        -collpackages java.util.*
+                        -qualify
+                    </additionalparam>
+                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                </configuration>
+            </plugin>
+       </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>net.thucydides</groupId>
