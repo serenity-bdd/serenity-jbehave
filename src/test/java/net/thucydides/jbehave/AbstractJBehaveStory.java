@@ -5,11 +5,13 @@ import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
+import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.jbehave.core.reporters.StoryReporter;
 import org.jbehave.core.reporters.TxtOutput;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.notification.RunNotifier;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,22 +33,23 @@ public class AbstractJBehaveStory {
     protected File outputDirectory;
 
     @Before
-    public void prepareReporter() {
+    public void prepareReporter() throws IOException {
 
         environmentVariables = new MockEnvironmentVariables();
 
         outputDirectory = temporaryFolder.newFolder("output");
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
-
-
         System.out.println("Report directory:" + this.outputDirectory);
     }
 
 
     protected void run(ThucydidesJUnitStories stories) {
         try {
-            stories.run();
+            ThucydidesReportingRunner runner = new ThucydidesReportingRunner(stories.getClass(),
+                                                                             environmentVariables,
+                                                                             stories);
+            runner.run(new RunNotifier());
         } catch(Throwable e) {
             e.printStackTrace();
         }

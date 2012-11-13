@@ -6,7 +6,6 @@ import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.jbehave.core.configuration.Configuration;
-import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.InjectableStepsFactory;
@@ -30,7 +29,7 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     }
 
     private StepFactory getStepFactory() {
-        return ThucydidesWebDriverSupport.getStepFactory();
+        return ThucydidesWebDriverSupport.getStepFactory().thatThrowsExcpetionsImmediately();
     }
 
     public List<CandidateSteps> createCandidateSteps() {

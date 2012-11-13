@@ -3,7 +3,6 @@ package net.thucydides.jbehave;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -49,8 +48,16 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        Thread.sleep(1000);
-        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
+        TestStep given = givenStepIn(outcomes);
+        assertThat(given.getScreenshots().size(), greaterThan(0));
+    }
+
+    private TestStep givenStepIn(List<TestOutcome> outcomes) {
+        return givenStepIn(outcomes,0);
+    }
+
+    private TestStep givenStepIn(List<TestOutcome> outcomes, int index) {
+        return outcomes.get(index).getTestSteps().get(0);
     }
 
     @Test(expected = AssertionError.class)
@@ -77,7 +84,8 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
+        TestStep given = givenStepIn(outcomes);
+        assertThat(given.getScreenshots().size(), greaterThan(0));
     }
 
 
@@ -86,7 +94,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Given
         ThucydidesJUnitStories story = new AStorySample("*PassingBehaviorWithSeleniumAndSeveralScenarios.story");
-
         story.setSystemConfiguration(systemConfiguration);
 
         // When
@@ -94,10 +101,16 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
-        assertThat(outcomes.get(1).getScreenshots().size(), greaterThan(0));
-        assertThat(outcomes.get(2).getScreenshots().size(), greaterThan(0));
-        assertThat(outcomes.get(3).getScreenshots().size(), greaterThan(0));
+
+        TestStep given1 = givenStepIn(outcomes,0);
+        TestStep given2 = givenStepIn(outcomes,1);
+        TestStep given3 = givenStepIn(outcomes,2);
+        TestStep given4 = givenStepIn(outcomes,3);
+
+        assertThat(given1.getScreenshots().size(), greaterThan(0));
+        assertThat(given2.getScreenshots().size(), greaterThan(0));
+        assertThat(given3.getScreenshots().size(), greaterThan(0));
+        assertThat(given4.getScreenshots().size(), greaterThan(0));
     }
 
     @Test
@@ -113,7 +126,9 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
+        TestStep given = givenStepIn(outcomes);
+        assertThat(given.getScreenshots().size(), greaterThan(0));
+
     }
 
     @Test
@@ -196,9 +211,10 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     @Test
     public void stories_with_errors_in_one_scenario_should_still_run_subsequent_scenarios() throws Throwable {
 
+        environmentVariables.setProperty("webdriver.driver","htmlunit");
+
         // Given
         ThucydidesJUnitStories story = new AStorySample("failingAndPassingBehaviorsWithSelenium.story");
-
         story.setSystemConfiguration(systemConfiguration);
 
         // When
