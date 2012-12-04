@@ -14,7 +14,11 @@ import static org.hamcrest.Matchers.is;
 public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
     final static class AStorySample extends ThucydidesJUnitStories {
-        AStorySample(String storyName) {
+        public AStorySample() {
+            super();
+        }
+
+        protected AStorySample(String storyName) {
             findStoriesCalled(storyName);
         }
     }

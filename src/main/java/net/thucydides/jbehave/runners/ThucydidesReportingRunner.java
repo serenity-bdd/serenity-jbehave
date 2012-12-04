@@ -31,6 +31,7 @@ import org.jbehave.core.steps.StepMonitor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
@@ -57,7 +58,6 @@ public class ThucydidesReportingRunner extends Runner {
     public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
                                      EnvironmentVariables environmentVariables,
                                      ConfigurableEmbedder embedder) throws Throwable {
-
         this.configurableEmbedder = embedder;
         this.environmentVariables = environmentVariables;
 
@@ -169,8 +169,6 @@ public class ThucydidesReportingRunner extends Runner {
 	}
 
 	private void getCandidateSteps() {
-		// candidateSteps = configurableEmbedder.configuredEmbedder()
-		// .stepsFactory().createCandidateSteps();
 		InjectableStepsFactory stepsFactory = configurableEmbedder
 				.stepsFactory();
 		if (stepsFactory != null) {

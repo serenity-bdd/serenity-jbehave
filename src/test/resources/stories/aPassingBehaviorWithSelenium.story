@@ -9,4 +9,3 @@ Examples:
 |firstname|lastname| expectedFirstname | expectedLastname |
 |Joe      | Blanc  | Joe               | Blanc            |
 |John     | Doe    | John              | Doe              |
-

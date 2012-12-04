@@ -28,7 +28,12 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     final static class AllStoriesSample extends ThucydidesJUnitStories {}
 
     final static class AStorySample extends ThucydidesJUnitStories {
-        AStorySample(String storyName) {
+
+        public AStorySample() {
+            super();
+        }
+
+        protected AStorySample(String storyName) {
             findStoriesCalled(storyName);
         }
     }

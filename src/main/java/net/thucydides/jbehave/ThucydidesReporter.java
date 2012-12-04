@@ -4,6 +4,7 @@ import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import net.thucydides.core.Thucydides;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
 import net.thucydides.core.model.TestTag;
@@ -16,6 +17,7 @@ import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
+import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.GivenStories;
@@ -26,11 +28,13 @@ import org.jbehave.core.model.Scenario;
 import org.jbehave.core.model.Story;
 import org.jbehave.core.model.StoryDuration;
 import org.jbehave.core.reporters.StoryReporter;
+import org.openqa.selenium.WebDriver;
 
 import java.util.List;
 import java.util.Map;
 
 import static ch.lambdaj.Lambda.convert;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
 
 public class ThucydidesReporter implements StoryReporter {
 
@@ -47,6 +51,7 @@ public class ThucydidesReporter implements StoryReporter {
         thucydidesListenersThreadLocal = new ThreadLocal<ThucydidesListeners>();
         reportServiceThreadLocal = new ThreadLocal<ReportService>();
         baseStepListeners = Lists.newArrayList();
+
     }
 
     protected void clearListeners() {
@@ -290,11 +295,19 @@ public class ThucydidesReporter implements StoryReporter {
     public void givenStories(List<String> strings) {
     }
 
+    int exampleCount = 0;
     public void beforeExamples(List<String> strings, ExamplesTable examplesTable) {
+        exampleCount = 0;
     }
 
     public void example(Map<String, String> stringStringMap) {
         StepEventBus.getEventBus().clearStepFailures();
+        if (systemConfiguration.getRestartFrequency() > 0) {
+            exampleCount++;
+            if (exampleCount % systemConfiguration.getRestartFrequency() == 0) {
+                WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+            }
+        }
     }
 
     public void afterExamples() {
