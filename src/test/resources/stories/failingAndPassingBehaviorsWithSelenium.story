@@ -1,3 +1,6 @@
+Meta:
+@driver htmlunit
+
 Scenario: A failing scenario that uses selenium
 
 Given I am on the test page

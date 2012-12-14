@@ -1,18 +1,12 @@
 package net.thucydides.jbehave.runners;
 
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.jbehave.ThucydidesJUnitStories;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
@@ -31,7 +25,13 @@ import org.jbehave.core.steps.StepMonitor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
@@ -43,42 +43,78 @@ public class ThucydidesReportingRunner extends Runner {
 	private List<String> storyPaths;
 	private Configuration configuration;
 	private int numberOfTestCases;
-	private Description rootDescription;
+	private Description description;
 	List<CandidateSteps> candidateSteps;
-	private ConfigurableEmbedder configurableEmbedder;
-    private EnvironmentVariables environmentVariables;
 
-	@SuppressWarnings("unchecked")
-	public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass)
-			throws Throwable {
-        this(testClass, Injectors.getInjector().getInstance(EnvironmentVariables.class),
-             (ConfigurableEmbedder) testClass.newInstance());
-	}
+    private final ConfigurableEmbedder configurableEmbedder;
+    private final Class<? extends ConfigurableEmbedder> testClass;
+    private final EnvironmentVariables environmentVariables;
 
-    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
-                                     EnvironmentVariables environmentVariables,
-                                     ConfigurableEmbedder embedder) throws Throwable {
-        this.configurableEmbedder = embedder;
-        this.environmentVariables = environmentVariables;
-
-        if (configurableEmbedder instanceof JUnitStories) {
-            getStoryPathsFromJUnitStories(testClass);
-        } else if (configurableEmbedder instanceof JUnitStory) {
-            getStoryPathsFromJUnitStory();
-        }
-
-        configuration = configuredEmbedder.configuration();
-
-        StepMonitor originalStepMonitor = createCandidateStepsWithNoMonitor();
-        storyDescriptions = buildDescriptionFromStories();
-        createCandidateStepsWith(originalStepMonitor);
-
-        initRootDescription();
+    @SuppressWarnings("unchecked")
+    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass)
+            throws Throwable {
+        this(testClass, (ConfigurableEmbedder) testClass.newInstance());
     }
 
-	@Override
+    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
+                                     ConfigurableEmbedder embedder) throws Throwable {
+        this.configurableEmbedder = embedder;
+        this.testClass = testClass;
+        this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
+
+    }
+
+    protected List<Description> getDescriptions() {
+        if (storyDescriptions == null) {
+            storyDescriptions = buildDescriptionFromStories();
+        }
+        return storyDescriptions;
+    }
+
+    protected Configuration getConfiguration() {
+        if (configuration == null) {
+            configuration = getConfiguredEmbedder().configuration();
+        }
+        return configuration;
+    }
+
+    Embedder getConfiguredEmbedder() {
+        if (configuredEmbedder == null) {
+            configuredEmbedder = configurableEmbedder.configuredEmbedder();
+        }
+        return configuredEmbedder;
+    }
+
+    List<String> getStoryPaths() {
+        if (storyPaths == null) {
+            try {
+                if (configurableEmbedder instanceof JUnitStories) {
+                    getStoryPathsFromJUnitStories(testClass);
+                } else if (configurableEmbedder instanceof JUnitStory) {
+                    getStoryPathsFromJUnitStory();
+                }
+            } catch(Throwable e) {
+                return (List<String>) Collections.EMPTY_LIST;
+            }
+        }
+        return storyPaths;
+    }
+
+    private EnvironmentVariables environmentVariablesFrom(ConfigurableEmbedder configurableEmbedder) {
+        if (configurableEmbedder instanceof ThucydidesJUnitStories) {
+            return ((ThucydidesJUnitStories) configurableEmbedder).getSystemConfiguration().getEnvironmentVariables();
+        } else {
+            return Injectors.getInjector().getInstance(EnvironmentVariables.class);
+        }
+    }
+
+    @Override
 	public Description getDescription() {
-		return rootDescription;
+        if (description == null) {
+            description = Description.createSuiteDescription(configurableEmbedder.getClass());
+            description.getChildren().addAll(getDescriptions());
+        }
+		return description;
 	}
 
 	@Override
@@ -89,25 +125,25 @@ public class ThucydidesReportingRunner extends Runner {
 	@Override
 	public void run(RunNotifier notifier) {
 
-        configuredEmbedder.embedderControls().doIgnoreFailureInView(true);
-        configuredEmbedder.embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
-        configuredEmbedder.embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
+        getConfiguredEmbedder().embedderControls().doIgnoreFailureInView(true);
+        getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
+        getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
         if (metaFiltersAreDefined()) {
-            configuredEmbedder.useMetaFilters(getMetaFilters());
+            getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
 
-        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, numberOfTestCases, rootDescription);
+        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, numberOfTestCases, getDescription());
 		// tell the reporter how to handle pending steps
-		junitReporter.usePendingStepStrategy(configuration.pendingStepStrategy());
+		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 	
 		addToStoryReporterFormats(junitReporter);
 	
 		try {
-			configuredEmbedder.runStoriesAsPaths(storyPaths);
+            getConfiguredEmbedder().runStoriesAsPaths(getStoryPaths());
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		} finally {
-			configuredEmbedder.generateCrossReference();
+            getConfiguredEmbedder().generateCrossReference();
 		}
 	}
 
@@ -121,24 +157,31 @@ public class ThucydidesReportingRunner extends Runner {
 				.useThreads(1);
 	}
 
+    List<CandidateSteps> getCandidateSteps() {
+        if (candidateSteps == null) {
+            StepMonitor originalStepMonitor = createCandidateStepsWithNoMonitor();
+            createCandidateStepsWith(originalStepMonitor);
+        }
+        return candidateSteps;
+    }
+
 	private void createCandidateStepsWith(StepMonitor stepMonitor) {
 		// reset step monitor and recreate candidate steps
-		configuration.useStepMonitor(stepMonitor);
-		getCandidateSteps();
+        getConfiguration().useStepMonitor(stepMonitor);
+        candidateSteps = buildCandidateSteps();
 		for (CandidateSteps step : candidateSteps) {
 			step.configuration().useStepMonitor(stepMonitor);
 		}
 	}
 
 	private StepMonitor createCandidateStepsWithNoMonitor() {
-		StepMonitor usedStepMonitor = configuration.stepMonitor();
+		StepMonitor usedStepMonitor = getConfiguration().stepMonitor();
 		createCandidateStepsWith(new NullStepMonitor());
 		return usedStepMonitor;
 	}
 
 	private void getStoryPathsFromJUnitStory() {
-		configuredEmbedder = configurableEmbedder.configuredEmbedder();
-		StoryPathResolver resolver = configuredEmbedder.configuration()
+		StoryPathResolver resolver = getConfiguredEmbedder().configuration()
 				.storyPathResolver();
 		storyPaths = Arrays.asList(resolver.resolve(configurableEmbedder
 				.getClass()));
@@ -149,11 +192,11 @@ public class ThucydidesReportingRunner extends Runner {
 			Class<? extends ConfigurableEmbedder> testClass)
 			throws NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException {
-		configuredEmbedder = configurableEmbedder.configuredEmbedder();
 		Method method = makeStoryPathsMethodPublic(testClass);
-		storyPaths = ((List<String>) method.invoke(
-				(JUnitStories) configurableEmbedder, (Object[]) null));
+		storyPaths = ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
 	}
+
+
 
 	private Method makeStoryPathsMethodPublic(
 			Class<? extends ConfigurableEmbedder> testClass)
@@ -168,8 +211,10 @@ public class ThucydidesReportingRunner extends Runner {
 		return method;
 	}
 
-	private void getCandidateSteps() {
-		InjectableStepsFactory stepsFactory = configurableEmbedder
+	private List<CandidateSteps> buildCandidateSteps() {
+        List<CandidateSteps> candidateSteps;
+
+        InjectableStepsFactory stepsFactory = configurableEmbedder
 				.stepsFactory();
 		if (stepsFactory != null) {
 			candidateSteps = stepsFactory.createCandidateSteps();
@@ -180,25 +225,18 @@ public class ThucydidesReportingRunner extends Runner {
 				candidateSteps = embedder.stepsFactory().createCandidateSteps();
 			}
 		}
-	}
-
-	private void initRootDescription() {
-		rootDescription = Description
-				.createSuiteDescription(configurableEmbedder.getClass());
-		rootDescription.getChildren().addAll(storyDescriptions);
+        return candidateSteps;
 	}
 
 	private void addToStoryReporterFormats(JUnitScenarioReporter junitReporter) {
-		StoryReporterBuilder storyReporterBuilder = configuration
-				.storyReporterBuilder();
-		StoryReporterBuilder.ProvidedFormat junitReportFormat = new StoryReporterBuilder.ProvidedFormat(
-				junitReporter);
+		StoryReporterBuilder storyReporterBuilder = getConfiguration().storyReporterBuilder();
+		StoryReporterBuilder.ProvidedFormat junitReportFormat
+                = new StoryReporterBuilder.ProvidedFormat(junitReporter);
 		storyReporterBuilder.withFormats(junitReportFormat);
 	}
 
 	private List<Description> buildDescriptionFromStories() {
-		JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(
-				candidateSteps, configuration);
+		JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
 		StoryRunner storyRunner = new StoryRunner();
 		List<Description> storyDescriptions = new ArrayList<Description>();
 
@@ -213,9 +251,8 @@ public class ThucydidesReportingRunner extends Runner {
 
 	private void addStories(List<Description> storyDescriptions,
 			StoryRunner storyRunner, JUnitDescriptionGenerator gen) {
-		for (String storyPath : storyPaths) {
-			Story parseStory = storyRunner
-					.storyOfPath(configuration, storyPath);
+		for (String storyPath : getStoryPaths()) {
+			Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
 			Description descr = gen.createDescriptionFrom(parseStory);
 			storyDescriptions.add(descr);
 		}

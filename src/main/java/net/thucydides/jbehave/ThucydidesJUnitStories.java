@@ -3,20 +3,16 @@ package net.thucydides.jbehave;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import de.codecentric.jbehave.junit.monitoring.JUnitReportingRunner;
-import net.thucydides.core.Thucydides;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
-import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
@@ -27,9 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.XML;
@@ -53,55 +46,24 @@ public class ThucydidesJUnitStories extends JUnitStories {
     private Configuration configuration;
     private List<Format> formats = Arrays.asList(CONSOLE, HTML, XML);
 
-    public ThucydidesJUnitStories() {
-        this(Injectors.getInjector().getInstance(EnvironmentVariables.class));
+    public ThucydidesJUnitStories() {}
+
+    protected ThucydidesJUnitStories(EnvironmentVariables environmentVariables) {
+        this.environmentVariables = environmentVariables.copy();
     }
 
-    public ThucydidesJUnitStories(EnvironmentVariables environmentVariables) {
-        super();
-        this.environmentVariables = environmentVariables;
-    }
-
-    @Test
-    public void run() throws Throwable {
-        Embedder embedder = configuredEmbedder();
-        embedder.embedderControls().doIgnoreFailureInView(true);
-        embedder.embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
-        embedder.embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
-        if (metaFiltersAreDefined()) {
-            embedder.useMetaFilters(getMetaFilters());
-        }
-        try {
-            embedder.runStoriesAsPaths(storyPaths());
-        } catch (Embedder.RunningStoriesFailed e) {
-            throw new AssertionError("JBehave story failure: " + e.getMessage());
-        } finally {
-            embedder.generateCrossReference();
-        }
-    }
-
-    private boolean metaFiltersAreDefined() {
-        String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
-        return !StringUtils.isEmpty(metaFilters);
-    }
-
-    protected boolean getIgnoreFailuresInStories() {
-        return environmentVariables.getPropertyAsBoolean(IGNORE_FAILURES_IN_STORIES.getName(),false);
-    }
-
-    protected int getStoryTimeoutInSecs() {
-        return environmentVariables.getPropertyAsInteger(STORY_TIMEOUT_IN_SECS.getName(), 300);
-    }
-
-    protected List<String> getMetaFilters() {
-        String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
-        return Lists.newArrayList(Splitter.on(",").trimResults().split(metaFilters));
+    protected ThucydidesJUnitStories(net.thucydides.core.webdriver.Configuration configuration) {
+        this.setSystemConfiguration(configuration);
     }
 
     @Override
     public Configuration configuration() {
         if (configuration == null) {
-            configuration = ThucydidesJBehave.defaultConfiguration(getSystemConfiguration(), formats, this);
+            net.thucydides.core.webdriver.Configuration thucydidesConfiguration = getSystemConfiguration();
+            if (environmentVariables != null) {
+                thucydidesConfiguration = thucydidesConfiguration.withEnvironmentVariables(environmentVariables);
+            }
+            configuration = ThucydidesJBehave.defaultConfiguration(thucydidesConfiguration, formats, this);
         }
         return configuration;
     }
@@ -162,7 +124,6 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     /**
      * Define the folder on the class path where the stories should be found
-     * @param storyFolder
      */
     public void findStoriesIn(String storyFolder) {
         this.storyFolder = storyFolder;
@@ -185,12 +146,16 @@ public class ThucydidesJUnitStories extends JUnitStories {
      * Use this to override the default ThucydidesWebdriverIntegration configuration - for testing purposes only.
      */
     public void setSystemConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
-        this.systemConfiguration = systemConfiguration;
+        this.systemConfiguration = copyOf(systemConfiguration);
+    }
+
+    private net.thucydides.core.webdriver.Configuration copyOf(net.thucydides.core.webdriver.Configuration systemConfiguration) {
+        return systemConfiguration.copy();
     }
 
     public net.thucydides.core.webdriver.Configuration getSystemConfiguration() {
         if (systemConfiguration == null) {
-            systemConfiguration = Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
+            systemConfiguration = copyOf(Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class));
         }
         return systemConfiguration;
     }

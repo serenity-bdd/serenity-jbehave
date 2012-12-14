@@ -19,6 +19,11 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
         findStoriesCalled(storynamesDerivedFromClassName());
     }
 
+    protected ThucydidesJUnitStory(net.thucydides.core.webdriver.Configuration configuration) {
+        super(configuration);
+        findStoriesCalled(storynamesDerivedFromClassName());
+    }
+
     @Override
     public void run() throws Throwable {
         super.run();

@@ -4,7 +4,6 @@ import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import net.thucydides.core.Thucydides;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
 import net.thucydides.core.model.TestTag;
@@ -28,19 +27,17 @@ import org.jbehave.core.model.Scenario;
 import org.jbehave.core.model.Story;
 import org.jbehave.core.model.StoryDuration;
 import org.jbehave.core.reporters.StoryReporter;
-import org.openqa.selenium.WebDriver;
 
 import java.util.List;
 import java.util.Map;
 
 import static ch.lambdaj.Lambda.convert;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
 
 public class ThucydidesReporter implements StoryReporter {
 
     private ThreadLocal<ThucydidesListeners> thucydidesListenersThreadLocal;
     private ThreadLocal<ReportService> reportServiceThreadLocal;
-    private List<BaseStepListener> baseStepListeners;
+    private final List<BaseStepListener> baseStepListeners;
 
     private final Configuration systemConfiguration;
     private static final String OPEN_PARAM_CHAR =  "\uff5f";
@@ -129,7 +126,13 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private String getRequestedDriver(Meta metaData) {
-        return metaData.getProperty("driver");
+        if (StringUtils.isNotEmpty(metaData.getProperty("driver"))) {
+            return metaData.getProperty("driver");
+        }
+        if (systemConfiguration.getDriverType() != null) {
+            return systemConfiguration.getDriverType().toString();
+        }
+        return null;
     }
 
     private List<String> getIssueOrIssuesPropertyValues(Meta metaData) {
@@ -153,7 +156,6 @@ public class ThucydidesReporter implements StoryReporter {
 
     private Converter<String, TestTag> toTags() {
         return new Converter<String, TestTag>() {
-            @Override
             public TestTag convert(String tag) {
                 List<String> tagParts = Lists.newArrayList(Splitter.on(":").trimResults().split(tag));
                 return TestTag.withName(tagParts.get(1)).andType(tagParts.get(0));
@@ -163,7 +165,6 @@ public class ThucydidesReporter implements StoryReporter {
 
     private Converter<String, TestTag> toFeatureTags() {
         return new Converter<String, TestTag>() {
-            @Override
             public TestTag convert(String featureName) {
                 return TestTag.withName(featureName).andType("feature");
             }
@@ -172,7 +173,6 @@ public class ThucydidesReporter implements StoryReporter {
 
     private Converter<String, TestTag> toEpicTags() {
         return new Converter<String, TestTag>() {
-            @Override
             public TestTag convert(String featureName) {
                 return TestTag.withName(featureName).andType("epic");
             }

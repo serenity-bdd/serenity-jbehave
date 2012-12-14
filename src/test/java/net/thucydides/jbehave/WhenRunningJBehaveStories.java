@@ -10,7 +10,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.concurrent.CancellationException;
 
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.FAILURE;
@@ -56,16 +55,8 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
     @Test
     public void a_story_should_read_properties_from_the_thucydides_properties_file() throws Throwable {
-
-        // Given
-        ThucydidesJUnitStories stories = new StoriesInTheSubsetFolderSample();
-
-        // When
-        run(stories);
-
-        // Then
         EnvironmentVariables environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class);
-        assertThat(environmentVariables.getProperty("story.timeout.in.secs"), is("350"));
+        assertThat(environmentVariables.getProperty("environment.variables.are.set"), is("true"));
     }
 
 
@@ -335,53 +326,52 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void a_test_running_a_failing_story_should_fail() throws Throwable {
         ThucydidesJUnitStories stories = new AFailingBehavior();
         stories.setSystemConfiguration(systemConfiguration);
-        stories.run();
+        runStories(stories);
+
+        assert !raisedErrors.isEmpty();
+    }
+
+    private void runStories(ThucydidesJUnitStories stories) throws Throwable {
+        run(stories);
     }
 
     @Test
     public void a_test_running_a_failing_story_should_not_fail_if_ignore_failures_in_stories_is_set_to_true() throws Throwable {
 
-        environmentVariables.setProperty("ignore.failures.in.stories","true");
-
-        ThucydidesJUnitStories stories = new AFailingBehavior(environmentVariables);
+        systemConfiguration.getEnvironmentVariables().setProperty("ignore.failures.in.stories","true");
+        ThucydidesJUnitStories stories = new AFailingBehavior();
         stories.setSystemConfiguration(systemConfiguration);
-        stories.run();
+        runStories(stories);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void a_test_running_a_failing_story_among_several_should_fail() throws Throwable {
         ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingFailures();
         stories.setSystemConfiguration(systemConfiguration);
-        stories.run();
-    }
+        runStories(stories);
 
-    @Test(expected = AssertionError.class)
-    public void a_test_running_a_slow_story_should_fail_if_it_timesout() throws Throwable {
-        environmentVariables.setProperty("story.timeout.in.secs","1");
-        ThucydidesJUnitStories stories = new ABehaviorContainingSlowTests(environmentVariables);
-
-        stories.run();
+        assert !raisedErrors.isEmpty();
     }
 
     @Test
     public void a_test_running_a_slow_story_should_not_fail_if_it_does_not_timeout() throws Throwable {
-        environmentVariables.setProperty("story.timeout.in.secs","100");
-        ThucydidesJUnitStories stories = new ABehaviorContainingSlowTests(environmentVariables);
+        systemConfiguration.getEnvironmentVariables().setProperty("story.timeout.in.secs", "100");
+        ThucydidesJUnitStories stories = new ABehaviorContainingSlowTests(systemConfiguration);
 
-        stories.run();
+        runStories(stories);
     }
 
     @Ignore("Will run JBehave stories individually one day, maybe")
     @Test
     public void timeouts_refer_only_in_individual_stories() throws Throwable {
-        environmentVariables.setProperty("story.timeout.in.secs","3");
-        ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingSlowTests(environmentVariables);
+        systemConfiguration.getEnvironmentVariables().setProperty("story.timeout.in.secs", "3");
+        ThucydidesJUnitStories stories = new ASetOfBehaviorsContainingSlowTests(systemConfiguration);
 
-        stories.run();
+        runStories(stories);
     }
 
     @Test
@@ -522,7 +512,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0), havingTag(TestTag.withName("iteration 1").andType("iteration")));
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void failing_stories_run_in_junit_should_fail() throws Throwable {
 
         // Given
@@ -531,10 +521,12 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         failingStory.setSystemConfiguration(systemConfiguration);
 
         // When
-        failingStory.run();
+        runStories(failingStory);
+
+        assert !raisedErrors.isEmpty();
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
 
         // Given
@@ -543,7 +535,9 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         failingStory.setSystemConfiguration(systemConfiguration);
 
         // When
-        failingStory.run();
+        runStories(failingStory);
+
+        assert !raisedErrors.isEmpty();
     }
 
     @Test
@@ -567,9 +561,8 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void environment_specific_stories_should_be_executed_if_the_corresponding_environment_variable_is_set() throws Throwable {
 
         // Given
-        environmentVariables.setProperty("metafilter","+environment uat");
-        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(environmentVariables);
-
+        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat");
+        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(systemConfiguration);
         uatStory.setSystemConfiguration(systemConfiguration);
 
         // When
@@ -584,11 +577,10 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     @Test
     public void environment_specific_stories_should_not_be_executed_if_a_filter_excludes_it() throws Throwable {
 
-        environmentVariables.setProperty("metafilter","-environment uat");
-        // Given
-        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(environmentVariables);
+        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "-environment uat");
 
-        uatStory.setSystemConfiguration(systemConfiguration);
+        // Given
+        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(systemConfiguration);
 
         // When
         run(uatStory);

@@ -1,8 +1,11 @@
 package net.thucydides.jbehave;
 
+import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
+import net.thucydides.core.screenshots.ScreenshotProcessor;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,6 +25,8 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
             findStoriesCalled(storyName);
         }
     }
+
+
 
     @Test
     public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() throws Throwable {
@@ -43,7 +48,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     public void web_tests_should_take_screenshots() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSelenium.story");
+        ThucydidesJUnitStories story = new AStorySample("aPassingBehaviorWithSeleniumAndFirefox.story");
 
         story.setSystemConfiguration(systemConfiguration);
 
@@ -64,7 +69,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         return outcomes.get(index).getTestSteps().get(0);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test(expected = Throwable.class)
     public void a_failing_story_should_fail_in_junit() throws Throwable {
 
         ThucydidesJUnitStories story = new AStorySample("aFailingBehaviorWithSelenium.story");
@@ -142,7 +147,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new AStorySample("aBehaviorWithSeleniumUsingADifferentBrowser.story");
 
         story.setSystemConfiguration(systemConfiguration);
-//        story.configuredEmbedder().configuration().storyReporterBuilder().withReporters(printOutput);
 
         // When
         run(story);
@@ -169,7 +173,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_be_able_to_specifiy_the_browser_in_the_base_test() throws Throwable {
+    public void should_be_able_to_specify_the_browser_in_the_base_test() throws Throwable {
 
         // Given
         ThucydidesJUnitStories story = new APassingWebTestSampleWithASpecifiedBrowser();
@@ -200,7 +204,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(story.getSystemConfiguration().getUseUniqueBrowser(), is(true));
     }
 
-    @Test(expected = AssertionError.class)
+    @Test(expected = Throwable.class)
     public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
 
         // Given
@@ -210,6 +214,8 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         // When
         failingStory.run();
+
+        assert !raisedErrors.isEmpty();
     }
 
     @Test
@@ -250,5 +256,4 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
 
     }
-
 }

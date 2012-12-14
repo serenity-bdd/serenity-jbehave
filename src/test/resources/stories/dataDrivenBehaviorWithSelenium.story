@@ -1,3 +1,6 @@
+Meta:
+@driver htmlunit
+
 Scenario: Data-driven testing from an external CSV file
 
 Given the names in data/names-data.csv
