@@ -4,8 +4,10 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
+import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.jbehave.ThucydidesJUnitStories;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
@@ -36,6 +38,7 @@ import java.util.List;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
+import static net.thucydides.core.ThucydidesSystemProperty.UNIQUE_BROWSER;
 
 public class ThucydidesReportingRunner extends Runner {
 	private List<Description> storyDescriptions;
@@ -51,8 +54,7 @@ public class ThucydidesReportingRunner extends Runner {
     private final EnvironmentVariables environmentVariables;
 
     @SuppressWarnings("unchecked")
-    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass)
-            throws Throwable {
+    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
         this(testClass, (ConfigurableEmbedder) testClass.newInstance());
     }
 
@@ -137,24 +139,17 @@ public class ThucydidesReportingRunner extends Runner {
 		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 	
 		addToStoryReporterFormats(junitReporter);
-	
+
 		try {
             getConfiguredEmbedder().runStoriesAsPaths(getStoryPaths());
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		} finally {
+            if (usingUniqueBrowser()) {
+                ThucydidesWebDriverSupport.closeAllDrivers();
+            }
             getConfiguredEmbedder().generateCrossReference();
 		}
-	}
-
-	public static EmbedderControls recommandedControls(Embedder embedder) {
-		return embedder.embedderControls()
-		// don't throw an exception on generating reports for failing stories
-				.doIgnoreFailureInView(true)
-				// don't throw an exception when a story failed
-				.doIgnoreFailureInStories(true)
-				// .doVerboseFailures(true)
-				.useThreads(1);
 	}
 
     List<CandidateSteps> getCandidateSteps() {
@@ -282,5 +277,9 @@ public class ThucydidesReportingRunner extends Runner {
     protected List<String> getMetaFilters() {
         String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
         return Lists.newArrayList(Splitter.on(",").trimResults().split(metaFilters));
+    }
+
+    public boolean usingUniqueBrowser() {
+        return environmentVariables.getPropertyAsBoolean(UNIQUE_BROWSER, false);
     }
 }

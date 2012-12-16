@@ -58,13 +58,11 @@ public class ThucydidesReporter implements StoryReporter {
 
     protected ThucydidesListeners getThucydidesListeners() {
         if (thucydidesListenersThreadLocal.get() == null) {
-            System.out.println("Initialize listeners");
             ThucydidesListeners listeners = ThucydidesReports.setupListeners(systemConfiguration);
             thucydidesListenersThreadLocal.set(listeners);
             synchronized(baseStepListeners) {
                 baseStepListeners.add(listeners.getBaseStepListener());
             }
-            System.out.println("Initialize listeners done");
         }
         return thucydidesListenersThreadLocal.get();
     }
@@ -107,6 +105,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private void configureDriver(Story story) {
+        StepEventBus.getEventBus().setUniqueSession(systemConfiguration.getUseUniqueBrowser());
         String requestedDriver = getRequestedDriver(story.getMeta());
         if (StringUtils.isNotEmpty(requestedDriver)) {
             ThucydidesWebDriverSupport.initialize(requestedDriver);
@@ -249,11 +248,17 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void afterStory(boolean given) {
         if (isAfterStory(currentStory)) {
-            ThucydidesWebDriverSupport.closeAllDrivers();
+            closeBrowsersForThisStory();
             generateReports();
         } else if (!isFixture(currentStory)) {
             StepEventBus.getEventBus().testSuiteFinished();
             clearListeners();
+        }
+    }
+
+    private void closeBrowsersForThisStory() {
+        if (!systemConfiguration.getUseUniqueBrowser()) {
+            ThucydidesWebDriverSupport.closeAllDrivers();
         }
     }
 
@@ -262,11 +267,9 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private synchronized void generateReports() {
-        System.out.println("generateReports");
         for(BaseStepListener listener : baseStepListeners) {
             getReportService().generateReportsFor(listener.getTestOutcomes());
         }
-        System.out.println("generateReports done");
     }
 
     public void narrative(Narrative narrative) {}
@@ -285,7 +288,6 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterScenario() {
-        System.out.println("After scenario");
         StepEventBus.getEventBus().testFinished();
     }
 

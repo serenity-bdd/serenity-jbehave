@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
@@ -164,6 +165,10 @@ public class ThucydidesJUnitStories extends JUnitStories {
         getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.DRIVER.getPropertyName(), driver);
     }
 
+    protected void useUniqueSession() {
+        getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.UNIQUE_BROWSER.getPropertyName(), "true");
+    }
+
     public ThucydidesConfigurationBuilder runThucydides() {
         return new ThucydidesConfigurationBuilder(this);
     }
@@ -182,6 +187,11 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
         public ThucydidesPropertySetter withProperty(ThucydidesSystemProperty property) {
             return new ThucydidesPropertySetter(thucydidesJUnitStories, property);
+        }
+
+        public ThucydidesConfigurationBuilder inASingleSession() {
+            useUniqueSession();
+            return this;
         }
     }
 
