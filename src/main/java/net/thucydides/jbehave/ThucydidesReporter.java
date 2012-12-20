@@ -6,6 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
+import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.TestTag;
 import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
@@ -74,7 +75,7 @@ public class ThucydidesReporter implements StoryReporter {
         return reportServiceThreadLocal.get();
     }
 
-    public void storyNotAllowed(Story story, String s) {
+    public void storyNotAllowed(Story story, String filter) {
     }
 
     public void storyCancelled(Story story, StoryDuration storyDuration) {
@@ -82,7 +83,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     private Story currentStory;
 
-    public void beforeStory(Story story, boolean b) {
+    public void beforeStory(Story story, boolean givenStory) {
         currentStory = story;
         if (!isFixture(story)) {
 
@@ -298,12 +299,22 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     int exampleCount = 0;
-    public void beforeExamples(List<String> strings, ExamplesTable examplesTable) {
+    public void beforeExamples(List<String> steps, ExamplesTable table) {
         exampleCount = 0;
+        StepEventBus.getEventBus().useExamplesFrom(thucydidesTableFrom(table));
     }
 
-    public void example(Map<String, String> stringStringMap) {
+    private DataTable thucydidesTableFrom(ExamplesTable table) {
+        return DataTable.withHeaders(table.getHeaders()).andMappedRows(table.getRows()).build();
+
+    }
+    public void example(Map<String, String> tableRow) {
+        System.out.println("Example: " + tableRow);
         StepEventBus.getEventBus().clearStepFailures();
+        restartPeriodically();
+    }
+
+    private void restartPeriodically() {
         if (systemConfiguration.getRestartFrequency() > 0) {
             exampleCount++;
             if (exampleCount % systemConfiguration.getRestartFrequency() == 0) {
