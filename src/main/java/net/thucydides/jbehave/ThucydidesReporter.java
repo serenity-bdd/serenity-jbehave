@@ -3,6 +3,7 @@ package net.thucydides.jbehave;
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
@@ -298,9 +299,11 @@ public class ThucydidesReporter implements StoryReporter {
     public void givenStories(List<String> strings) {
     }
 
+    List<Map<String,String>> exampleData;
     int exampleCount = 0;
     public void beforeExamples(List<String> steps, ExamplesTable table) {
         exampleCount = 0;
+        exampleData = ImmutableList.copyOf(table.getRows());
         StepEventBus.getEventBus().useExamplesFrom(thucydidesTableFrom(table));
     }
 
@@ -309,14 +312,30 @@ public class ThucydidesReporter implements StoryReporter {
 
     }
     public void example(Map<String, String> tableRow) {
-        System.out.println("Example: " + tableRow);
         StepEventBus.getEventBus().clearStepFailures();
+        if (executingExamples()) {
+            finishExample();
+        }
         restartPeriodically();
+        startExample();
+    }
+
+    private void startExample() {
+        Map<String,String> data = exampleData.get(exampleCount - 1);
+        StepEventBus.getEventBus().exampleStarted(data);
+    }
+
+    private void finishExample() {
+        StepEventBus.getEventBus().exampleFinished();
+    }
+
+    private boolean executingExamples() {
+        return (exampleCount > 0);
     }
 
     private void restartPeriodically() {
+        exampleCount++;
         if (systemConfiguration.getRestartFrequency() > 0) {
-            exampleCount++;
             if (exampleCount % systemConfiguration.getRestartFrequency() == 0) {
                 WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
             }
@@ -324,6 +343,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterExamples() {
+        finishExample();
     }
 
     public void beforeStep(String stepTitle) {

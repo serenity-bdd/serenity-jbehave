@@ -66,7 +66,11 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     private TestStep givenStepIn(List<TestOutcome> outcomes, int index) {
-        return outcomes.get(index).getTestSteps().get(0);
+        TestStep givenStep = outcomes.get(index).getTestSteps().get(0);
+        if (!givenStep.getDescription().startsWith("Given")) {
+            givenStep = givenStep.getChildren().get(0);
+        }
+        return givenStep;
     }
 
     @Test(expected = Throwable.class)

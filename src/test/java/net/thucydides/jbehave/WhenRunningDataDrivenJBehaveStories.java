@@ -1,5 +1,6 @@
 package net.thucydides.jbehave;
 
+import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
@@ -28,7 +29,8 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(2));
-        assertThat(outcomes.get(0).getTestSteps().size(), is(9));
+        assertThat(outcomes.get(0).getTestSteps().size(), is(3));
+        assertThat(outcomes.get(0).getTestSteps().get(0).getChildren().size(), is(3));
     }
 
     @Test
@@ -46,8 +48,8 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         List<TestStep> steps = outcomes.get(0).getTestSteps();
         assertThat(steps.get(0).getDescription(), containsString("10"));
-        assertThat(steps.get(3).getDescription(), containsString("11"));
-        assertThat(steps.get(6).getDescription(), containsString("12"));
+        assertThat(steps.get(1).getDescription(), containsString("11"));
+        assertThat(steps.get(2).getDescription(), containsString("12"));
     }
 
     @Test
@@ -98,13 +100,33 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
 
         List<TestStep> steps = outcomes.get(0).getTestSteps();
+        assertThat(steps.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(steps.get(1).getResult(), is(TestResult.FAILURE));
         assertThat(steps.get(2).getResult(), is(TestResult.SUCCESS));
-        assertThat(steps.get(6).getResult(), is(TestResult.FAILURE));
-        assertThat(steps.get(10).getResult(), is(TestResult.SUCCESS));
 
         assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
     }
 
+    @Test
+    public void a_failing_step_in_a_data_driven_test_should_be_recorded_in_the_examples_table() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AStorySample("aFailingDataDrivenBehavior.story");
+
+        story.setSystemConfiguration(systemConfiguration);
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+
+
+        DataTable table = outcomes.get(0).getDataTable();
+        assertThat(table.getRows().get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(table.getRows().get(1).getResult(), is(TestResult.FAILURE));
+        assertThat(table.getRows().get(2).getResult(), is(TestResult.SUCCESS));
+    }
 
 
 }
