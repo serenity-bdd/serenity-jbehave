@@ -4,7 +4,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
-import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
@@ -13,7 +12,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.Embedder;
-import org.jbehave.core.embedder.EmbedderControls;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
 import org.jbehave.core.junit.JUnitStories;
@@ -35,17 +33,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static net.thucydides.core.ThucydidesSystemProperty.UNIQUE_BROWSER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
-import static net.thucydides.core.ThucydidesSystemProperty.UNIQUE_BROWSER;
 
 public class ThucydidesReportingRunner extends Runner {
 	private List<Description> storyDescriptions;
 	private Embedder configuredEmbedder;
 	private List<String> storyPaths;
 	private Configuration configuration;
-	private int numberOfTestCases;
 	private Description description;
 	List<CandidateSteps> candidateSteps;
 
@@ -55,7 +52,7 @@ public class ThucydidesReportingRunner extends Runner {
 
     @SuppressWarnings("unchecked")
     public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
-        this(testClass, (ConfigurableEmbedder) testClass.newInstance());
+        this(testClass, testClass.newInstance());
     }
 
     public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
@@ -96,7 +93,7 @@ public class ThucydidesReportingRunner extends Runner {
                     getStoryPathsFromJUnitStory();
                 }
             } catch(Throwable e) {
-                return (List<String>) Collections.EMPTY_LIST;
+                return Collections.EMPTY_LIST;
             }
         }
         return storyPaths;
@@ -119,10 +116,15 @@ public class ThucydidesReportingRunner extends Runner {
 		return description;
 	}
 
+    private int testCount = 0;
+
 	@Override
 	public int testCount() {
-		return numberOfTestCases;
-	}
+        if (testCount == 0) {
+            testCount = countStories();
+        }
+        return testCount;
+    }
 
 	@Override
 	public void run(RunNotifier notifier) {
@@ -134,7 +136,7 @@ public class ThucydidesReportingRunner extends Runner {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
 
-        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, numberOfTestCases, getDescription());
+        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription());
 		// tell the reporter how to handle pending steps
 		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 	
@@ -239,12 +241,19 @@ public class ThucydidesReportingRunner extends Runner {
 		addStories(storyDescriptions, storyRunner, descriptionGenerator);
 		addSuite(storyDescriptions, "AfterStories");
 
-		numberOfTestCases += descriptionGenerator.getTestCases();
-
 		return storyDescriptions;
 	}
 
-	private void addStories(List<Description> storyDescriptions,
+    private int countStories() {
+        JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
+        return descriptionGenerator.getTestCases() + beforeAndAfterStorySteps();
+    }
+
+    private int beforeAndAfterStorySteps() {
+        return 2;
+    }
+
+    private void addStories(List<Description> storyDescriptions,
 			StoryRunner storyRunner, JUnitDescriptionGenerator gen) {
 		for (String storyPath : getStoryPaths()) {
 			Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
@@ -256,7 +265,6 @@ public class ThucydidesReportingRunner extends Runner {
 	private void addSuite(List<Description> storyDescriptions, String name) {
 		storyDescriptions.add(Description.createTestDescription(Object.class,
 				name));
-		numberOfTestCases++;
 	}
 
     //////////////////
