@@ -147,7 +147,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
      * Use this to override the default ThucydidesWebdriverIntegration configuration - for testing purposes only.
      */
     public void setSystemConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
-        this.systemConfiguration = copyOf(systemConfiguration);
+        this.systemConfiguration = systemConfiguration;// copyOf(systemConfiguration);
     }
 
     private net.thucydides.core.webdriver.Configuration copyOf(net.thucydides.core.webdriver.Configuration systemConfiguration) {
@@ -156,7 +156,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     public net.thucydides.core.webdriver.Configuration getSystemConfiguration() {
         if (systemConfiguration == null) {
-            systemConfiguration = copyOf(Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class));
+            systemConfiguration = Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
         }
         return systemConfiguration;
     }
