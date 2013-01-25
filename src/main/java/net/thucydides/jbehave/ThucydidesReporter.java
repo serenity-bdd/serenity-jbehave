@@ -311,6 +311,7 @@ public class ThucydidesReporter implements StoryReporter {
         return DataTable.withHeaders(table.getHeaders()).andMappedRows(table.getRows()).build();
 
     }
+
     public void example(Map<String, String> tableRow) {
         StepEventBus.getEventBus().clearStepFailures();
         if (executingExamples()) {
