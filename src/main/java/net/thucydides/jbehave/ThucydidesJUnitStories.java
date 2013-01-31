@@ -189,6 +189,10 @@ public class ThucydidesJUnitStories extends JUnitStories {
             return new ThucydidesPropertySetter(thucydidesJUnitStories, property);
         }
 
+        public ThucydidesPropertySetter withProperty(String property) {
+            return new ThucydidesPropertySetter(thucydidesJUnitStories, property);
+        }
+
         public ThucydidesConfigurationBuilder inASingleSession() {
             useUniqueSession();
             return this;
@@ -197,25 +201,31 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     public class ThucydidesPropertySetter {
         private final ThucydidesJUnitStories thucydidesJUnitStories;
-        private final ThucydidesSystemProperty propertyToSet;
+        private final String propertyToSet;
 
         public ThucydidesPropertySetter(ThucydidesJUnitStories thucydidesJUnitStories,
                                         ThucydidesSystemProperty propertyToSet) {
+            this.thucydidesJUnitStories = thucydidesJUnitStories;
+            this.propertyToSet = propertyToSet.getPropertyName();
+        }
+
+        public ThucydidesPropertySetter(ThucydidesJUnitStories thucydidesJUnitStories,
+                                        String propertyToSet) {
             this.thucydidesJUnitStories = thucydidesJUnitStories;
             this.propertyToSet = propertyToSet;
         }
 
         public void setTo(boolean value) {
-            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet.getPropertyName(),
+            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet,
                     Boolean.toString(value));
         }
 
         public void setTo(String value) {
-            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet.getPropertyName(), value);
+            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet, value);
         }
 
         public void setTo(Integer value) {
-            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet.getPropertyName(),
+            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet,
                     Integer.toString(value));
         }
     }

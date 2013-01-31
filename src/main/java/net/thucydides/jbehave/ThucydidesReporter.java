@@ -280,8 +280,18 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void beforeScenario(String scenarioTitle) {
+        if (shouldRestartDriverBeforeEachScenario()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+        }
+        StepEventBus.getEventBus().testStarted(scenarioTitle);
         StepEventBus.getEventBus().testStarted(scenarioTitle);
     }
+
+    private boolean shouldRestartDriverBeforeEachScenario() {
+        return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
+               ThucydidesJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
+    }
+
 
     public void scenarioMeta(Meta meta) {
         registerIssues(meta);
@@ -313,6 +323,10 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void example(Map<String, String> tableRow) {
+        if (shouldRestartDriverBeforeEachScenario()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+        }
+
         StepEventBus.getEventBus().clearStepFailures();
         if (executingExamples()) {
             finishExample();

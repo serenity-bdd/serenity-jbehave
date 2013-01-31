@@ -23,7 +23,12 @@ public enum ThucydidesJBehaveSystemProperties {
      * execute. See http://jbehave.org/reference/stable/meta-filtering.html for details
      * on how the metafilter syntax works.
      */
-    METAFILTER;
+    METAFILTER,
+
+    /**
+     * Force Thucydides to restart the browser before each scenario.
+     */
+    RESTART_BROWSER_EACH_SCENARIO;
 
     public String getName() {return toString().toLowerCase().replaceAll("_",".");}
 
