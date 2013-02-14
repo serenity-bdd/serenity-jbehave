@@ -1,3 +1,4 @@
+
 Scenario: A scenario that works
 
 Given I have an implemented JBehave scenario

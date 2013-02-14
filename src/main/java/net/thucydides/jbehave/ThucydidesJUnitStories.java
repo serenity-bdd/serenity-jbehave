@@ -1,12 +1,12 @@
 package net.thucydides.jbehave;
 
+import ch.lambdaj.Lambda;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Set;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.XML;
-
 /**
  * A JUnit-runnable test case designed to run a set of ThucydidesWebdriverIntegration-enabled JBehave stories in a given package.
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
@@ -55,6 +53,13 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     protected ThucydidesJUnitStories(net.thucydides.core.webdriver.Configuration configuration) {
         this.setSystemConfiguration(configuration);
+    }
+
+    protected EnvironmentVariables getEnvironmentVariables() {
+        if (environmentVariables == null) {
+            environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class).copy();
+        }
+        return environmentVariables;
     }
 
     @Override
@@ -86,20 +91,26 @@ public class ThucydidesJUnitStories extends JUnitStories {
     public List<String> storyPaths() {
         Set<String> storyPaths = Sets.newHashSet();
 
-        Iterable<String> pathExpressions = getStoryPathExpressions();
+        List<String> pathExpressions = getStoryPathExpressions();
         StoryFinder storyFinder = new StoryFinder();
         for(String pathExpression : pathExpressions) {
-            List<URL> classpathRoots = findAllClasspathRoots();
-            for(URL classpathRootUrl : classpathRoots) {
+            if (absolutePath(pathExpression)) {
+                storyPaths.add(pathExpression);
+            }
+            for(URL classpathRootUrl : allClasspathRoots()) {
                 storyPaths.addAll(storyFinder.findPaths(classpathRootUrl, pathExpression, ""));
             }
         }
         return Lists.newArrayList(storyPaths);
     }
 
-    private ArrayList<URL> findAllClasspathRoots() {
+    private boolean absolutePath(String pathExpression) {
+        return (!pathExpression.contains("*"));
+    }
+
+    private List<URL> allClasspathRoots() {
         try {
-            return Collections.list(Thread.currentThread().getContextClassLoader().getResources("."));
+            return Collections.list(getClassLoader().getResources("."));
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not load the classpath roots when looking for story files",e);
         }
@@ -112,8 +123,8 @@ public class ThucydidesJUnitStories extends JUnitStories {
         return this.getClass().getPackage().getName();
     }
 
-    protected Iterable<String> getStoryPathExpressions() {
-        return Splitter.on(';').trimResults().split(getStoryPath());
+    protected List<String> getStoryPathExpressions() {
+        return Lists.newArrayList(Splitter.on(';').trimResults().omitEmptyStrings().split(getStoryPath()));
     }
 
         /**
@@ -134,24 +145,22 @@ public class ThucydidesJUnitStories extends JUnitStories {
         this.formats = Arrays.asList(formats);
     }
 
-    public void findStoriesCalled(String storyName) {
-        if (storyName.startsWith("**/")) {
-            storyNamePattern = storyName;
-        } else {
-            storyNamePattern = "**/" + storyName;
-        }
+    public void findStoriesCalled(String storyNames) {
+        Set<String>  storyPathElements = new StoryPathFinder(getEnvironmentVariables(), storyNames).findAllElements();
+        storyNamePattern = Lambda.join(storyPathElements,";");
 
-    }
+   }
+
 
     /**
      * Use this to override the default ThucydidesWebdriverIntegration configuration - for testing purposes only.
      */
-    public void setSystemConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
-        this.systemConfiguration = systemConfiguration;// copyOf(systemConfiguration);
+    protected void setSystemConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
+        this.systemConfiguration = systemConfiguration;
     }
 
-    private net.thucydides.core.webdriver.Configuration copyOf(net.thucydides.core.webdriver.Configuration systemConfiguration) {
-        return systemConfiguration.copy();
+    protected void setEnvironmentVariables(EnvironmentVariables environmentVariables) {
+        this.environmentVariables = environmentVariables;
     }
 
     public net.thucydides.core.webdriver.Configuration getSystemConfiguration() {
@@ -229,4 +238,5 @@ public class ThucydidesJUnitStories extends JUnitStories {
                     Integer.toString(value));
         }
     }
+
 }

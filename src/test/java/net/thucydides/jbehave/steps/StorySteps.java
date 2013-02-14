@@ -1,17 +1,27 @@
 package net.thucydides.jbehave.steps;
 
+import net.thucydides.core.annotations.Steps;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Pending;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
+import java.util.Date;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class StorySteps {
+
+    @Steps
+    SomeThucydidesSteps steps;
+
+
+
     @Given("I have an implemented JBehave scenario")
     public void givenIHaveAnImplementedJBehaveScenario() {
+        assert steps != null;
     }
 
     @Given("I have a badly implemented JBehave scenario")
@@ -76,6 +86,24 @@ public class StorySteps {
 
     @Then("the test should time out")
     public void thenTheTestShouldTimeOut() {
+    }
+
+
+    @Given("a date of $someDate")
+    @Pending
+    public void givenADateOf(Date someDate) {
+    }
+
+    @When("4 days pass")
+    public void when4DaysPass() {
+    }
+
+    @Then("the date is $someDate")
+    public void thenTheDateIs(Date someDate) {
+    }
+
+    @Then("some otherwise ambiguous two string step, with one and two as strings")
+    public void thenSomeOtherwiseAmbiguousTwoStringStepWithOneAndTwoAsStrings() {
     }
 }
 

@@ -80,8 +80,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void stories_with_a_matching_name_can_be_run() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = new AStorySample("*PassingBehavior.story");
-        stories.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories stories = newStory("*PassingBehavior.story");
 
         // When
         run(stories);
@@ -95,9 +94,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void pending_stories_should_be_reported_as_pending() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories pendingStory = new AStorySample("aPendingBehavior.story");
-
-        pendingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories pendingStory = newStory("aPendingBehavior.story");
 
         // When
         run(pendingStory);
@@ -112,9 +109,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void pending_stories_should_report_the_given_when_then_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories pendingStory = new AStorySample("aPendingBehavior.story");
-
-        pendingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories pendingStory = newStory("aPendingBehavior.story");
 
         // When
         run(pendingStory);
@@ -129,9 +124,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void implemented_pending_stories_should_be_reported_as_pending() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories pendingStory = new AStorySample("aPendingImplementedBehavior.story");
-
-        pendingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories pendingStory = newStory("aPendingImplementedBehavior.story");
 
         // When
         run(pendingStory);
@@ -146,9 +139,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void passing_stories_should_be_reported_as_passing() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories passingStory = new AStorySample("aPassingBehavior.story");
-
-        passingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories passingStory = newStory("aPassingBehavior.story");
 
         // When
         run(passingStory);
@@ -163,9 +154,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void state_should_be_conserved_between_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories passingStoryWithState = new AStorySample("aPassingBehaviorWithState.story");
-
-        passingStoryWithState.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories passingStoryWithState = newStory("aPassingBehaviorWithState.story");
 
         // When
         run(passingStoryWithState);
@@ -180,9 +169,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void state_should_not_be_conserved_between_stories() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories passingStoryWithState = new AStorySample("*PassingBehaviorWithState.story");
-
-        passingStoryWithState.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories passingStoryWithState = newStory("*PassingBehaviorWithState.story");
 
         // When
         run(passingStoryWithState);
@@ -198,9 +185,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_passing_story_with_steps_should_record_the_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories passingStory = new AStorySample("aPassingBehaviorWithSteps.story");
-
-        passingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories passingStory = newStory("aPassingBehaviorWithSteps.story");
 
         // When
         run(passingStory);
@@ -216,9 +201,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void the_given_when_then_clauses_should_count_as_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories passingStory = new AStorySample("aPassingBehaviorWithSteps.story");
-
-        passingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories passingStory = newStory("aPassingBehaviorWithSteps.story");
 
         // When
         run(passingStory);
@@ -237,9 +220,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void failing_stories_should_be_reported_as_failing() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehavior.story");
-
-        failingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories failingStory = newStory("aFailingBehavior.story");
 
         // When
         run(failingStory);
@@ -254,9 +235,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void steps_after_a_failing_step_should_be_skipped() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aComplexFailingBehavior.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aComplexFailingBehavior.story");
 
         // When
         run(story);
@@ -273,9 +252,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_with_a_pending_step_should_be_pending() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithAPendingStep.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithAPendingStep.story");
 
         // When
         run(story);
@@ -295,9 +272,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_be_associated_with_a_corresponding_issue_if_specified() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithAnIssue.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithAnIssue.story");
 
         // When
         run(story);
@@ -313,9 +288,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_can_be_associated_with_several_issues() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleIssues.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithMultipleIssues.story");
 
         // When
         run(story);
@@ -378,9 +351,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_story_can_be_associated_with_several_issues() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithOneStoryAndMultipleIssues.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithOneStoryAndMultipleIssues.story");
 
         // When
         run(story);
@@ -394,9 +365,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void all_the_scenarios_in_a_story_should_be_associated_with_a_corresponding_issue_if_specified_at_the_story_level() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithIssues.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithIssues.story");
 
         // When
         run(story);
@@ -413,9 +382,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_have_a_story_tag_matching_the_jbehave_story() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithAnIssue.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithAnIssue.story");
 
         // When
         run(story);
@@ -429,9 +396,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_have_features_defined_by_the_feature_meta_field() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithFeatures.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithFeatures.story");
 
         // When
         run(story);
@@ -445,9 +410,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_have_features_defined_at_the_story_levelby_the_feature_meta_field() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithFeatures.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithFeatures.story");
 
         // When
         run(story);
@@ -463,9 +426,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_have_multiple_features_defined_at_the_story_level_by_the_feature_meta_field() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithMultipleFeatures.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithMultipleFeatures.story");
 
         // When
         run(story);
@@ -482,9 +443,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_have_tags_defined_by_the_tag_meta_field() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithTags.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithTags.story");
 
         // When
         run(story);
@@ -498,9 +457,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AStorySample("aBehaviorWithTags.story");
-
-        story.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories story = newStory("aBehaviorWithTags.story");
 
         // When
         run(story);
@@ -516,9 +473,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void failing_stories_run_in_junit_should_fail() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories failingStory = new AStorySample("aFailingBehavior.story");
-
-        failingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories failingStory = newStory("aFailingBehavior.story");
 
         // When
         runStories(failingStory);
@@ -530,9 +485,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories failingStory = new AStorySample("aBehaviorThrowingAnException.story");
-
-        failingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories failingStory = newStory("aBehaviorThrowingAnException.story");
 
         // When
         runStories(failingStory);
@@ -544,9 +497,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     public void stories_with_errors_should_be_reported_as_failing() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories failingStory = new AStorySample("aBehaviorThrowingAnException.story");
-
-        failingStory.setSystemConfiguration(systemConfiguration);
+        ThucydidesJUnitStories failingStory = newStory("aBehaviorThrowingAnException.story");
 
         // When
         run(failingStory);
@@ -564,6 +515,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat");
         ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(systemConfiguration);
         uatStory.setSystemConfiguration(systemConfiguration);
+        uatStory.setEnvironmentVariables(environmentVariables);
 
         // When
         run(uatStory);
@@ -588,4 +540,81 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(0));
-    }}
+    }
+
+    @Test
+    public void should_find_stories_in_a_jar_file() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("a_top_level_story.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+    }
+
+    @Test
+    public void should_find_stories_in_a_subdirectory_in_the_jar_file() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("a_story_in_the_stories_directory.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+    }
+
+    @Test
+    public void should_find_stories_in_a_declared_subdirectory_in_the_jar_file() throws Throwable {
+
+        // Given
+        environmentVariables.setProperty("jbehave.story.packages","another;another/package");
+        ThucydidesJUnitStories story = newStory("a_story_in_another_package.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+
+    @Test
+    public void spring_autowiring_in_jbehave_steps_should_be_supported() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aBehaviorWithSpringBeans.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void should_instantiate_page_objects_in_jbehave_steps() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aBehaviorWithSeleniumPageObjects.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+}

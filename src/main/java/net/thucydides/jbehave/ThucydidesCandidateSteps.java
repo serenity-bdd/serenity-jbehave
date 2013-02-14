@@ -1,7 +1,6 @@
 package net.thucydides.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
-import net.thucydides.core.steps.StepFactory;
 import org.jbehave.core.annotations.ScenarioType;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.BeforeOrAfterStep;
@@ -14,11 +13,9 @@ import static ch.lambdaj.Lambda.convert;
 
 public class ThucydidesCandidateSteps implements CandidateSteps {
     private final CandidateSteps candidateSteps;
-    private final StepFactory thucydidesStepProxyFactory;
 
-    public ThucydidesCandidateSteps(CandidateSteps candidateSteps, StepFactory thucydidesStepProxyFactory) {
+    public ThucydidesCandidateSteps(CandidateSteps candidateSteps) {
         this.candidateSteps = candidateSteps;
-        this.thucydidesStepProxyFactory = thucydidesStepProxyFactory;
     }
 
     public List<StepCandidate> listCandidates() {
@@ -28,7 +25,7 @@ public class ThucydidesCandidateSteps implements CandidateSteps {
     private Converter<StepCandidate, StepCandidate> toThucydidesStepCandidates() {
         return new Converter<StepCandidate, StepCandidate>() {
             public StepCandidate convert(StepCandidate stepCandidate) {
-                return new ThucydidesStepCandidate(stepCandidate, thucydidesStepProxyFactory);
+                return new ThucydidesStepCandidate(stepCandidate);
             }
         };
     }

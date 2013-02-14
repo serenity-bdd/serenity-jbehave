@@ -1,12 +1,32 @@
 package net.thucydides.jbehave;
 
 
+import ch.lambdaj.function.convert.Converter;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
+
+import static ch.lambdaj.Lambda.convert;
 
 /**
  * Load classes from a given package.
@@ -33,7 +53,15 @@ public class ClassFinder {
      * @param packageName The base package
      * @return The classes
      */
-    public List<Class> fromPackage(String packageName) {
+    public List<Class<?>> fromPackage(String packageName) {
+        if (expectedAnnotations == null) {
+            return allClassesInPackage(packageName);
+        } else {
+            return annotatedClassesInPackage(packageName);
+        }
+    }
+
+    private List<Class<?>> allClassesInPackage(String packageName) {
         String path = packageName.replace('.', '/');
         Enumeration<URL> resources = classResourcesOn(path);
         List<File> dirs = new ArrayList<File>();
@@ -41,11 +69,49 @@ public class ClassFinder {
             URL resource = resources.nextElement();
             dirs.add(new File(resource.getFile()));
         }
-        ArrayList<Class> classes = new ArrayList<Class>();
+        List<Class<?>> classes = Lists.newArrayList();
         for (File directory : dirs) {
             classes.addAll(findClasses(directory, packageName));
         }
         return classes;
+    }
+
+
+    private List<Class<? extends Annotation>> expectedAnnotations;
+
+    public ClassFinder annotatedWith(Class<? extends Annotation>... someAnnotations) {
+        expectedAnnotations = ImmutableList.copyOf(someAnnotations);
+        return this;
+    }
+
+    public List<Class<?>> annotatedClassesInPackage(String packageName) {
+
+        Reflections reflections = new Reflections(packageName,
+                new SubTypesScanner(),
+                new TypeAnnotationsScanner(),
+                new MethodAnnotationsScanner(),
+                new ResourcesScanner(), getClassLoader());
+
+        Set<Class<?>> matchingClasses = Sets.newHashSet();
+        for (Class<? extends Annotation> expectedAnnotation : expectedAnnotations) {
+            matchingClasses.addAll(reflections.getTypesAnnotatedWith(expectedAnnotation));
+            matchingClasses.addAll(classesFrom(reflections.getMethodsAnnotatedWith(expectedAnnotation)));
+        }
+        return ImmutableList.copyOf(matchingClasses);
+
+    }
+
+    private Collection<Class<?>> classesFrom(Set<Method> annotatedMethods) {
+        return convert(annotatedMethods, toDeclaringCasses());
+    }
+
+    private Converter<Method, Class<?>> toDeclaringCasses() {
+        return new Converter<Method, Class<?>>() {
+
+            public Class convert(Method from) {
+                return from.getDeclaringClass();
+            }
+        };
     }
 
     private Enumeration<URL> classResourcesOn(String path) {
@@ -63,8 +129,8 @@ public class ClassFinder {
      * @param packageName The package name for classes found inside the base directory
      * @return The classes
      */
-    private List<Class> findClasses(File directory, String packageName) {
-        List<Class> classes = new ArrayList<Class>();
+    private List<Class<?>> findClasses(File directory, String packageName) {
+        List<Class<?>> classes = Lists.newArrayList();
         if (!directory.exists()) {
             return classes;
         }

@@ -1,5 +1,6 @@
 package net.thucydides.jbehave;
 
+import org.jbehave.core.annotations.Given;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,27 +14,33 @@ public class WhenLoadingClassesFromAPackage {
 
     @Test
     public void shouldLoadAllClassesInAPackage() throws IOException, ClassNotFoundException {
-        List<Class> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave.pages");
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave.pages");
         assertThat(classes.size(), is(1));
         assertThat(classes.get(0).getName(), is("net.thucydides.jbehave.pages.StaticSitePage"));
     }
 
     @Test
     public void shouldLoadAllClassesInNestedPackages() throws IOException, ClassNotFoundException {
-        List<Class> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave");
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave");
         assertThat(classes.size(), greaterThan(10));
     }
 
     @Test
+    public void shouldLoadAllAnnotatedClassesInNestedPackages() throws IOException, ClassNotFoundException {
+        List<Class<?>> classes = ClassFinder.loadClasses().annotatedWith(Given.class).fromPackage("net.thucydides.jbehave");
+        assertThat(classes.size(), is(8));
+    }
+
+    @Test
     public void shouldLoadNoClassesIfThePackageDoesNotExist() throws IOException, ClassNotFoundException {
-        List<Class> classes = ClassFinder.loadClasses().fromPackage("that.does.not.exist");
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("that.does.not.exist");
         assertThat(classes.size(), is(0));
     }
 
 
     @Test
     public void shouldNotLoadResourcesOnClasspath() throws IOException, ClassNotFoundException {
-        List<Class> classes = ClassFinder.loadClasses().fromPackage("stories");
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("stories");
         assertThat(classes.size(), is(0));
     }
 }

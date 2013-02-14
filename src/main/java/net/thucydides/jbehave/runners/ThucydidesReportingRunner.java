@@ -1,6 +1,7 @@
 package net.thucydides.jbehave.runners;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
@@ -14,6 +15,7 @@ import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
+import org.jbehave.core.io.StoryResourceNotFound;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.junit.JUnitStory;
 import org.jbehave.core.model.Story;
@@ -85,12 +87,12 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     List<String> getStoryPaths() {
-        if (storyPaths == null) {
+        if ((storyPaths == null) || (storyPaths.isEmpty())) {
             try {
-                if (configurableEmbedder instanceof JUnitStories) {
-                    getStoryPathsFromJUnitStories(testClass);
-                } else if (configurableEmbedder instanceof JUnitStory) {
+                if (configurableEmbedder instanceof JUnitStory) {
                     getStoryPathsFromJUnitStory();
+                } else  if (configurableEmbedder instanceof JUnitStories) {
+                    getStoryPathsFromJUnitStories(testClass);
                 }
             } catch(Throwable e) {
                 return Collections.EMPTY_LIST;
@@ -178,10 +180,8 @@ public class ThucydidesReportingRunner extends Runner {
 	}
 
 	private void getStoryPathsFromJUnitStory() {
-		StoryPathResolver resolver = getConfiguredEmbedder().configuration()
-				.storyPathResolver();
-		storyPaths = Arrays.asList(resolver.resolve(configurableEmbedder
-				.getClass()));
+		StoryPathResolver resolver = getConfiguredEmbedder().configuration().storyPathResolver();
+		storyPaths = Arrays.asList(resolver.resolve(configurableEmbedder.getClass()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -255,10 +255,11 @@ public class ThucydidesReportingRunner extends Runner {
 
     private void addStories(List<Description> storyDescriptions,
 			StoryRunner storyRunner, JUnitDescriptionGenerator gen) {
-		for (String storyPath : getStoryPaths()) {
-			Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
-			Description descr = gen.createDescriptionFrom(parseStory);
-			storyDescriptions.add(descr);
+
+        for (String storyPath : getStoryPaths()) {
+            Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
+            Description descr = gen.createDescriptionFrom(parseStory);
+            storyDescriptions.add(descr);
 		}
 	}
 

@@ -3,7 +3,6 @@ package net.thucydides.jbehave;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
 import org.codehaus.plexus.util.StringUtils;
-import org.jbehave.core.embedder.Embedder;
 
 /**
  * Run an individual JBehave story in JUnit, where the name of the story is derived from the name of the test.
@@ -30,15 +29,24 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
     }
 
     protected String storynamesDerivedFromClassName() {
-        return camelCaseStoryName() + ";" + underscoreStoryName() + ";" + camelCaseStartingWithLowercaseStoryName();
+        return camelCaseStoryName() + ";"
+                + underscoreStoryName() + ";"
+                + camelCaseStartingWithLowercaseStoryName();
     }
 
     private String camelCaseStoryName() {
-        return "**/" + simpleClassName() + ".story";
+        return getStoryPathsFor(simpleClassName());
     }
 
+    private String getStoryPathsFor(String storyName) {
+        return "**/" + storyName + ".story;"
+                + "/" + storyName + ".story;"
+                + "stories/" + storyName + ".story";
+    }
+
+
     private String camelCaseStartingWithLowercaseStoryName() {
-        return "**/" + StringUtils.uncapitalise(simpleClassName())  + ".story";
+        return getStoryPathsFor(StringUtils.uncapitalise(simpleClassName()));
     }
 
     private String simpleClassName() {
@@ -46,7 +54,11 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
     }
 
     private String underscoreStoryName() {
-        return "**/" + Inflector.getInstance().of(simpleClassName()).withUnderscores() + ".story";
+        return getStoryPathsFor(underscoredTestName());
+    }
+
+    private String underscoredTestName() {
+        return Inflector.getInstance().of(simpleClassName()).withUnderscores().toString();
     }
 
 }

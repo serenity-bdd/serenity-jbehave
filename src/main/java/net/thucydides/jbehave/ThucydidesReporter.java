@@ -32,6 +32,7 @@ import org.jbehave.core.reporters.StoryReporter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import static ch.lambdaj.Lambda.convert;
 
@@ -84,9 +85,13 @@ public class ThucydidesReporter implements StoryReporter {
 
     private Story currentStory;
 
+    private Stack<String> activeScenarios = new Stack<String>();
+
     public void beforeStory(Story story, boolean givenStory) {
         currentStory = story;
         if (!isFixture(story)) {
+
+            activeScenarios.clear();
 
             configureDriver(story);
 
@@ -250,11 +255,18 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void afterStory(boolean given) {
         if (isAfterStory(currentStory)) {
+            finishAnyActiveScenarios();
             closeBrowsersForThisStory();
             generateReports();
         } else if (!isFixture(currentStory)) {
             StepEventBus.getEventBus().testSuiteFinished();
             clearListeners();
+        }
+    }
+
+    private void finishAnyActiveScenarios() {
+        while (!activeScenarios.isEmpty()) {
+            afterScenario();
         }
     }
 
@@ -284,7 +296,7 @@ public class ThucydidesReporter implements StoryReporter {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
         StepEventBus.getEventBus().testStarted(scenarioTitle);
-        StepEventBus.getEventBus().testStarted(scenarioTitle);
+        activeScenarios.add(scenarioTitle);
     }
 
     private boolean shouldRestartDriverBeforeEachScenario() {
@@ -301,6 +313,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void afterScenario() {
         StepEventBus.getEventBus().testFinished();
+        activeScenarios.pop();
     }
 
     public void givenStories(GivenStories givenStories) {

@@ -2,8 +2,10 @@ package net.thucydides.jbehave;
 
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
+import net.thucydides.core.model.TestStep;
 import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
 import net.thucydides.core.screenshots.ScreenshotProcessor;
+import net.thucydides.core.screenshots.SingleThreadScreenshotProcessor;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
@@ -43,8 +45,9 @@ public class AbstractJBehaveStory {
 
         outputDirectory = temporaryFolder.newFolder("output");
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
+        environmentVariables.setProperty("webdriver.driver", "firefox");
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
-        screenshotProcessor = Injectors.getInjector().getInstance(ScreenshotProcessor.class);
+        screenshotProcessor = new SingleThreadScreenshotProcessor(environmentVariables);// Injectors.getInjector().getInstance(ScreenshotProcessor.class);
         raisedErrors.clear();
         System.out.println("Report directory:" + this.outputDirectory);
     }
@@ -91,4 +94,23 @@ public class AbstractJBehaveStory {
         });
         return testOutcomes;
     }
+
+
+    protected ThucydidesJUnitStories newStory(String storyPattern) {
+        return new AStorySample(storyPattern, systemConfiguration, environmentVariables);
+    }
+
+    protected TestStep givenStepIn(List<TestOutcome> outcomes) {
+        return givenStepIn(outcomes,0);
+    }
+
+    protected TestStep givenStepIn(List<TestOutcome> outcomes, int index) {
+        TestStep givenStep = outcomes.get(index).getTestSteps().get(0);
+        if (!givenStep.getDescription().startsWith("Given")) {
+            givenStep = givenStep.getChildren().get(0);
+        }
+        return givenStep;
+    }
+
+
 }

@@ -1,6 +1,5 @@
 package net.thucydides.jbehave.steps;
 
-import net.thucydides.core.pages.Pages;
 import net.thucydides.jbehave.pages.StaticSitePage;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
@@ -11,14 +10,7 @@ import static org.hamcrest.Matchers.is;
 
 public class StoryStepsWithPageObjects {
 
-    private final Pages pages;
-
     StaticSitePage indexPage;
-
-    public StoryStepsWithPageObjects(Pages pages) {
-        this.pages = pages;
-        indexPage = pages.get(StaticSitePage.class);
-    }
 
     @Given("I start on the test page")
     public void givenIAmOnTheTestPage() {
