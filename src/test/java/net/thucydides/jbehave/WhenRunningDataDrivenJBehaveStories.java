@@ -53,10 +53,8 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
 
         // Given
         ThucydidesJUnitStories story = newStory("aDataDrivenBehavior.story");
-
         // When
         run(story);
-
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
