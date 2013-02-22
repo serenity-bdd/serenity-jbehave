@@ -258,7 +258,7 @@ public class ThucydidesReporter implements StoryReporter {
             finishAnyActiveScenarios();
             closeBrowsersForThisStory();
             generateReports();
-        } else if (!isFixture(currentStory)) {
+        } else if (!isFixture(currentStory) && !given) {
             StepEventBus.getEventBus().testSuiteFinished();
             clearListeners();
         }
