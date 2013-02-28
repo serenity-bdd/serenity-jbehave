@@ -159,4 +159,18 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
 
     }
+
+    @Test
+    public void browser_should_not_closed_between_given_stories_and_scenario_steps() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("aBehaviorWithGivenStFeature.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
 }

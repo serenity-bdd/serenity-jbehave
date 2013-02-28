@@ -89,7 +89,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     public void beforeStory(Story story, boolean givenStory) {
         currentStory = story;
-        if (!isFixture(story)) {
+        if (!isFixture(story) && !givenStory) {
 
             activeScenarios.clear();
 
@@ -258,7 +258,7 @@ public class ThucydidesReporter implements StoryReporter {
             finishAnyActiveScenarios();
             closeBrowsersForThisStory();
             generateReports();
-        } else if (!isFixture(currentStory)) {
+        } else if (!isFixture(currentStory) && !given) {
             StepEventBus.getEventBus().testSuiteFinished();
             clearListeners();
         }
