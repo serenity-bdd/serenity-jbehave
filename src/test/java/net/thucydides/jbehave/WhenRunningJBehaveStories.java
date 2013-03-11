@@ -505,7 +505,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(1));
-        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.ERROR));
     }
 
     @Test
