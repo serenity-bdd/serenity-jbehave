@@ -571,23 +571,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_find_stories_in_a_declared_subdirectory_in_the_jar_file() throws Throwable {
-
-        // Given
-        environmentVariables.setProperty("jbehave.story.packages","another;another/package");
-        ThucydidesJUnitStories story = newStory("a_story_in_another_package.story");
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(1));
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-    }
-
-
-    @Test
     public void spring_autowiring_in_jbehave_steps_should_be_supported() throws Throwable {
 
         // Given

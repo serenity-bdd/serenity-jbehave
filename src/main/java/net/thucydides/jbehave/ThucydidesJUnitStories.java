@@ -127,9 +127,9 @@ public class ThucydidesJUnitStories extends JUnitStories {
         return Lists.newArrayList(Splitter.on(';').trimResults().omitEmptyStrings().split(getStoryPath()));
     }
 
-        /**
-        * The root package on the classpath containing the JBehave stories to be run.
-        */
+    /**
+     * The root package on the classpath containing the JBehave stories to be run.
+     */
     protected String getStoryPath() {
         return (StringUtils.isEmpty(storyFolder)) ? storyNamePattern : storyFolder + "/" + storyNamePattern;
     }
@@ -149,7 +149,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
         Set<String>  storyPathElements = new StoryPathFinder(getEnvironmentVariables(), storyNames).findAllElements();
         storyNamePattern = Lambda.join(storyPathElements,";");
 
-   }
+    }
 
 
     /**
@@ -238,5 +238,4 @@ public class ThucydidesJUnitStories extends JUnitStories {
                     Integer.toString(value));
         }
     }
-
 }

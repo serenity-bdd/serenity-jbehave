@@ -1,6 +1,7 @@
 package net.thucydides.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
+import com.google.common.collect.Lists;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.DependencyInjector;
 import net.thucydides.core.steps.PageObjectDependencyInjector;
@@ -56,11 +57,24 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         return types;
     }
 
-    private List<Class<?>> getCandidateClasses() {
-        List<Class<?>> candidateClasses = ClassFinder.loadClasses()
-                .withClassLoader(classLoader)
-                .annotatedWith(Given.class, When.class, Then.class)
-                .fromPackage(rootPackage);
+//    private List<Class<?>> getCandidateClasses() {
+//        List<Class<?>> candidateClasses = ClassFinder.loadClasses()
+//                .withClassLoader(classLoader)
+//                .annotatedWith(Given.class, When.class, Then.class)
+//                .fromPackage(rootPackage);
+//
+//        return candidateClasses;
+//    }
+
+    private List<Class> getCandidateClasses() {
+
+        List<Class<?>> allClassesUnderRootPackage = ClassFinder.loadClasses().withClassLoader(classLoader).fromPackage(rootPackage);
+        List<Class> candidateClasses = Lists.newArrayList();
+        for(Class<?> classUnderRootPackage : allClassesUnderRootPackage) {
+            if (hasAnnotatedMethods(classUnderRootPackage)) {
+                candidateClasses.add(classUnderRootPackage);
+            }
+        }
 
         return candidateClasses;
     }
