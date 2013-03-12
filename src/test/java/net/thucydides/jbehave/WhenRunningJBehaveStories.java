@@ -617,4 +617,36 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }
 
+    @Test
+    public void should_run_before_story_methods() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories stories = new AStorySample("aPassingBehavior.story");
+        stories.setSystemConfiguration(systemConfiguration);
+
+        FixtureMethods.beforeStoryCalledCount = 0;
+
+        // When
+        run(stories);
+
+        // Then
+        assertThat(FixtureMethods.beforeStoryCalledCount, is(1));
+    }
+
+    @Test
+    public void should_run_before_scenario_methods() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories stories = new AStorySample("aPassingBehaviorWithSeveralScenarios.story");
+        stories.setSystemConfiguration(systemConfiguration);
+
+        FixtureMethods.beforeScenarioCalledCount = 0;
+
+        // When
+        run(stories);
+
+        // Then
+        assertThat(FixtureMethods.beforeScenarioCalledCount, is(2));
+    }
+
 }
