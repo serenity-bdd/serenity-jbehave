@@ -17,6 +17,7 @@ class StoryPathFinder {
     
     private final String storyNames;
     private final EnvironmentVariables environmentVariables;
+    private static final String WILDCARD = "*";
 
     Set<String> identifiedStoryPaths = Sets.newHashSet();
 
@@ -34,6 +35,7 @@ class StoryPathFinder {
             Set<String> newPathElements = Sets.newHashSet();
 
             Optional<URL> storyOnClasspath = storyOnClasspath(rootStoryName);
+
             if (storyOnClasspath.isPresent() && unidentified(storyOnClasspath.get())) {
                 addPathElement(newPathElements, rootStoryName, storyOnClasspath.get());
             }
@@ -59,9 +61,11 @@ class StoryPathFinder {
     private void addPathElement(Set<String> storyPathElements, String storyName, URL storyPath) {
         storyPathElements.add(storyName);
         identifiedStoryPaths.add(storyPath.getFile().toLowerCase());
-
     }
 
+    private void addPathElement(Set<String> storyPathElements, String storyPathPattern) {
+        storyPathElements.add(storyPathPattern);
+    }
 
     private String stripLeadingWildcards(String rootStoryName) {
         return rootStoryName.startsWith("**/") ? rootStoryName.substring(3) : rootStoryName;
@@ -76,7 +80,7 @@ class StoryPathFinder {
     }
 
     private String withWildcard(String resourceName) {
-        return "**/" + simpleNameFrom(resourceName);
+        return "**/" + resourceName;//simpleNameFrom(resourceName);
     }
 
     private String simpleNameFrom(String resourceName) {

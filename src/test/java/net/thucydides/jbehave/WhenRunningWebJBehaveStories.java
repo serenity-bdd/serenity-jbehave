@@ -26,7 +26,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
     @Before
     public void reset_driver() {
-        environmentVariables.setProperty("webdriver.driver","firefox");
+        environmentVariables.setProperty("webdriver.driver", "firefox");
     }
 
     @Test
@@ -164,7 +164,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     public void browser_should_not_closed_between_given_stories_and_scenario_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("aBehaviorWithGivenStFeature.story");
+        ThucydidesJUnitStories story = newStory("aBehaviorWithGivenStories.story");
 
         // When
         run(story);

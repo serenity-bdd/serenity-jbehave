@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
 import net.thucydides.core.model.DataTable;
+import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestTag;
 import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
@@ -22,6 +23,7 @@ import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.GivenStories;
+import org.jbehave.core.model.GivenStory;
 import org.jbehave.core.model.Meta;
 import org.jbehave.core.model.Narrative;
 import org.jbehave.core.model.OutcomesTable;
@@ -30,11 +32,15 @@ import org.jbehave.core.model.Story;
 import org.jbehave.core.model.StoryDuration;
 import org.jbehave.core.reporters.StoryReporter;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.convert;
+import static ch.lambdaj.Lambda.flatten;
+import static ch.lambdaj.Lambda.on;
 
 public class ThucydidesReporter implements StoryReporter {
 
@@ -46,17 +52,21 @@ public class ThucydidesReporter implements StoryReporter {
     private static final String OPEN_PARAM_CHAR =  "\uff5f";
     private static final String CLOSE_PARAM_CHAR = "\uff60";
 
+    private GivenStoryMonitor givenStoryMonitor;
+
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
         thucydidesListenersThreadLocal = new ThreadLocal<ThucydidesListeners>();
         reportServiceThreadLocal = new ThreadLocal<ReportService>();
         baseStepListeners = Lists.newArrayList();
+        givenStoryMonitor = new GivenStoryMonitor();
 
     }
 
     protected void clearListeners() {
         thucydidesListenersThreadLocal.remove();
         reportServiceThreadLocal.remove();
+        givenStoryMonitor.clear();
     }
 
     protected ThucydidesListeners getThucydidesListeners() {
@@ -83,12 +93,25 @@ public class ThucydidesReporter implements StoryReporter {
     public void storyCancelled(Story story, StoryDuration storyDuration) {
     }
 
-    private Story currentStory;
+    private Stack<Story> storyStack = new Stack<Story>();
 
     private Stack<String> activeScenarios = new Stack<String>();
+    private List<String> givenStories = Lists.newArrayList();
+
+    private Story currentStory() {
+        return storyStack.peek();
+    }
+
+    private void currentStoryIs(Story story) {
+        storyStack.push(story);
+    }
 
     public void beforeStory(Story story, boolean givenStory) {
-        currentStory = story;
+        System.out.println("Before story" + story.getName());
+
+        currentStoryIs(story);
+        noteAnyGivenStoriesFor(story);
+
         if (!isFixture(story) && !givenStory) {
 
             activeScenarios.clear();
@@ -99,16 +122,94 @@ public class ThucydidesReporter implements StoryReporter {
 
             getThucydidesListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
 
-            String storyName = removeSuffixFrom(story.getName());
-            String storyTitle = NameConverter.humanize(storyName);
-
-            net.thucydides.core.model.Story userStory
-                        = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
-                                                         .withNarrative(story.getNarrative().asA());
-            StepEventBus.getEventBus().testSuiteStarted(userStory);
-
-            registerTags(story);
+            if (!isAStoryLevelGiven(story)) {
+                startTestSuiteForStory(story);
+                if (givenStoriesPresentFor(story)) {
+                    startTestForFirstScenarioIn(story);
+                }
+            }
         }
+    }
+
+    private boolean unregisteredGivenStory(Story story) {
+        return !isAStoryLevelGiven(story);
+    }
+
+    private boolean nestScenarios = false;
+
+    private boolean shouldNestScenarios() {
+        return nestScenarios;
+    }
+
+    private void shouldNestScenarios(boolean nestScenarios) {
+        this.nestScenarios = nestScenarios;
+    }
+
+    private void startTestForFirstScenarioIn(Story story) {
+        System.out.println("Starting first test for " + story.getName());
+        Scenario firstScenario = story.getScenarios().get(0);
+        startScenarioCalled(firstScenario.getTitle());
+        StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle("Preconditions"));
+        shouldNestScenarios(true);
+    }
+
+    public void beforeScenario(String scenarioTitle) {
+
+        if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+        }
+        if (shouldNestScenarios()) {
+            startNewStep(scenarioTitle);
+        } else {
+            startScenarioCalled(scenarioTitle);
+        }
+    }
+
+    private void startNewStep(String scenarioTitle) {
+        if (givenStoryMonitor.isInGivenStory() && StepEventBus.getEventBus().areStepsRunning()) {
+            StepEventBus.getEventBus().updateCurrentStepTitle(scenarioTitle);
+        } else {
+            StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(scenarioTitle));
+        }
+    }
+
+    private boolean givenStoriesPresentFor(Story story) {
+        return !story.getGivenStories().getStories().isEmpty();
+    }
+
+    private void startTestSuiteForStory(Story story) {
+        String storyName = removeSuffixFrom(story.getName());
+        String storyTitle = NameConverter.humanize(storyName);
+
+        net.thucydides.core.model.Story userStory
+                    = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
+                                                     .withNarrative(story.getNarrative().asA());
+        StepEventBus.getEventBus().testSuiteStarted(userStory);
+        registerTags(story);
+    }
+
+    private void noteAnyGivenStoriesFor(Story story) {
+        for(GivenStory given : story.getGivenStories().getStories()) {
+            String givenStoryName = new File(given.getPath()).getName();
+            givenStories.add(givenStoryName);
+        }
+    }
+
+    private boolean isAStoryLevelGiven(Story story) {
+        for(String givenStoryName : givenStories) {
+            if (hasSameName(story, givenStoryName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void givenStoryDone(Story story) {
+        givenStories.remove(story.getName());
+    }
+
+    private boolean hasSameName(Story story, String givenStoryName) {
+        return story.getName().equalsIgnoreCase(givenStoryName);
     }
 
     private void configureDriver(Story story) {
@@ -254,20 +355,20 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterStory(boolean given) {
-        if (isAfterStory(currentStory)) {
-            finishAnyActiveScenarios();
-            closeBrowsersForThisStory();
-            generateReports();
-        } else if (!isFixture(currentStory) && !given) {
-            StepEventBus.getEventBus().testSuiteFinished();
-            clearListeners();
+        if (given) {
+            givenStoryMonitor.exitingGivenStory();
+            givenStoryDone(currentStory());
+        } else {
+            shouldNestScenarios(false);
+            if (isAfterStory(currentStory())) {
+                closeBrowsersForThisStory();
+                generateReports();
+            } else if (!isFixture(currentStory()) && !given &&  (!isAStoryLevelGiven(currentStory()))) {
+                StepEventBus.getEventBus().testSuiteFinished();
+                clearListeners();
+            }
         }
-    }
-
-    private void finishAnyActiveScenarios() {
-        while (!activeScenarios.isEmpty()) {
-            afterScenario();
-        }
+        storyStack.pop();
     }
 
     private void closeBrowsersForThisStory() {
@@ -281,9 +382,11 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private synchronized void generateReports() {
-        for(BaseStepListener listener : baseStepListeners) {
-            getReportService().generateReportsFor(listener.getTestOutcomes());
-        }
+        getReportService().generateReportsFor(getAllTestOutcomes());
+    }
+
+    public List<TestOutcome> getAllTestOutcomes() {
+        return flatten(extract(baseStepListeners, on(BaseStepListener.class).getTestOutcomes()));
     }
 
     public void narrative(Narrative narrative) {}
@@ -291,10 +394,7 @@ public class ThucydidesReporter implements StoryReporter {
     public void scenarioNotAllowed(Scenario scenario, String s) {
     }
 
-    public void beforeScenario(String scenarioTitle) {
-        if (shouldRestartDriverBeforeEachScenario()) {
-            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
-        }
+    private void startScenarioCalled(String scenarioTitle) {
         StepEventBus.getEventBus().testStarted(scenarioTitle);
         activeScenarios.add(scenarioTitle);
     }
@@ -312,11 +412,16 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterScenario() {
-        StepEventBus.getEventBus().testFinished();
-        activeScenarios.pop();
+        if (givenStoryMonitor.isInGivenStory() || shouldNestScenarios()) {
+            StepEventBus.getEventBus().stepFinished();
+        } else {
+            StepEventBus.getEventBus().testFinished();
+            activeScenarios.pop();
+        }
     }
 
     public void givenStories(GivenStories givenStories) {
+        givenStoryMonitor.enteringGivenStory();
     }
 
     public void givenStories(List<String> strings) {

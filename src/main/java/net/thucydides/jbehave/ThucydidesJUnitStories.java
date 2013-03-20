@@ -2,13 +2,16 @@ package net.thucydides.jbehave;
 
 import ch.lambdaj.Lambda;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.sun.tools.javac.util.Paths;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
+import org.hamcrest.CoreMatchers;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
@@ -23,9 +26,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static ch.lambdaj.Lambda.filter;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
 import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.XML;
+import static org.mockito.Matchers.startsWith;
+
 /**
  * A JUnit-runnable test case designed to run a set of ThucydidesWebdriverIntegration-enabled JBehave stories in a given package.
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
@@ -35,6 +43,7 @@ import static org.jbehave.core.reporters.Format.XML;
 public class ThucydidesJUnitStories extends JUnitStories {
 
     public static final String DEFAULT_STORY_NAME =  "**/*.story";
+    public static final List<String> DEFAULT_GIVEN_STORY_PREFIX = ImmutableList.of("Given","Precondition");
 
     private net.thucydides.core.webdriver.Configuration systemConfiguration;
     private EnvironmentVariables environmentVariables;
@@ -100,8 +109,24 @@ public class ThucydidesJUnitStories extends JUnitStories {
             for(URL classpathRootUrl : allClasspathRoots()) {
                 storyPaths.addAll(storyFinder.findPaths(classpathRootUrl, pathExpression, ""));
             }
+            storyPaths = pruneGivenStoriesFrom(storyPaths);
         }
         return Lists.newArrayList(storyPaths);
+    }
+
+    private Set<String> pruneGivenStoriesFrom(Set<String> storyPaths) {
+        List<String> filteredPaths = Lists.newArrayList(storyPaths);
+        for (String skippedPrecondition : skippedPreconditions()) {
+            filteredPaths = filter(not(startsWith(skippedPrecondition)), filteredPaths);
+            filteredPaths = filter(not(startsWith(skippedPrecondition.toLowerCase())), filteredPaths);
+            filteredPaths = filter(not(containsString("/" + skippedPrecondition)), filteredPaths);
+            filteredPaths = filter(not(containsString("/" + skippedPrecondition.toLowerCase())), filteredPaths);
+        }
+        return Sets.newHashSet(filteredPaths);
+    }
+
+    private List<String> skippedPreconditions() {
+        return DEFAULT_GIVEN_STORY_PREFIX;
     }
 
     private boolean absolutePath(String pathExpression) {

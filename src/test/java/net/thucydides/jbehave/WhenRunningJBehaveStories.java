@@ -648,4 +648,72 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(FixtureMethods.beforeScenarioCalledCount, is(6));
     }
 
+
+    final class AnotherStorySample extends ThucydidesJUnitStories {
+
+        public AnotherStorySample() {
+            super(environmentVariables);
+            findStoriesCalled("stories/samples/*Behavior.story");
+        }
+    }
+
+
+    @Test
+    public void test_should_run_stories_in_a_specified_place() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AnotherStorySample();
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(3));
+    }
+
+    @Test
+    public void test_should_not_run_given_stories_separately() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AnotherStorySample();
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(3));
+
+        TestOutcome scenarioWithGivens = outcomes.get(2);
+        assertThat(scenarioWithGivens.getTestSteps().size(), is(7));
+
+        TestStep firstStep = scenarioWithGivens.getTestSteps().get(0);
+        TestStep secondStep = scenarioWithGivens.getTestSteps().get(1);
+        TestStep scenarioStep = scenarioWithGivens.getTestSteps().get(4);
+        assertThat(firstStep.getDescription(), is("precondition description"));
+        assertThat(secondStep.getDescription(), is("another precondition description"));
+        assertThat(scenarioStep.getDescription(), is("Given a system state"));
+
+        assertThat(firstStep.getChildren().size(), is(3));
+        assertThat(secondStep.getChildren().size(), is(4));
+
+
+    }
+
+    @Test
+    public void test_stories_should_be_named_after_the_main_behavior_when_given_stories_are_present() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AnotherStorySample();
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(3));
+        assertThat(outcomes.get(0).getUserStory().getName(), is("Some other behavior"));
+        assertThat(outcomes.get(1).getUserStory().getName(), is("Some behavior"));
+    }
 }
