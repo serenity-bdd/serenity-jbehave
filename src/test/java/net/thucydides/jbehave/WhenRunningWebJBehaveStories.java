@@ -127,7 +127,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     @Test
     public void stories_with_errors_in_one_scenario_should_still_run_subsequent_scenarios() throws Throwable {
 
-        environmentVariables.setProperty("webdriver.driver","htmlunit");
+        environmentVariables.setProperty("restart.browser.each.scenario","true");
 
         // Given
         ThucydidesJUnitStories story = newStory("failingAndPassingBehaviorsWithSelenium.story");

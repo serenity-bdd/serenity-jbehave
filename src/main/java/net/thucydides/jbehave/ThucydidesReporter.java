@@ -5,6 +5,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import net.thucydides.core.Thucydides;
 import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
 import net.thucydides.core.model.DataTable;
@@ -53,6 +55,8 @@ public class ThucydidesReporter implements StoryReporter {
     private static final String CLOSE_PARAM_CHAR = "\uff60";
 
     private GivenStoryMonitor givenStoryMonitor;
+
+    private static final List<String> VALID_TAGS = ImmutableList.of("tag","tags","driver","issue","issues","feature","epic");
 
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
@@ -106,12 +110,14 @@ public class ThucydidesReporter implements StoryReporter {
         storyStack.push(story);
     }
 
+    private Map<String, String> storyMetadata;
+
     public void beforeStory(Story story, boolean givenStory) {
         System.out.println("Before story" + story.getName());
 
         currentStoryIs(story);
         noteAnyGivenStoriesFor(story);
-
+        storyMetadata = getMetadataFrom(story.getMeta());
         if (!isFixture(story) && !givenStory) {
 
             activeScenarios.clear();
@@ -129,10 +135,6 @@ public class ThucydidesReporter implements StoryReporter {
                 }
             }
         }
-    }
-
-    private boolean unregisteredGivenStory(Story story) {
-        return !isAStoryLevelGiven(story);
     }
 
     private boolean nestScenarios = false;
@@ -226,6 +228,7 @@ public class ThucydidesReporter implements StoryReporter {
         registerStoryIssues(story.getMeta());
         registerStoryFeaturesAndEpics(story.getMeta());
         registerStoryTags(story.getMeta());
+        registerStoryMeta(story.getMeta());
     }
 
     private boolean isFixture(Story story) {
@@ -343,6 +346,26 @@ public class ThucydidesReporter implements StoryReporter {
         }
     }
 
+    private Map<String,String> getMetadataFrom(Meta metaData) {
+        Map<String,String> metadata = Maps.newHashMap();
+        for(String propertyName : metaData.getPropertyNames()) {
+            if (!VALID_TAGS.contains(propertyName)) {
+                metadata.put(propertyName, metaData.getProperty(propertyName));
+            }
+        }
+        return metadata;
+    }
+
+    private void registerMetadata(Meta metaData) {
+        Map<String, String> scenarioMetadata = getMetadataFrom(metaData);
+        scenarioMetadata.putAll(storyMetadata);
+        for(String key : scenarioMetadata.keySet()) {
+            if (!VALID_TAGS.contains(key)) {
+                Thucydides.getCurrentSession().addMetaData(key, scenarioMetadata.get(key));
+            }
+        }
+    }
+
     private void registerStoryTags(Meta metaData) {
         List<TestTag> tags = getTagOrTagsPropertyValues(metaData);
 
@@ -350,6 +373,10 @@ public class ThucydidesReporter implements StoryReporter {
             StepEventBus.getEventBus().addTagsToCurrentStory(tags);
         }
     }
+
+    private void registerStoryMeta(Meta metaData) {
+    }
+
     private String removeSuffixFrom(String name) {
         return (name.contains(".")) ? name.substring(0, name.indexOf(".")) :  name;
     }
@@ -409,6 +436,7 @@ public class ThucydidesReporter implements StoryReporter {
         registerIssues(meta);
         registerFeaturesAndEpics(meta);
         registerTags(meta);
+        registerMetadata(meta);
     }
 
     public void afterScenario() {

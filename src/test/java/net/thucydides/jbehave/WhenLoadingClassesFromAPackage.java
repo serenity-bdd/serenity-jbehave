@@ -1,13 +1,16 @@
 package net.thucydides.jbehave;
 
+import ch.lambdaj.function.convert.PropertyExtractor;
 import org.jbehave.core.annotations.Given;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
+import static ch.lambdaj.Lambda.convert;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 public class WhenLoadingClassesFromAPackage {
@@ -42,5 +45,12 @@ public class WhenLoadingClassesFromAPackage {
     public void shouldNotLoadResourcesOnClasspath() throws IOException, ClassNotFoundException {
         List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("stories");
         assertThat(classes.size(), is(0));
+    }
+
+    @Test
+    public void shouldLoadClassesFromDependencies() throws IOException, ClassNotFoundException {
+        List<Class<?>> classes = ClassFinder.loadClasses().annotatedWith(Given.class).fromPackage("net.thucydides.jbehave");
+        List<String> classnames = convert(classes, new PropertyExtractor("name"));
+        assertThat(classnames, hasItem("net.thucydides.jbehave.SomeBoilerplateSteps"));
     }
 }

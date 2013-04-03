@@ -9,9 +9,6 @@ import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
 import net.thucydides.core.steps.di.DependencyInjectorService;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
@@ -56,15 +53,6 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         }
         return types;
     }
-
-//    private List<Class<?>> getCandidateClasses() {
-//        List<Class<?>> candidateClasses = ClassFinder.loadClasses()
-//                .withClassLoader(classLoader)
-//                .annotatedWith(Given.class, When.class, Then.class)
-//                .fromPackage(rootPackage);
-//
-//        return candidateClasses;
-//    }
 
     private List<Class> getCandidateClasses() {
 

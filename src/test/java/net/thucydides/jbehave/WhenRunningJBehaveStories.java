@@ -716,4 +716,46 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getUserStory().getName(), is("Some other behavior"));
         assertThat(outcomes.get(1).getUserStory().getName(), is("Some behavior"));
     }
+
+
+
+    final class ABehaviorWithCustomMetaTags extends ThucydidesJUnitStory {
+
+        public ABehaviorWithCustomMetaTags() {
+            super(environmentVariables);
+            findStoriesCalled("stories/aBehaviorWithCustomMetaTags.story");
+        }
+    }
+
+    @Test
+    public void steps_should_have_access_to_meta_tags_specified_in_the_story_files() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("aBehaviorWithCustomMetaTags.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void steps_should_have_access_to_meta_tags_specified_in_the_story_files_at_the_story_level() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("aBehaviorWithCustomMetaTagsAtSeveralLevels.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+    }
+
 }
