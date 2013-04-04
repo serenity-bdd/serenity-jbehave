@@ -748,4 +748,20 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
     }
 
+    @Test
+    public void scenario_metatags_should_not_be_shared_between_scenarios() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("aBehaviorWithCustomMetaTagsInSeveralScenarios.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+    }
+
 }

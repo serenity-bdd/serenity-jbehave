@@ -357,6 +357,8 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private void registerMetadata(Meta metaData) {
+        Thucydides.getCurrentSession().clearMetaData();
+
         Map<String, String> scenarioMetadata = getMetadataFrom(metaData);
         scenarioMetadata.putAll(storyMetadata);
         for(String key : scenarioMetadata.keySet()) {

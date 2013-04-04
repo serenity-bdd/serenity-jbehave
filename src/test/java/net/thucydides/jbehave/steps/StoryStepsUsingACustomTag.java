@@ -35,5 +35,19 @@ public class StoryStepsUsingACustomTag {
     @Then("I should be able to use the <name> and the <age> field in my stored procedure")
     public void thenIShouldBeAbleToUseThenameAndTheageFieldInMyStoredProcedure(String name, String age) {
     }
+
+    @Then("the local variable should be defined")
+    public void thenTheLocalVariableShouldBeDefined() {
+        Map<String, String> metadata = Thucydides.getCurrentSession().getMetaData();
+        assertThat(metadata.get("local")).isEqualTo("defined");
+    }
+
+
+    @Then("the local variable should not be defined")
+    public void thenTheLocalVariableShouldNotBeDefined() {
+        Map<String, String> metadata = Thucydides.getCurrentSession().getMetaData();
+        assertThat(metadata.get("local")).isNull();
+    }
+
 }
 
