@@ -153,10 +153,16 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         run(story);
 
         // Then
-        List<TestStep> outcomes = loadTestOutcomes().get(0).getTestSteps().get(2).getChildren();
-        assertThat(outcomes.size(), is(2));
-        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
-        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+        List<TestOutcome> allOutcomes = loadTestOutcomes();
+        assertThat(allOutcomes.size(), is(1));
+
+        List<TestStep> topLevelSteps = allOutcomes.get(0).getTestSteps();
+        assertThat(topLevelSteps.size(), is(3));
+
+        List<TestStep> nestedDataDrivenSteps = topLevelSteps.get(2).getChildren();
+        assertThat(nestedDataDrivenSteps.size(), is(2));
+        assertThat(nestedDataDrivenSteps.get(0).getResult(), is(TestResult.FAILURE));
+        assertThat(nestedDataDrivenSteps.get(1).getResult(), is(TestResult.SUCCESS));
 
     }
 

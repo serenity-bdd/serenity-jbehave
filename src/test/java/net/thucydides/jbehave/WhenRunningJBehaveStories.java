@@ -717,16 +717,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getUserStory().getName(), is("Some behavior"));
     }
 
-
-
-    final class ABehaviorWithCustomMetaTags extends ThucydidesJUnitStory {
-
-        public ABehaviorWithCustomMetaTags() {
-            super(environmentVariables);
-            findStoriesCalled("stories/aBehaviorWithCustomMetaTags.story");
-        }
-    }
-
     @Test
     public void steps_should_have_access_to_meta_tags_specified_in_the_story_files() throws Throwable {
 

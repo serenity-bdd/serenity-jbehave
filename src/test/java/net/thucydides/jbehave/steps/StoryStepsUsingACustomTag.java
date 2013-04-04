@@ -31,5 +31,9 @@ public class StoryStepsUsingACustomTag {
         assertThat(metadata.get("sql")).containsIgnoringCase(tagvalue);
         assertThat(metadata.get("global")).containsIgnoringCase(global);
     }
+
+    @Then("I should be able to use the <name> and the <age> field in my stored procedure")
+    public void thenIShouldBeAbleToUseThenameAndTheageFieldInMyStoredProcedure(String name, String age) {
+    }
 }
 
