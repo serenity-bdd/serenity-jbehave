@@ -9,9 +9,7 @@ import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class WhenLoadingClassesFromAPackage {
 
@@ -50,6 +48,13 @@ public class WhenLoadingClassesFromAPackage {
     @Test
     public void shouldLoadClassesFromDependencies() throws IOException, ClassNotFoundException {
         List<Class<?>> classes = ClassFinder.loadClasses().annotatedWith(Given.class).fromPackage("net.thucydides.jbehave");
+        List<String> classnames = convert(classes, new PropertyExtractor("name"));
+        assertThat(classnames, hasItem("net.thucydides.jbehave.SomeBoilerplateSteps"));
+    }
+
+    @Test
+    public void  shouldLoadAllClassesInAGivenPackageFromAnotherModule() {
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave");
         List<String> classnames = convert(classes, new PropertyExtractor("name"));
         assertThat(classnames, hasItem("net.thucydides.jbehave.SomeBoilerplateSteps"));
     }

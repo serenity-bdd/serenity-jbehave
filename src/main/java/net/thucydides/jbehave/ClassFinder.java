@@ -2,7 +2,6 @@ package net.thucydides.jbehave;
 
 
 import ch.lambdaj.function.convert.Converter;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -11,20 +10,15 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static ch.lambdaj.Lambda.convert;
 
@@ -131,6 +125,12 @@ public class ClassFinder {
      */
     private List<Class<?>> findClasses(File directory, String packageName) {
         List<Class<?>> classes = Lists.newArrayList();
+        if (isJar(directory)) {
+            List<File> files = classesFilesFromJar(directory, packageName);
+            for (File file : files) {
+                classes.add(correspondingClass(packageName, file));
+            }
+        }
         if (!directory.exists()) {
             return classes;
         }
@@ -145,6 +145,29 @@ public class ClassFinder {
             }
         }
         return classes;
+    }
+
+    private List<File> classesFilesFromJar(File directory, String packageName) {
+        try {
+            List<File> files = Lists.newArrayList();
+            String [] split = directory.getPath().split("!");
+            URL jar = new URL(split[0]);
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+            ZipEntry entry;
+            while ((entry = zip.getNextEntry()) != null)
+                if (entry.getName().replaceAll("/", ".").startsWith(packageName)
+                        && entry.getName().endsWith(".class")
+                        && isNotAnInnerClass(entry.getName())) {
+                    files.add(new File(entry.getName()));
+                }
+            return files;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not find or access class for " + directory, e);
+        }
+    }
+
+    private boolean isJar(File dir) {
+        return dir.getPath().startsWith("file:") && dir.getPath().contains("!");
     }
 
     private Class<?> correspondingClass(String packageName, File file) {
