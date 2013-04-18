@@ -126,10 +126,7 @@ public class ClassFinder {
     private List<Class<?>> findClasses(File directory, String packageName) {
         List<Class<?>> classes = Lists.newArrayList();
         if (isJar(directory)) {
-            List<File> files = classesFilesFromJar(directory, packageName);
-            for (File file : files) {
-                classes.add(correspondingClass(packageName, file));
-            }
+            return classesFromJar(directory, packageName);
         }
         if (!directory.exists()) {
             return classes;
@@ -147,36 +144,45 @@ public class ClassFinder {
         return classes;
     }
 
-    private List<File> classesFilesFromJar(File directory, String packageName) {
+    private List<Class<?>> classesFromJar(File directory, String packageName) {
         try {
-            List<File> files = Lists.newArrayList();
+            List<Class<?>> classes = Lists.newArrayList();
             String [] split = directory.getPath().split("!");
             URL jar = new URL(split[0]);
             ZipInputStream zip = new ZipInputStream(jar.openStream());
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null)
-                if (entry.getName().replaceAll("/", ".").startsWith(packageName)
-                        && entry.getName().endsWith(".class")
-                        && isNotAnInnerClass(entry.getName())) {
-                    files.add(new File(entry.getName()));
+                if (entry.getName().endsWith(".class")) {
+                    String className = classNameFor(entry);
+                    if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
+                        classes.add(loadClassWithName(className));
+                    }
                 }
-            return files;
+            return classes;
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not find or access class for " + directory, e);
         }
+    }
+
+    private static String classNameFor(ZipEntry entry) {
+        return entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
     }
 
     private boolean isJar(File dir) {
         return dir.getPath().startsWith("file:") && dir.getPath().contains("!");
     }
 
-    private Class<?> correspondingClass(String packageName, File file) {
+    private Class<?> loadClassWithName(String className){
         try {
-            String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);
-            return getClassLoader().loadClass(fullyQualifiedClassName);
+            return getClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Could not find or access class for " + file, e);
+            throw new IllegalArgumentException("Could not find or access class for " + className, e);
         }
+     }
+
+    private Class<?> correspondingClass(String packageName, File file) {
+        String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);
+        return loadClassWithName(fullyQualifiedClassName);
     }
 
     private static ClassLoader getDefaultClassLoader() {
