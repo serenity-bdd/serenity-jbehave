@@ -53,8 +53,8 @@ public class WhenLoadingClassesFromAPackage {
     }
 
     @Test
-    public void  shouldLoadAllClassesInAGivenPackageFromAnotherModule() {
-        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave");
+    public void  shouldLoadAllClassesInAGivenPackageFromAnotherModuleAndAllSubpackages() {
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.thucydides");
         List<String> classnames = convert(classes, new PropertyExtractor("name"));
         assertThat(classnames, hasItem("net.thucydides.jbehave.SomeBoilerplateSteps"));
     }
