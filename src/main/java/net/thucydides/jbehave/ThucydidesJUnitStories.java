@@ -5,13 +5,11 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.sun.tools.javac.util.Paths;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
-import org.hamcrest.CoreMatchers;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
@@ -29,9 +27,7 @@ import java.util.Set;
 import static ch.lambdaj.Lambda.filter;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
-import static org.jbehave.core.reporters.Format.CONSOLE;
-import static org.jbehave.core.reporters.Format.HTML;
-import static org.jbehave.core.reporters.Format.XML;
+import static org.jbehave.core.reporters.Format.*;
 import static org.mockito.Matchers.startsWith;
 
 /**
