@@ -1,5 +1,6 @@
 package net.thucydides.jbehave;
 
+import ch.lambdaj.Lambda;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -17,7 +18,6 @@ class StoryPathFinder {
     
     private final String storyNames;
     private final EnvironmentVariables environmentVariables;
-    private static final String WILDCARD = "*";
 
     Set<String> identifiedStoryPaths = Sets.newHashSet();
 
@@ -63,10 +63,6 @@ class StoryPathFinder {
         identifiedStoryPaths.add(storyPath.getFile().toLowerCase());
     }
 
-    private void addPathElement(Set<String> storyPathElements, String storyPathPattern) {
-        storyPathElements.add(storyPathPattern);
-    }
-
     private String stripLeadingWildcards(String rootStoryName) {
         return rootStoryName.startsWith("**/") ? rootStoryName.substring(3) : rootStoryName;
     }
@@ -81,15 +77,6 @@ class StoryPathFinder {
 
     private String withWildcard(String resourceName) {
         return "**/" + resourceName;//simpleNameFrom(resourceName);
-    }
-
-    private String simpleNameFrom(String resourceName) {
-        int lastSlash = resourceName.lastIndexOf('/');
-        if (lastSlash >= 0) {
-            return resourceName.substring(lastSlash + 1);
-        } else {
-            return resourceName;
-        }
     }
 
     private Optional<URL> storyOnClasspath(String storyFile) {

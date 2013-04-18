@@ -73,27 +73,8 @@ public class ThucydidesJUnitStory extends ThucydidesJUnitStories {
         }
     }
 
-    private String camelCaseStoryName() {
-        return getStoryPathsFor(simpleClassName());
-    }
-
-    private String getStoryPathsFor(String storyName) {
-        return "**/" + storyName + ".story;"
-                + "/" + storyName + ".story;"
-                + "stories/" + storyName + ".story";
-    }
-
-
-    private String camelCaseStartingWithLowercaseStoryName() {
-        return getStoryPathsFor(StringUtils.uncapitalise(simpleClassName()));
-    }
-
     private String simpleClassName() {
         return this.getClass().getSimpleName();
-    }
-
-    private String underscoreStoryName() {
-        return getStoryPathsFor(underscoredTestName());
     }
 
     private String underscoredTestName() {
