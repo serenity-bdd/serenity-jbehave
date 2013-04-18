@@ -21,6 +21,9 @@ public class SomeDataDrivenSteps {
     SomeSeleniumSteps steps;
 
     @Steps
+    SomeNormalSteps normalSteps;
+
+    @Steps
     EnterNamesStep enterNameSteps;
 
     String dataSource;

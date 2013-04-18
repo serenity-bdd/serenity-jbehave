@@ -1,6 +1,8 @@
 package net.thucydides.jbehave.steps;
 
+import net.thucydides.core.Thucydides;
 import net.thucydides.core.annotations.Steps;
+import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Pending;
@@ -9,15 +11,26 @@ import org.jbehave.core.annotations.When;
 
 import java.util.Date;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeTrue;
+
 
 public class StorySteps {
 
     @Steps
     SomeThucydidesSteps steps;
 
+    @Given("I have a failing precondition")
+    public void failAPrecondition() {
+        assumeTrue(false);
+    }
 
+    @Given("I have a passing precondition")
+    public void passAPrecondition() {
+        assumeTrue(true);
+    }
 
     @Given("I have an implemented JBehave scenario")
     public void givenIHaveAnImplementedJBehaveScenario() {
@@ -43,7 +56,7 @@ public class StorySteps {
     @Given("the scenario fails")
     public void givenTheScenarioFails() {
         System.out.println("Deliberately failing a scenario.");
-        assertThat(true,is(false));
+        assertThat(true).isEqualTo(false);
     }
 
     @Then("I should get a failed result")

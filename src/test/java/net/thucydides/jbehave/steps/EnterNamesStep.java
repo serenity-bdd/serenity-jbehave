@@ -14,7 +14,6 @@ public class EnterNamesStep {
 
     @Step
     public void enterAndCheckName() {
-        System.out.println(firstname + "/" + lastname + " == " + expectedFirstname + "/" + expectedLastname);
         steps.whenIEnterTheFirstName(firstname);
         steps.whenIEnterTheLastName(lastname);
         steps.thenIShouldSeeInTheNamesFields(expectedFirstname, expectedLastname);

@@ -33,14 +33,15 @@ import org.jbehave.core.model.Scenario;
 import org.jbehave.core.model.Story;
 import org.jbehave.core.model.StoryDuration;
 import org.jbehave.core.reporters.StoryReporter;
+import org.junit.internal.AssumptionViolatedException;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.convert;
+import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.flatten;
 import static ch.lambdaj.Lambda.on;
 
@@ -536,7 +537,15 @@ public class ThucydidesReporter implements StoryReporter {
     public void failed(String stepTitle, Throwable cause) {
         Throwable rootCause = cause.getCause() != null ? cause.getCause() : cause;
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
-        StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), rootCause));
+        if (isAssumptionFailure(rootCause)) {
+            StepEventBus.getEventBus().assumptionViolated(rootCause.getMessage());
+        } else {
+            StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), rootCause));
+        }
+    }
+
+    private boolean isAssumptionFailure(Throwable rootCause) {
+        return (AssumptionViolatedException.class.isAssignableFrom(rootCause.getClass()));
     }
 
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {

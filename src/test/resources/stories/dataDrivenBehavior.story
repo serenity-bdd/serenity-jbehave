@@ -1,8 +1,6 @@
-Meta:
-@driver htmlunit
 
-Scenario: Data-driven testing from an external CSV file
+Scenario: Non-web Data-driven testing from an external CSV file
 
-Given the names in data/names-data.csv
-When we enter these values
-Then we should see them on the screen
+Given the data in data/names-data.csv
+When we enter this data
+Then the values should be correct

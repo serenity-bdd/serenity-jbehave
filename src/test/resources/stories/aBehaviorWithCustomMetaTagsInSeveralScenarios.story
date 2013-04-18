@@ -16,3 +16,10 @@ Given I have an implemented JBehave scenario
 And the scenario uses the custom tag MY_OTHER_STORED_PROCEDURE
 When I run the scenario
 Then the local variable should not be defined
+
+Scenario: A scenario with no local metadata field defined
+
+Given I have an implemented JBehave scenario
+And the scenario uses the custom tag MY_OTHER_STORED_PROCEDURE
+When I run the scenario
+Then the local variable should not be defined

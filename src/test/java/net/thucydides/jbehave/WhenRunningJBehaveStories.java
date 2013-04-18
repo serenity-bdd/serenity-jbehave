@@ -659,6 +659,23 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
 
     @Test
+    public void should_mark_scenarios_with_failing_assumption_as_skipped() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories stories = new ABehaviorWithAFailingAssumption(environmentVariables);
+
+        // When
+        run(stories);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(PENDING));
+        assertThat(outcomes.get(1).getResult(), is(SUCCESS));
+    }
+
+
+    @Test
     public void test_should_run_stories_in_a_specified_place() throws Throwable {
 
         // Given

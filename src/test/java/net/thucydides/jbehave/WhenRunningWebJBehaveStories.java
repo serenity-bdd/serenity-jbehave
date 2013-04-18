@@ -144,10 +144,10 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void stories_with_errors_in_one_external_data_scenario_should_still_run_subsequent_scenarios() throws Throwable {
+    public void data_driven_steps_should_appear_as_nested_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("dataDrivenBehaviorWithSelenium.story");
+        ThucydidesJUnitStories story = newStory("dataDrivenBehavior.story");
 
         // When
         run(story);
@@ -159,10 +159,8 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         List<TestStep> topLevelSteps = allOutcomes.get(0).getTestSteps();
         assertThat(topLevelSteps.size(), is(3));
 
-        List<TestStep> nestedDataDrivenSteps = topLevelSteps.get(2).getChildren();
-        assertThat(nestedDataDrivenSteps.size(), is(2));
-        assertThat(nestedDataDrivenSteps.get(0).getResult(), is(TestResult.FAILURE));
-        assertThat(nestedDataDrivenSteps.get(1).getResult(), is(TestResult.SUCCESS));
+        List<TestStep> nestedDataDrivenSteps = topLevelSteps.get(2).getChildren().get(0).getChildren();
+        assertThat(nestedDataDrivenSteps.size(), is(3));
 
     }
 

@@ -1,6 +1,7 @@
 package net.thucydides.jbehave.steps;
 
 import net.thucydides.core.Thucydides;
+import org.jbehave.core.annotations.BeforeStory;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 
@@ -47,6 +48,14 @@ public class StoryStepsUsingACustomTag {
     public void thenTheLocalVariableShouldNotBeDefined() {
         Map<String, String> metadata = Thucydides.getCurrentSession().getMetaData();
         assertThat(metadata.get("local")).isNull();
+    }
+
+    @BeforeStory
+    public void beforeStory() {
+        Map<String, String> metadata = Thucydides.getCurrentSession().getMetaData();
+        if (!metadata.isEmpty()) {
+            assertThat(metadata.get("global")).containsIgnoringCase("shared");
+        }
     }
 
 }
