@@ -45,6 +45,7 @@ public class ThucydidesJBehave {
                                 .withViewResources(viewResources)
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
                                 .withFailureTrace(true).withFailureTraceCompression(true)
-                                .withReporters(new ThucydidesReporter(systemConfiguration)));
+                                .withReporters(new ThucydidesReporter(systemConfiguration)))
+                                .useStoryLoader(new UTF8StoryLoader());
     }
 }
