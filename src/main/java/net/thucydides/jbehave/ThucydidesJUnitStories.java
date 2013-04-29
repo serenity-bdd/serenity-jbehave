@@ -24,11 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static ch.lambdaj.Lambda.filter;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
-import static org.jbehave.core.reporters.Format.*;
-import static org.mockito.Matchers.startsWith;
+import static org.jbehave.core.reporters.Format.CONSOLE;
+import static org.jbehave.core.reporters.Format.HTML;
+import static org.jbehave.core.reporters.Format.XML;
 
 /**
  * A JUnit-runnable test case designed to run a set of ThucydidesWebdriverIntegration-enabled JBehave stories in a given package.
@@ -113,12 +111,42 @@ public class ThucydidesJUnitStories extends JUnitStories {
     private Set<String> pruneGivenStoriesFrom(Set<String> storyPaths) {
         List<String> filteredPaths = Lists.newArrayList(storyPaths);
         for (String skippedPrecondition : skippedPreconditions()) {
-            filteredPaths = filter(not(startsWith(skippedPrecondition)), filteredPaths);
-            filteredPaths = filter(not(startsWith(skippedPrecondition.toLowerCase())), filteredPaths);
-            filteredPaths = filter(not(containsString("/" + skippedPrecondition)), filteredPaths);
-            filteredPaths = filter(not(containsString("/" + skippedPrecondition.toLowerCase())), filteredPaths);
+            filteredPaths = removeFrom(filteredPaths)
+                            .pathsNotStartingWith(skippedPrecondition)
+                            .and().pathsNotStartingWith("/" + skippedPrecondition)
+                            .filter();
         }
         return Sets.newHashSet(filteredPaths);
+    }
+
+    class FilterBuilder {
+
+        private final List<String> paths;
+        public FilterBuilder(List<String> paths) {
+            this.paths = paths;
+        }
+
+        public FilterBuilder pathsNotStartingWith(String skippedPrecondition) {
+            List<String> filteredPaths = Lists.newArrayList();
+            for(String path : paths) {
+                if (!startsWith(skippedPrecondition, path)) {
+                    filteredPaths.add(path);
+                }
+            }
+            return new FilterBuilder(filteredPaths);
+        }
+
+        public FilterBuilder and() { return this; }
+
+        public List<String> filter() {
+            return ImmutableList.copyOf(paths);
+        }
+        private boolean startsWith(String skippedPrecondition, String path) {
+            return path.toLowerCase().startsWith(skippedPrecondition.toLowerCase());
+        }
+    }
+    private FilterBuilder removeFrom(List<String> filteredPaths) {
+        return new FilterBuilder(filteredPaths);
     }
 
     private List<String> skippedPreconditions() {
