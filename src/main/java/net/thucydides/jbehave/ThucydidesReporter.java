@@ -269,7 +269,11 @@ public class ThucydidesReporter implements StoryReporter {
         return new Converter<String, TestTag>() {
             public TestTag convert(String tag) {
                 List<String> tagParts = Lists.newArrayList(Splitter.on(":").trimResults().split(tag));
-                return TestTag.withName(tagParts.get(1)).andType(tagParts.get(0));
+                if (tagParts.size() == 2) {
+                    return TestTag.withName(tagParts.get(1)).andType(tagParts.get(0));
+                } else {
+                    return TestTag.withName("true").andType(tagParts.get(0));
+                }
             }
         };
     }

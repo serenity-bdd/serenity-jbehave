@@ -454,6 +454,20 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
+    public void a_test_should_accept_boolean_tags() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("aBehaviorWithTags.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0), havingTag(TestTag.withName("true").andType("security")));
+    }
+
+    @Test
     public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() throws Throwable {
 
         // Given
