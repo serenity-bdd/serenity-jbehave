@@ -21,6 +21,12 @@ public class StoryStepsUsingACustomTag {
         assertThat(metadata).isNotEmpty();
     }
 
+    @Then("I should be able to read the issue tag")
+    public void thenIShouldBeAbleToReadTheIssueTag() {
+        Map<String, String> metadata = Thucydides.getCurrentSession().getMetaData();
+        assertThat(metadata.get("issue")).isEqualTo("ISSUE-1");
+    }
+
     @Given("the scenario uses the custom tag $tagvalue")
     public void givenTheScenarioUsesTheCustomTag(String tagvalue) {
     }

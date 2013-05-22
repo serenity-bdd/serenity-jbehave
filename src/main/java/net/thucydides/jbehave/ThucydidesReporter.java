@@ -52,12 +52,10 @@ public class ThucydidesReporter implements StoryReporter {
     private final List<BaseStepListener> baseStepListeners;
 
     private final Configuration systemConfiguration;
-    private static final String OPEN_PARAM_CHAR =  "\uff5f";
+    private static final String OPEN_PARAM_CHAR = "\uff5f";
     private static final String CLOSE_PARAM_CHAR = "\uff60";
 
     private GivenStoryMonitor givenStoryMonitor;
-
-    private static final List<String> VALID_TAGS = ImmutableList.of("tag","tags","driver","issue","issues","feature","epic");
 
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
@@ -78,7 +76,7 @@ public class ThucydidesReporter implements StoryReporter {
         if (thucydidesListenersThreadLocal.get() == null) {
             ThucydidesListeners listeners = ThucydidesReports.setupListeners(systemConfiguration);
             thucydidesListenersThreadLocal.set(listeners);
-            synchronized(baseStepListeners) {
+            synchronized (baseStepListeners) {
                 baseStepListeners.add(listeners.getBaseStepListener());
             }
         }
@@ -185,21 +183,21 @@ public class ThucydidesReporter implements StoryReporter {
         String storyTitle = NameConverter.humanize(storyName);
 
         net.thucydides.core.model.Story userStory
-                    = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
-                                                     .withNarrative(story.getNarrative().asA());
+                = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
+                .withNarrative(story.getNarrative().asA());
         StepEventBus.getEventBus().testSuiteStarted(userStory);
         registerTags(story);
     }
 
     private void noteAnyGivenStoriesFor(Story story) {
-        for(GivenStory given : story.getGivenStories().getStories()) {
+        for (GivenStory given : story.getGivenStories().getStories()) {
             String givenStoryName = new File(given.getPath()).getName();
             givenStories.add(givenStoryName);
         }
     }
 
     private boolean isAStoryLevelGiven(Story story) {
-        for(String givenStoryName : givenStories) {
+        for (String givenStoryName : givenStories) {
             if (hasSameName(story, givenStoryName)) {
                 return true;
             }
@@ -351,12 +349,10 @@ public class ThucydidesReporter implements StoryReporter {
         }
     }
 
-    private Map<String,String> getMetadataFrom(Meta metaData) {
-        Map<String,String> metadata = Maps.newHashMap();
-        for(String propertyName : metaData.getPropertyNames()) {
-            if (!VALID_TAGS.contains(propertyName)) {
-                metadata.put(propertyName, metaData.getProperty(propertyName));
-            }
+    private Map<String, String> getMetadataFrom(Meta metaData) {
+        Map<String, String> metadata = Maps.newHashMap();
+        for (String propertyName : metaData.getPropertyNames()) {
+            metadata.put(propertyName, metaData.getProperty(propertyName));
         }
         return metadata;
     }
@@ -366,10 +362,8 @@ public class ThucydidesReporter implements StoryReporter {
 
         Map<String, String> scenarioMetadata = getMetadataFrom(metaData);
         scenarioMetadata.putAll(storyMetadata);
-        for(String key : scenarioMetadata.keySet()) {
-            if (!VALID_TAGS.contains(key)) {
-                Thucydides.getCurrentSession().addMetaData(key, scenarioMetadata.get(key));
-            }
+        for (String key : scenarioMetadata.keySet()) {
+            Thucydides.getCurrentSession().addMetaData(key, scenarioMetadata.get(key));
         }
     }
 
@@ -385,7 +379,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private String removeSuffixFrom(String name) {
-        return (name.contains(".")) ? name.substring(0, name.indexOf(".")) :  name;
+        return (name.contains(".")) ? name.substring(0, name.indexOf(".")) : name;
     }
 
     public void afterStory(boolean given) {
@@ -397,7 +391,7 @@ public class ThucydidesReporter implements StoryReporter {
             if (isAfterStory(currentStory())) {
                 closeBrowsersForThisStory();
                 generateReports();
-            } else if (!isFixture(currentStory()) && !given &&  (!isAStoryLevelGiven(currentStory()))) {
+            } else if (!isFixture(currentStory()) && !given && (!isAStoryLevelGiven(currentStory()))) {
                 StepEventBus.getEventBus().testSuiteFinished();
                 clearListeners();
             }
@@ -423,7 +417,8 @@ public class ThucydidesReporter implements StoryReporter {
         return flatten(extract(baseStepListeners, on(BaseStepListener.class).getTestOutcomes()));
     }
 
-    public void narrative(Narrative narrative) {}
+    public void narrative(Narrative narrative) {
+    }
 
     public void scenarioNotAllowed(Scenario scenario, String s) {
     }
@@ -435,7 +430,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     private boolean shouldRestartDriverBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-               ThucydidesJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
+                ThucydidesJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
     }
 
 
@@ -462,8 +457,9 @@ public class ThucydidesReporter implements StoryReporter {
     public void givenStories(List<String> strings) {
     }
 
-    List<Map<String,String>> exampleData;
+    List<Map<String, String>> exampleData;
     int exampleCount = 0;
+
     public void beforeExamples(List<String> steps, ExamplesTable table) {
         exampleCount = 0;
         exampleData = ImmutableList.copyOf(table.getRows());
@@ -489,7 +485,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private void startExample() {
-        Map<String,String> data = exampleData.get(exampleCount - 1);
+        Map<String, String> data = exampleData.get(exampleCount - 1);
         StepEventBus.getEventBus().exampleStarted(data);
     }
 
@@ -565,7 +561,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private String normalized(String value) {
-        return value.replaceAll(OPEN_PARAM_CHAR, "{").replaceAll(CLOSE_PARAM_CHAR,"}");
+        return value.replaceAll(OPEN_PARAM_CHAR, "{").replaceAll(CLOSE_PARAM_CHAR, "}");
 
     }
 }
