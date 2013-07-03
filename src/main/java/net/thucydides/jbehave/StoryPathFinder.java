@@ -54,7 +54,6 @@ class StoryPathFinder {
                 storyPathElements.addAll(newPathElements);
             }
         }
-
         return storyPathElements;
     }
 
@@ -76,7 +75,7 @@ class StoryPathFinder {
     }
 
     private String withWildcard(String resourceName) {
-        return "**/" + resourceName;//simpleNameFrom(resourceName);
+        return "**/" + resourceName;
     }
 
     private Optional<URL> storyOnClasspath(String storyFile) {
