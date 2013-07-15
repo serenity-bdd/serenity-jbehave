@@ -33,6 +33,7 @@ public class ThucydidesStepCandidate extends StepCandidate {
                 new RegexPrefixCapturingPatternParser(),
                 new ParameterConverters(),
                 new ParameterControls());
+        this.composedOf(stepCandidate.composedSteps());
         this.stepCandidate = stepCandidate;
     }
 

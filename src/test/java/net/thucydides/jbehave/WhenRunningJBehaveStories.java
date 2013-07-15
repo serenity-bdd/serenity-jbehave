@@ -795,4 +795,35 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
     }
 
+    @Test
+    public void a_scenario_should_convert_dates_and_times() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aBehaviorWithDatesAndTimes.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void should_run_stories_with_composite_steps() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = newStory("aBehaviorWithCompositeSteps.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+    }
+
 }
