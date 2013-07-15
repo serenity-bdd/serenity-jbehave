@@ -1,5 +1,10 @@
 package net.thucydides.jbehave;
 
+import net.thucydides.jbehave.converters.DateListConverter;
+import net.thucydides.jbehave.converters.DateTimeConverter;
+import net.thucydides.jbehave.converters.DateTimeListConverter;
+import net.thucydides.jbehave.converters.TimeConverter;
+import net.thucydides.jbehave.converters.TimeListConverter;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
@@ -32,10 +37,18 @@ public class ThucydidesJBehave {
         Properties viewResources = new Properties();
         viewResources.put("decorateNonHtml", "true");
 
+        new ParameterConverters.DateConverter();
         return new ParanamerConfiguration()
                 .useParameterConverters(
-                        new ParameterConverters().addConverters(new ParameterConverters.EnumConverter(),
-                                                                new ParameterConverters.EnumListConverter()))
+                        new ParameterConverters().addConverters(
+                                new ParameterConverters.DateConverter(),
+                                new DateListConverter(),
+                                new DateTimeConverter(),
+                                new DateTimeListConverter(),
+                                new TimeConverter(),
+                                new TimeListConverter(),
+                                new ParameterConverters.EnumConverter(),
+                                new ParameterConverters.EnumListConverter()))
                 .useStoryReporterBuilder(
                         new StoryReporterBuilder()
                                 .withDefaultFormats()
@@ -46,6 +59,6 @@ public class ThucydidesJBehave {
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
                                 .withFailureTrace(true).withFailureTraceCompression(true)
                                 .withReporters(new ThucydidesReporter(systemConfiguration)))
-                                .useStoryLoader(new UTF8StoryLoader());
+                .useStoryLoader(new UTF8StoryLoader());
     }
 }
