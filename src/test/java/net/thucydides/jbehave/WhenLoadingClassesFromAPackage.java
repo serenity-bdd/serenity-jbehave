@@ -29,7 +29,7 @@ public class WhenLoadingClassesFromAPackage {
     @Test
     public void shouldLoadAllAnnotatedClassesInNestedPackages() throws IOException, ClassNotFoundException {
         List<Class<?>> classes = ClassFinder.loadClasses().annotatedWith(Given.class).fromPackage("net.thucydides.jbehave");
-        assertThat(classes.size(), is(10));
+        assertThat(classes.size(), is(12));
     }
 
     @Test
