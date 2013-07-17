@@ -36,7 +36,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>0.9.200-SNAPSHOT</version>
+            <version>0.9.200</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-sample-alternative-resources</artifactId>
-            <version>0.9.125</version>
+            <version>0.9.131-NS</version>
             <scope>test</scope>
         </dependency>
         <dependency>
