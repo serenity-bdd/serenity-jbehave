@@ -52,6 +52,10 @@ public class ThucydidesReportingRunner extends Runner {
     private final Class<? extends ConfigurableEmbedder> testClass;
     private final EnvironmentVariables environmentVariables;
 
+    private final String SKIP_FILTER = "-skip";
+    private final String IGNORE_FILTER = "-ignore";
+    private final String DEFAULT_METAFILTER = SKIP_FILTER + " " + IGNORE_FILTER;
+
     @SuppressWarnings("unchecked")
     public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
         this(testClass, testClass.newInstance());
@@ -271,8 +275,19 @@ public class ThucydidesReportingRunner extends Runner {
     //////////////////
 
     private boolean metaFiltersAreDefined() {
-        String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
+        String metaFilters = getMetafilterSetting();
         return !StringUtils.isEmpty(metaFilters);
+    }
+
+    private String getMetafilterSetting() {
+        String metaFilters = environmentVariables.getProperty(METAFILTER.getName(),DEFAULT_METAFILTER);
+        if (!metaFilters.contains(SKIP_FILTER)) {
+            metaFilters = metaFilters + SKIP_FILTER;
+        }
+        if (!metaFilters.contains(IGNORE_FILTER)) {
+            metaFilters = metaFilters + IGNORE_FILTER;
+        }
+        return metaFilters;
     }
 
     protected boolean getIgnoreFailuresInStories() {
@@ -284,7 +299,7 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     protected List<String> getMetaFilters() {
-        String metaFilters = environmentVariables.getProperty(METAFILTER.getName());
+        String metaFilters = getMetafilterSetting();
         return Lists.newArrayList(Splitter.on(",").trimResults().split(metaFilters));
     }
 
