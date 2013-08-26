@@ -717,11 +717,11 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.size(), is(3));
 
         TestOutcome scenarioWithGivens = outcomes.get(2);
-        assertThat(scenarioWithGivens.getTestSteps().size(), is(7));
+        assertThat(scenarioWithGivens.getTestSteps().size(), is(5));
 
         TestStep firstStep = scenarioWithGivens.getTestSteps().get(0);
         TestStep secondStep = scenarioWithGivens.getTestSteps().get(1);
-        TestStep scenarioStep = scenarioWithGivens.getTestSteps().get(4);
+        TestStep scenarioStep = scenarioWithGivens.getTestSteps().get(2);
         assertThat(firstStep.getDescription(), is("precondition description"));
         assertThat(secondStep.getDescription(), is("another precondition description"));
         assertThat(scenarioStep.getDescription(), is("Given a system state"));
@@ -730,6 +730,93 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(secondStep.getChildren().size(), is(4));
 
 
+    }
+
+    @Test
+    public void test_should_count_preconditions_as_step() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new AnotherSingleStorySample();
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+
+        TestOutcome scenarioWithGivens = outcomes.get(0);
+        assertThat(scenarioWithGivens.getTestSteps().size(), is(5));
+
+        TestStep firstStep = scenarioWithGivens.getTestSteps().get(0);
+        TestStep secondStep = scenarioWithGivens.getTestSteps().get(1);
+        TestStep scenarioStep = scenarioWithGivens.getTestSteps().get(2);
+        assertThat(firstStep.getDescription(), is("precondition description"));
+        assertThat(secondStep.getDescription(), is("another precondition description"));
+        assertThat(scenarioStep.getDescription(), is("Given a system state"));
+
+        assertThat(firstStep.getChildren().size(), is(3));
+        assertThat(secondStep.getChildren().size(), is(4));
+
+
+    }
+
+    final class AnotherSingleStorySample extends ThucydidesJUnitStories {
+
+        public AnotherSingleStorySample() {
+            super(environmentVariables);
+            findStoriesCalled("stories/samples/SomeMoreBehavior.story");
+        }
+    }
+
+    @Test
+    public void test_should_count_not_merge_main_step() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories story = new ASingleStoryWithGivenSample();
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+
+        TestOutcome scenarioWithGivens = outcomes.get(0);
+        assertThat(scenarioWithGivens.getTestSteps().size(), is(5));
+
+        TestStep firstStep = scenarioWithGivens.getTestSteps().get(0);
+        TestStep firstChildrenFirstStep = firstStep.getChildren().get(0);
+        TestStep secondChildrenFirstStep = firstStep.getChildren().get(1);
+        TestStep thirdChildrenFirstStep = firstStep.getChildren().get(2);
+        TestStep secondStep = scenarioWithGivens.getTestSteps().get(1);
+        TestStep firstChildrenSecondStep = secondStep.getChildren().get(0);
+        TestStep secondChildrenSecondStep = secondStep.getChildren().get(1);
+        TestStep thirdChildrenSecondStep = secondStep.getChildren().get(2);
+        TestStep fourthChildrenSecondStep = secondStep.getChildren().get(3);
+        TestStep scenarioFirstStep = scenarioWithGivens.getTestSteps().get(2);
+        TestStep scenarioSecondStep = scenarioWithGivens.getTestSteps().get(3);
+        TestStep scenarioThirdStep = scenarioWithGivens.getTestSteps().get(4);
+        assertThat(firstStep.getDescription(), is("precondition description"));
+        assertThat(firstChildrenFirstStep.getDescription(), is("Given some pre-precondition"));
+        assertThat(secondChildrenFirstStep.getDescription(), is("When I set up my precondition"));
+        assertThat(thirdChildrenFirstStep.getDescription(), is("Then I should be ready for the real test"));
+        assertThat(secondStep.getDescription(), is("another precondition description"));
+        assertThat(firstChildrenSecondStep.getDescription(), is("Given some other pre-precondition"));
+        assertThat(secondChildrenSecondStep.getDescription(), is("When I set up my other precondition"));
+        assertThat(thirdChildrenSecondStep.getDescription(), is("And I do some other stuff"));
+        assertThat(fourthChildrenSecondStep.getDescription(), is("Then I should be even more ready for the real test"));
+        assertThat(scenarioFirstStep.getDescription(), is("Given a system state"));
+        assertThat(scenarioSecondStep.getDescription(), is("When I do something"));
+        assertThat(scenarioThirdStep.getDescription(), is("Then system is in a different state"));
+    }
+
+    final class ASingleStoryWithGivenSample extends ThucydidesJUnitStories {
+
+        public ASingleStoryWithGivenSample() {
+            super(environmentVariables);
+            findStoriesCalled("stories/samples/SomeMoreBehavior.story");
+        }
     }
 
     @Test
