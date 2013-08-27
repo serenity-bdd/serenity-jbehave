@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
 public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
@@ -176,5 +175,13 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void two_scenarii_using_the_same_given_story_should_return_two_test_outcomes() throws Throwable {
+        ThucydidesJUnitStories story = newStory("LookupADefinitionSuite.story");
+        run(story);
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
     }
 }

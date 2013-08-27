@@ -133,6 +133,8 @@ public class ThucydidesReporter implements StoryReporter {
                     startTestForFirstScenarioIn(story);
                 }
             }
+        } else if(givenStory) {
+            shouldNestScenarios(true);
         }
     }
 
@@ -159,11 +161,18 @@ public class ThucydidesReporter implements StoryReporter {
         if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
-        if (shouldNestScenarios()) {
+
+        if(isCurrentScenario(scenarioTitle)) {
+            //This is our scenario
+        } else if (shouldNestScenarios()) {
             startNewStep(scenarioTitle);
         } else {
             startScenarioCalled(scenarioTitle);
         }
+    }
+
+    private boolean isCurrentScenario(String scenarioTitle) {
+        return !activeScenarios.empty() && scenarioTitle.equals(activeScenarios.peek());
     }
 
     private void startNewStep(String scenarioTitle) {
@@ -383,11 +392,11 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void afterStory(boolean given) {
+        shouldNestScenarios(false);
         if (given) {
             givenStoryMonitor.exitingGivenStory();
             givenStoryDone(currentStory());
         } else {
-            shouldNestScenarios(false);
             if (isAfterStory(currentStory())) {
                 closeBrowsersForThisStory();
                 generateReports();
