@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.JBEHAVE_STORY_PACKAGES;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_DIRECTORY;
 
 class StoryPathFinder {
     
@@ -88,7 +89,9 @@ class StoryPathFinder {
     }
 
     private String join(String packagePath, String storyName) {
-        if (packagePath.endsWith("/")) {
+        if (packagePath == null) {
+            return storyName;
+        } else if (packagePath.endsWith("/")) {
             return packagePath + storyName;
         } else {
             return packagePath + "/" + storyName;
@@ -98,7 +101,8 @@ class StoryPathFinder {
 
     private List<String> getClasspathPackages() {
 
-        List<String> packages = Lists.newArrayList("/","stories","/stories");
+        String storyDirectory = environmentVariables.getProperty(STORY_DIRECTORY,"stories");
+        List<String> packages = Lists.newArrayList("/",storyDirectory,"/" + storyDirectory);
         String storyPackages = environmentVariables.getProperty(JBEHAVE_STORY_PACKAGES.getName());
         if (StringUtils.isNotEmpty(storyPackages)) {
             packages.addAll(Lists.newArrayList(Splitter.on(";").trimResults().omitEmptyStrings().split(storyPackages)));

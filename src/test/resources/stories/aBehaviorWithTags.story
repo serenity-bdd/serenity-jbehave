@@ -4,7 +4,7 @@ Meta:
 Scenario: A scenario that works
 Meta:
 @tags domain:a domain, iteration: iteration 1, security
-
+@end-to-end
 Given I have an implemented JBehave scenario
 And the scenario works
 When I run the scenario

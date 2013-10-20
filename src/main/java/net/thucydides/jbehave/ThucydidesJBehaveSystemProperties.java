@@ -31,6 +31,11 @@ public enum ThucydidesJBehaveSystemProperties {
     RESTART_BROWSER_EACH_SCENARIO,
 
     /**
+     * Define a directory for the .story files, inside src/test/resources. By default, this is 'stories'
+     */
+    STORY_DIRECTORY,
+
+    /**
      * If the JBehave stories are in a JAR file, we need to provide a semi-colon separated list of packages for
      * the test runner to look in, e.g. "/my/package;/my/other/package"
      * If the stories are in the root package or in the "stories" folder, this is not required.
