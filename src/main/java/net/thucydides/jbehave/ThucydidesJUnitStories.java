@@ -11,6 +11,7 @@ import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
+import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
@@ -48,7 +49,8 @@ public class ThucydidesJUnitStories extends JUnitStories {
     private Configuration configuration;
     private List<Format> formats = Arrays.asList(CONSOLE, HTML, XML);
 
-    public ThucydidesJUnitStories() {}
+    public ThucydidesJUnitStories() {
+    }
 
     protected ThucydidesJUnitStories(EnvironmentVariables environmentVariables) {
         this.environmentVariables = environmentVariables.copy();

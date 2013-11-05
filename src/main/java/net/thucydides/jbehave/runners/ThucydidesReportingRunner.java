@@ -8,6 +8,7 @@ import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
+import net.thucydides.jbehave.ThucydidesJBehaveSystemProperties;
 import net.thucydides.jbehave.ThucydidesJUnitStories;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
@@ -135,9 +136,12 @@ public class ThucydidesReportingRunner extends Runner {
 	@Override
 	public void run(RunNotifier notifier) {
 
+        int threadCount = environmentVariables.getPropertyAsInteger(ThucydidesJBehaveSystemProperties.JBEHAVE_THREADS, 1);
+
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInView(true);
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
         getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
+        getConfiguredEmbedder().embedderControls().useThreads(threadCount);
         if (metaFiltersAreDefined()) {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
