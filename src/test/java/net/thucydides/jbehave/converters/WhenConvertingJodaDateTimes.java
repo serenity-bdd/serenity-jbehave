@@ -1,15 +1,9 @@
 package net.thucydides.jbehave.converters;
 
-import com.beust.jcommander.internal.Lists;
-import net.thucydides.jbehave.converters.TimeConverter;
-import net.thucydides.jbehave.converters.TimeListConverter;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.YearMonth;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -55,22 +49,32 @@ public class WhenConvertingJodaDateTimes {
     }
 
     @Test
-    @Ignore
     public void should_accept_YearMonth_values() {
-        DateTimeConverter converter = new DateTimeConverter();
-// TODO:
+        YearMonthConverter converter = new YearMonthConverter();
         assertThat(converter.accept(YearMonth.class)).isTrue();
     }
 
     @Test
+    public void should_not_accept_non_YearMonth_value() {
+        YearMonthConverter converter = new YearMonthConverter();
+        assertThat(converter.accept(DateTime.class)).isFalse();
+    }
 
-    @Ignore
+    @Test
     public void should_detect_YearMonth_format() {
-        DateTimeConverter converter = new DateTimeConverter();
-// TODO:
+        YearMonthConverter converter = new YearMonthConverter();
         YearMonth convertedTime = (YearMonth) converter.convertValue("10-1942", YearMonth.class);
 
-        assertThat(convertedTime.getMonthOfYear()).isEqualTo(4);
+        assertThat(convertedTime.getMonthOfYear()).isEqualTo(10);
+        assertThat(convertedTime.getYear()).isEqualTo(1942);
+    }
+
+    @Test
+    public void should_detect_YearMonth_format_with_slash() {
+        YearMonthConverter converter = new YearMonthConverter();
+        YearMonth convertedTime = (YearMonth) converter.convertValue("10/1942", YearMonth.class);
+
+        assertThat(convertedTime.getMonthOfYear()).isEqualTo(10);
         assertThat(convertedTime.getYear()).isEqualTo(1942);
     }
 }

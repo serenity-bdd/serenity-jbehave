@@ -3,6 +3,7 @@ package net.thucydides.jbehave.steps.dateconversions;
 import ch.lambdaj.function.convert.Converter;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
+import org.joda.time.YearMonth;
 
 public class StringDateConverters {
     public static Converter<String, LocalTime> toLocalTimes() {
@@ -24,4 +25,15 @@ public class StringDateConverters {
             }
         };
     }
+
+    public static Converter<String, YearMonth> toYearMonths() {
+        return new Converter<String,YearMonth>() {
+
+            @Override
+            public YearMonth convert(String from) {
+                return new YearMonth(from);
+            }
+        };
+    }
+
 }

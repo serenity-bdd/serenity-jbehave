@@ -37,8 +37,8 @@ Examples:
 
 Scenario: Should convert month-year values
 Given I want to convert string values to Joda MonthYear objects
-When I pass a MonthYear parameter a value of <value>
-Then the parameter should be converted to a MonthYear with a value of <expectedValue>
+When I pass a YearMonth parameter a value of <value>
+Then the parameter should be converted to a YearMonth with a value of <expectedValue>
 Examples:
 |value       | expectedValue |
 |10-2013     | 2013-10       |
@@ -46,8 +46,8 @@ Examples:
 
 Scenario: Should convert lists of month-year values
 Given I want to convert string values to Joda MonthYear objects
-When I pass a list of MonthYear parameter a value of <value>
-Then the parameter should be converted to a list of MonthYear with a value of <expected>
+When I pass a list of YearMonth parameter a value of <value>
+Then the parameter should be converted to a list of YearMonth with a value of <expected>
 Examples:
 |value               | expected         |
 |10-2013             | 2013-10          |

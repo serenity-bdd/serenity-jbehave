@@ -5,6 +5,8 @@ import net.thucydides.jbehave.converters.DateTimeConverter;
 import net.thucydides.jbehave.converters.DateTimeListConverter;
 import net.thucydides.jbehave.converters.TimeConverter;
 import net.thucydides.jbehave.converters.TimeListConverter;
+import net.thucydides.jbehave.converters.YearMonthConverter;
+import net.thucydides.jbehave.converters.YearMonthListConverter;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
@@ -45,6 +47,8 @@ public class ThucydidesJBehave {
                                 new DateListConverter(),
                                 new DateTimeConverter(),
                                 new DateTimeListConverter(),
+                                new YearMonthConverter(),
+                                new YearMonthListConverter(),
                                 new TimeConverter(),
                                 new TimeListConverter(),
                                 new ParameterConverters.EnumConverter(),
