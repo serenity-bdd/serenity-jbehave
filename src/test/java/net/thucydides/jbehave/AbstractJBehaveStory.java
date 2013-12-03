@@ -1,12 +1,10 @@
 package net.thucydides.jbehave;
 
-import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
 import net.thucydides.core.screenshots.ScreenshotProcessor;
 import net.thucydides.core.screenshots.SingleThreadScreenshotProcessor;
-import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
@@ -45,7 +43,7 @@ public class AbstractJBehaveStory {
 
         outputDirectory = temporaryFolder.newFolder("output");
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
-        environmentVariables.setProperty("webdriver.driver", "firefox");
+        environmentVariables.setProperty("webdriver.driver", "phantomjs");
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
         screenshotProcessor = new SingleThreadScreenshotProcessor(environmentVariables);// Injectors.getInjector().getInstance(ScreenshotProcessor.class);
         raisedErrors.clear();
@@ -85,7 +83,9 @@ public class AbstractJBehaveStory {
     }
 
     protected List<TestOutcome> loadTestOutcomes() throws IOException {
+
         XMLTestOutcomeReporter outcomeReporter = new XMLTestOutcomeReporter();
+        System.out.println("Loading test outcomes from " + outputDirectory);
         List<TestOutcome> testOutcomes = outcomeReporter.loadReportsFrom(outputDirectory);
         Collections.sort(testOutcomes, new Comparator<TestOutcome>() {
             public int compare(TestOutcome testOutcome, TestOutcome testOutcome1) {

@@ -52,3 +52,20 @@ Examples:
 |value               | expected         |
 |10-2013             | 2013-10          |
 |10/2013,11/2013     | 2013-10,2013-11  |
+
+Scenario: Should convert duration values
+Given I want to convert string values to Joda Durations
+When I pass a Duration parameter a value of <value>
+Then the parameter should be converted to a Duration with the value <expected> seconds
+Examples:
+|value               | expected      |
+|1 second            | 1             |
+|2 seconds           | 2             |
+|1 minute            | 60            |
+|2 minutes           | 120           |
+|1 hour              | 3600          |
+|2 hours             | 7200          |
+|1 day               | 86400         |
+|2 days              | 172800        |
+
+

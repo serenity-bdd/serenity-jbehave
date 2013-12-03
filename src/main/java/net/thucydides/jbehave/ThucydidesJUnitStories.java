@@ -60,7 +60,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
         this.setSystemConfiguration(configuration);
     }
 
-    protected EnvironmentVariables getEnvironmentVariables() {
+    public EnvironmentVariables getEnvironmentVariables() {
         if (environmentVariables == null) {
             environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class).copy();
         }

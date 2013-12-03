@@ -84,10 +84,11 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     protected ReportService getReportService() {
-        if (reportServiceThreadLocal.get() == null) {
-            reportServiceThreadLocal.set(ThucydidesReports.getReportService(systemConfiguration));
-        }
-        return reportServiceThreadLocal.get();
+        return ThucydidesReports.getReportService(systemConfiguration);
+//        if (reportServiceThreadLocal.get() == null) {
+//            reportServiceThreadLocal.set(ThucydidesReports.getReportService(systemConfiguration));
+//        }
+//        return reportServiceThreadLocal.get();
     }
 
     public void storyNotAllowed(Story story, String filter) {

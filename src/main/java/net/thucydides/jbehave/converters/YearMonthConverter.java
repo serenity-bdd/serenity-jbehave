@@ -1,6 +1,7 @@
 package net.thucydides.jbehave.converters;
 
 import org.jbehave.core.steps.ParameterConverters;
+import org.joda.time.Duration;
 import org.joda.time.YearMonth;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -19,6 +20,7 @@ public class YearMonthConverter implements ParameterConverters.ParameterConverte
         } else {
             return false;
         }
+
     }
 
     @Override

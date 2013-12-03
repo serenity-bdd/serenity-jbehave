@@ -86,10 +86,12 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         ThucydidesJUnitStories story = new APassingWebTestSampleWithASpecifiedBrowser();
         story.setEnvironmentVariables(environmentVariables);
 
+        System.out.println("Output dir = " + outputDirectory.getAbsolutePath());
         // When
         run(story);
 
         // Then
+        System.out.println("Loading from output dir = " + outputDirectory.getAbsolutePath());
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }

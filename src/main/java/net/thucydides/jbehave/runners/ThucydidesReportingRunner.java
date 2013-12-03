@@ -108,7 +108,7 @@ public class ThucydidesReportingRunner extends Runner {
 
     private EnvironmentVariables environmentVariablesFrom(ConfigurableEmbedder configurableEmbedder) {
         if (configurableEmbedder instanceof ThucydidesJUnitStories) {
-            return ((ThucydidesJUnitStories) configurableEmbedder).getSystemConfiguration().getEnvironmentVariables();
+            return ((ThucydidesJUnitStories) configurableEmbedder).getEnvironmentVariables();
         } else {
             return Injectors.getInjector().getInstance(EnvironmentVariables.class);
         }
@@ -135,13 +135,9 @@ public class ThucydidesReportingRunner extends Runner {
 
 	@Override
 	public void run(RunNotifier notifier) {
-
-        int threadCount = environmentVariables.getPropertyAsInteger(ThucydidesJBehaveSystemProperties.JBEHAVE_THREADS, 1);
-
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInView(true);
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
         getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
-        getConfiguredEmbedder().embedderControls().useThreads(threadCount);
         if (metaFiltersAreDefined()) {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
