@@ -13,6 +13,7 @@ import net.thucydides.jbehave.ThucydidesJUnitStories;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
+import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
@@ -142,7 +143,7 @@ public class ThucydidesReportingRunner extends Runner {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
 
-        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription());
+        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(), new Keywords());
 		// tell the reporter how to handle pending steps
 		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 	
