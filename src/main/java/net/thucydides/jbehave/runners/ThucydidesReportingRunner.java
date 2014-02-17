@@ -1,14 +1,12 @@
 package net.thucydides.jbehave.runners;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import net.thucydides.jbehave.ThucydidesJBehaveSystemProperties;
 import net.thucydides.jbehave.ThucydidesJUnitStories;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
@@ -17,7 +15,6 @@ import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
-import org.jbehave.core.io.StoryResourceNotFound;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.junit.JUnitStory;
 import org.jbehave.core.model.Story;
@@ -36,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static net.thucydides.core.ThucydidesSystemProperty.UNIQUE_BROWSER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
@@ -54,9 +52,9 @@ public class ThucydidesReportingRunner extends Runner {
     private final Class<? extends ConfigurableEmbedder> testClass;
     private final EnvironmentVariables environmentVariables;
 
-    private final String SKIP_FILTER = "-skip";
-    private final String IGNORE_FILTER = "-ignore";
-    private final String DEFAULT_METAFILTER = SKIP_FILTER + " " + IGNORE_FILTER;
+    private final String SKIP_FILTER = " -skip";
+    private final String IGNORE_FILTER = " -ignore";
+    private final String DEFAULT_METAFILTER = SKIP_FILTER + IGNORE_FILTER;
 
     @SuppressWarnings("unchecked")
     public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
@@ -282,15 +280,42 @@ public class ThucydidesReportingRunner extends Runner {
 
     private String getMetafilterSetting() {
         String metaFilters = environmentVariables.getProperty(METAFILTER.getName(),DEFAULT_METAFILTER);
-        if (!metaFilters.contains(SKIP_FILTER)) {
-            metaFilters = metaFilters + SKIP_FILTER;
-        }
-        if (!metaFilters.contains(IGNORE_FILTER)) {
-            metaFilters = metaFilters + IGNORE_FILTER;
+        if (isGroovy(metaFilters)) {
+            metaFilters = addGroovyMetafilterValuesTo(metaFilters);
+        } else {
+            metaFilters = addDefaultMetafilterValuesTo(metaFilters);
         }
         return metaFilters;
     }
 
+    private boolean isGroovy(String metaFilters) {
+        return (metaFilters != null) && (metaFilters.startsWith("groovy:"));
+    }
+
+    private String addDefaultMetafilterValuesTo(String metaFilters) {
+        if (!metaFilters.contains(SKIP_FILTER)) {
+            metaFilters = metaFilters + ", " + SKIP_FILTER;
+        }
+        if (!metaFilters.contains(IGNORE_FILTER)) {
+            metaFilters = metaFilters + ", " + IGNORE_FILTER;
+        }
+        return metaFilters;
+    }
+
+    private String addGroovyMetafilterValuesTo(String metaFilters) {
+        String skipAndIgnore = "";
+        if (!metaFilters.contains("skip")) {
+            skipAndIgnore = skipAndIgnore + " && !skip";
+        }
+        if (!metaFilters.contains("ignore")) {
+            skipAndIgnore = skipAndIgnore + " && !ignore";
+        }
+        if (!skipAndIgnore.isEmpty()) {
+            return "groovy:(" + metaFilters.substring(7) + ") " + skipAndIgnore;
+        } else {
+            return metaFilters;
+        }
+    }
     protected boolean getIgnoreFailuresInStories() {
         return environmentVariables.getPropertyAsBoolean(IGNORE_FAILURES_IN_STORIES.getName(),true);
     }
@@ -301,7 +326,7 @@ public class ThucydidesReportingRunner extends Runner {
 
     protected List<String> getMetaFilters() {
         String metaFilters = getMetafilterSetting();
-        return Lists.newArrayList(Splitter.on(",").trimResults().split(metaFilters));
+        return Lists.newArrayList(Splitter.on(Pattern.compile(",")).trimResults().omitEmptyStrings().split(metaFilters));
     }
 
     public boolean usingUniqueBrowser() {

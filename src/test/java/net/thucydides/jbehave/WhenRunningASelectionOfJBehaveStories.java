@@ -3,7 +3,6 @@ package net.thucydides.jbehave;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.core.webdriver.Configuration;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -88,6 +87,42 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(1));
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+
+    @Test
+    public void should_be_possible_to_define_multiple_metafilters() throws Throwable {
+
+        // Given
+        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
+        ThucydidesJUnitStories allStories = new ThucydidesJUnitStories(systemConfiguration);
+        allStories.setSystemConfiguration(systemConfiguration);
+        allStories.setEnvironmentVariables(environmentVariables);
+
+        // When
+        run(allStories);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(4));
+    }
+
+    @Test
+    @Ignore("PENDING")
+    public void should_be_possible_to_define_groovy_metafilters() throws Throwable {
+
+        // Given
+        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "groovy:true==false");
+        ThucydidesJUnitStories allStories = new ThucydidesJUnitStories(systemConfiguration);
+        allStories.setSystemConfiguration(systemConfiguration);
+        allStories.setEnvironmentVariables(environmentVariables);
+
+        // When
+        run(allStories);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(0));
     }
 
     @Test

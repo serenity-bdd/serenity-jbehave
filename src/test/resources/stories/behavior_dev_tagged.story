@@ -1,8 +1,8 @@
 Meta:
-@environment uat
+@environment dev
+@speed fast
 
-
-Scenario: A scenario for UAT
+Scenario: A scenario for DEV
 
 Given I have an implemented JBehave scenario
 And the scenario works

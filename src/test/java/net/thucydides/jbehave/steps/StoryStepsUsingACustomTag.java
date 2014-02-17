@@ -59,7 +59,7 @@ public class StoryStepsUsingACustomTag {
     @BeforeStory
     public void beforeStory() {
         Map<String, String> metadata = Thucydides.getCurrentSession().getMetaData();
-        if (!metadata.isEmpty()) {
+        if (!metadata.isEmpty() && metadata.get("global") != null) {
             assertThat(metadata.get("global")).containsIgnoringCase("shared");
         }
     }
