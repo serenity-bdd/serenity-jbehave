@@ -1,7 +1,6 @@
 package net.thucydides.jbehave.converters;
 
 import org.jbehave.core.steps.ParameterConverters;
-import org.joda.time.DateTime;
 import org.joda.time.YearMonth;
 
 import java.lang.reflect.ParameterizedType;

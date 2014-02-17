@@ -70,9 +70,28 @@ public class WhenConvertingJodaDateTimes {
     }
 
     @Test
+    public void should_detect_MonthYear_format() {
+        YearMonthConverter converter = new YearMonthConverter();
+        YearMonth convertedTime = (YearMonth) converter.convertValue("1942-10", YearMonth.class);
+
+        assertThat(convertedTime.getMonthOfYear()).isEqualTo(10);
+        assertThat(convertedTime.getYear()).isEqualTo(1942);
+    }
+
+    @Test
     public void should_detect_YearMonth_format_with_slash() {
         YearMonthConverter converter = new YearMonthConverter();
         YearMonth convertedTime = (YearMonth) converter.convertValue("10/1942", YearMonth.class);
+
+        assertThat(convertedTime.getMonthOfYear()).isEqualTo(10);
+        assertThat(convertedTime.getYear()).isEqualTo(1942);
+    }
+
+
+    @Test
+    public void should_detect_MonthYear_format_with_slash() {
+        YearMonthConverter converter = new YearMonthConverter();
+        YearMonth convertedTime = (YearMonth) converter.convertValue("1942/10", YearMonth.class);
 
         assertThat(convertedTime.getMonthOfYear()).isEqualTo(10);
         assertThat(convertedTime.getYear()).isEqualTo(1942);
