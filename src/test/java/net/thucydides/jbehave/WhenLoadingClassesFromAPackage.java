@@ -10,7 +10,9 @@ import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 
 public class WhenLoadingClassesFromAPackage {
 

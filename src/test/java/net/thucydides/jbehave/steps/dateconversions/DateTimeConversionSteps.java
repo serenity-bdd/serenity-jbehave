@@ -1,18 +1,15 @@
 package net.thucydides.jbehave.steps.dateconversions;
 
 import org.jbehave.core.annotations.Alias;
-import org.jbehave.core.annotations.Aliases;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 
 import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
 import static net.thucydides.jbehave.steps.dateconversions.StringDateConverters.toDateTimes;
-import static net.thucydides.jbehave.steps.dateconversions.StringDateConverters.toLocalTimes;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class DateTimeConversionSteps {

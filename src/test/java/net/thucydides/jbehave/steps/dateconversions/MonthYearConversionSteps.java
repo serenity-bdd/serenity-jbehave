@@ -8,7 +8,6 @@ import org.joda.time.YearMonth;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
-import static net.thucydides.jbehave.steps.dateconversions.StringDateConverters.toDateTimes;
 import static net.thucydides.jbehave.steps.dateconversions.StringDateConverters.toYearMonths;
 import static org.fest.assertions.Assertions.assertThat;
 

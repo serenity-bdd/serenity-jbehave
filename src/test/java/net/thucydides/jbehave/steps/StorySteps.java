@@ -1,8 +1,6 @@
 package net.thucydides.jbehave.steps;
 
-import net.thucydides.core.Thucydides;
 import net.thucydides.core.annotations.Steps;
-import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Pending;
@@ -12,8 +10,6 @@ import org.jbehave.core.annotations.When;
 import java.util.Date;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assume.assumeThat;
 import static org.junit.Assume.assumeTrue;
 
 

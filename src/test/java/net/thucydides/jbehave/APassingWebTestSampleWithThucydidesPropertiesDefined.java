@@ -2,7 +2,6 @@ package net.thucydides.jbehave;
 
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.webdriver.Configuration;
-import org.jbehave.core.reporters.Format;
 
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.TXT;

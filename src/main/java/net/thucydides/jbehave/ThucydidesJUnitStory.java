@@ -1,12 +1,10 @@
 package net.thucydides.jbehave;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.File;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.join;

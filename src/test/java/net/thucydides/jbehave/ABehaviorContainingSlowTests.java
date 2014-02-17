@@ -1,6 +1,5 @@
 package net.thucydides.jbehave;
 
-import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 
 public class ABehaviorContainingSlowTests extends ThucydidesJUnitStories {

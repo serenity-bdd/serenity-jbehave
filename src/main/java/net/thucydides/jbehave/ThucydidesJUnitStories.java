@@ -11,7 +11,6 @@ import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
-import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;

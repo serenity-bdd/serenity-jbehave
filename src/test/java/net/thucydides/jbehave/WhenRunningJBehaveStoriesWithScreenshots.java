@@ -1,16 +1,13 @@
 package net.thucydides.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
 
 public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveStory {
 

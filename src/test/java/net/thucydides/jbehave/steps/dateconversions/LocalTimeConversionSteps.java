@@ -1,11 +1,8 @@
 package net.thucydides.jbehave.steps.dateconversions;
 
-import ch.lambdaj.function.convert.Converter;
-import org.jbehave.core.annotations.Aliases;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
-import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
 import java.util.List;

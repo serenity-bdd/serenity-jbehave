@@ -4,9 +4,7 @@ import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
-import net.thucydides.core.model.TestTag;
 import net.thucydides.core.util.EnvironmentVariables;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,10 +14,7 @@ import static net.thucydides.core.model.TestResult.FAILURE;
 import static net.thucydides.core.model.TestResult.PENDING;
 import static net.thucydides.core.model.TestResult.SKIPPED;
 import static net.thucydides.core.model.TestResult.SUCCESS;
-import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.havingTag;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 
 public class WhenRunningJBehaveStories extends AbstractJBehaveStory {

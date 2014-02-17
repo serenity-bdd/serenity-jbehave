@@ -4,7 +4,6 @@ import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
-import org.jbehave.core.annotations.Given;
 import org.junit.Test;
 
 import java.util.List;

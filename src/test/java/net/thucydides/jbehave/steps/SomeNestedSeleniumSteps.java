@@ -4,17 +4,8 @@ import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.ManagedPages;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.pages.Pages;
-import net.thucydides.core.webdriver.WebDriverFacade;
 import net.thucydides.jbehave.pages.StaticSitePage;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebDriver;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 public class SomeNestedSeleniumSteps {
 

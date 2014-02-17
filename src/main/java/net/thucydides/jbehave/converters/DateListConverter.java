@@ -1,7 +1,6 @@
 package net.thucydides.jbehave.converters;
 
 import org.jbehave.core.steps.ParameterConverters;
-import org.joda.time.LocalTime;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

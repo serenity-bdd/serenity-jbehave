@@ -1,7 +1,6 @@
 package net.thucydides.jbehave;
 
 import com.thoughtworks.paranamer.Paranamer;
-import net.thucydides.core.steps.StepFactory;
 import net.thucydides.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
