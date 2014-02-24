@@ -31,6 +31,14 @@ public enum ThucydidesJBehaveSystemProperties {
     RESTART_BROWSER_EACH_SCENARIO,
 
     /**
+     * Reset step libraries in JBehave step definitions for each scenario.
+     * If this property is set to true (the default), any @Step-annotated member variables in JBehave step definitions
+     * will be reinitialized before each scenario.
+     */
+    RESET_STEPS_EACH_SCENARIO,
+
+
+    /**
      * Define a directory for the .story files, inside src/test/resources. By default, this is 'stories'
      */
     STORY_DIRECTORY,

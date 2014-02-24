@@ -37,16 +37,19 @@ public class StorySteps {
     public void givenIHaveABadlyImplementedJBehaveScenario() {
     }
 
+    int counter = 0;
     @Given("the scenario works")
     public void givenTheScenarioWorks() {
     }
 
     @When("I run the scenario")
     public void whenIRunTheScenario() {
+        counter++;
     }
 
     @Then("I should get a successful result")
     public void thenIShouldGetASuccessfulResult() {
+        assertThat(counter).isEqualTo(1);
     }
 
     @Given("the scenario fails")

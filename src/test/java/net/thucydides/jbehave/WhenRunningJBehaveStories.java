@@ -421,4 +421,37 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.size(), is(1));
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }
+
+    @Test
+    public void should_reset_steps_for_each_scenario() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aPassingBehaviorWithSeveralScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void should_not_reset_steps_for_each_scenario_if_configured() throws Throwable {
+
+        environmentVariables.setProperty("reset.steps.each.scenario","false");
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aPassingBehaviorWithSeveralScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.FAILURE));
+    }
 }

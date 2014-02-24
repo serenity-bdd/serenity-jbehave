@@ -16,6 +16,7 @@ import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
 import net.thucydides.core.steps.ExecutedStepDescription;
 import net.thucydides.core.steps.StepEventBus;
+import net.thucydides.core.steps.StepFactory;
 import net.thucydides.core.steps.StepFailure;
 import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
@@ -161,6 +162,10 @@ public class ThucydidesReporter implements StoryReporter {
 
         if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+        }
+
+        if (shouldResetStepsBeforeEachScenario()) {
+            ThucydidesStepFactory.resetContext();
         }
 
         if(isCurrentScenario(scenarioTitle)) {
@@ -441,6 +446,11 @@ public class ThucydidesReporter implements StoryReporter {
     private boolean shouldRestartDriverBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
                 ThucydidesJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
+    }
+
+    private boolean shouldResetStepsBeforeEachScenario() {
+        return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
+                ThucydidesJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
     }
 
 
