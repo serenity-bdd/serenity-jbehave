@@ -4,11 +4,11 @@
     <parent>
         <artifactId>thucydides</artifactId>
         <groupId>net.thucydides</groupId>
-        <version>0.9.233</version>
+        <version>0.9.235</version>
     </parent>
     <groupId>net.thucydides</groupId>
     <artifactId>thucydides-jbehave-plugin</artifactId>
-    <version>0.9.234-SNAPSHOT</version>
+    <version>0.9.235-SNAPSHOT</version>
     <name>thucydides-jbehave-plugin</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>0.9.233</version>
+            <version>0.9.235</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>
@@ -110,7 +110,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.8.4</version>
+            <version>2.2.1</version>
             <!--<scope>test</scope>-->
         </dependency>
     </dependencies>

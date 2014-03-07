@@ -43,7 +43,7 @@ public class AbstractJBehaveStory {
 
         outputDirectory = temporaryFolder.newFolder("output");
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
-        environmentVariables.setProperty("webdriver.driver", "phantomjs");
+        environmentVariables.setProperty("webdriver.driver", "chrome");
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
         screenshotProcessor = new SingleThreadScreenshotProcessor(environmentVariables);// Injectors.getInjector().getInstance(ScreenshotProcessor.class);
         raisedErrors.clear();

@@ -112,6 +112,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void should_be_possible_to_define_groovy_metafilters() throws Throwable {
 
         // Given
+        systemConfiguration.getEnvironmentVariables().setProperty("webdriver.driver","htmlunit");
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "groovy:true==false");
         ThucydidesJUnitStories allStories = new ThucydidesJUnitStories(systemConfiguration);
         allStories.setSystemConfiguration(systemConfiguration);
