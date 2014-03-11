@@ -311,7 +311,7 @@ public class ThucydidesReportingRunner extends Runner {
             skipAndIgnore = skipAndIgnore + " && !ignore";
         }
         if (!skipAndIgnore.isEmpty()) {
-            return "groovy:(" + metaFilters.substring(7) + ") " + skipAndIgnore;
+            return "groovy: (" + metaFilters.substring(7).trim() + ") " + skipAndIgnore;
         } else {
             return metaFilters;
         }

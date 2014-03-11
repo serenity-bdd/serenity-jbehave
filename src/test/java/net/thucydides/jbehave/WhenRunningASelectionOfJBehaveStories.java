@@ -108,7 +108,6 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    @Ignore("PENDING")
     public void should_be_possible_to_define_groovy_metafilters() throws Throwable {
 
         // Given
