@@ -58,6 +58,13 @@ public class StorySteps {
         assertThat(true).isEqualTo(false);
     }
 
+    @Given("the scenario contains an error")
+    public void givenTheScenarioHasAnError() {
+        System.out.println("Deliberate error");
+        String s = null;
+        s.length();
+    }
+
     @Then("I should get a failed result")
     public void thenIShouldGetAFailedResult() {
     }

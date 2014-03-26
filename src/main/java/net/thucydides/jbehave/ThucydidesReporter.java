@@ -16,7 +16,6 @@ import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
 import net.thucydides.core.steps.ExecutedStepDescription;
 import net.thucydides.core.steps.StepEventBus;
-import net.thucydides.core.steps.StepFactory;
 import net.thucydides.core.steps.StepFailure;
 import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;

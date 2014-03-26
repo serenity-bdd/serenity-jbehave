@@ -192,6 +192,22 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
+    public void errored_stories_should_be_reported_as_having_an_error() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories failingStory = newStory("aBehaviorWithAnError.story");
+
+        // When
+        run(failingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.ERROR));
+    }
+
+
+    @Test
     public void steps_after_a_failing_step_should_be_skipped() throws Throwable {
 
         // Given
