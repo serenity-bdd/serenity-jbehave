@@ -12,7 +12,7 @@
     <name>thucydides-jbehave-plugin</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jbehave.core.version>3.8</jbehave.core.version>
+        <jbehave.core.version>3.9</jbehave.core.version>
         <embeddables>**/*Stories.java</embeddables>
     </properties>
     <scm>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>de.codecentric</groupId>
                 <artifactId>jbehave-junit-runner</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>

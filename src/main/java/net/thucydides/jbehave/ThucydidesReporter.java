@@ -26,6 +26,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.GivenStories;
 import org.jbehave.core.model.GivenStory;
+import org.jbehave.core.model.Lifecycle;
 import org.jbehave.core.model.Meta;
 import org.jbehave.core.model.Narrative;
 import org.jbehave.core.model.OutcomesTable;
@@ -432,6 +433,9 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void narrative(Narrative narrative) {
+    }
+
+    public void lifecyle(Lifecycle lifecycle) {
     }
 
     public void scenarioNotAllowed(Scenario scenario, String s) {
