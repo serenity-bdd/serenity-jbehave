@@ -15,9 +15,9 @@ public class APassingWebTestSampleWithThucydidesPropertiesDefined extends Thucyd
         findStoriesCalled("aBehaviorWithSeleniumUsingADifferentBrowser.story");
         useFormats(TXT, XML, HTML);
         runThucydides().withProperty(ThucydidesSystemProperty.DRIVER).setTo("htmlunit");
-        runThucydides().withProperty(ThucydidesSystemProperty.BASE_URL).setTo("some-base-url");
-        runThucydides().withProperty(ThucydidesSystemProperty.ELEMENT_TIMEOUT).setTo(5);
-        runThucydides().withProperty(ThucydidesSystemProperty.UNIQUE_BROWSER).setTo(true);
+        runThucydides().withProperty(ThucydidesSystemProperty.WEBDRIVER_BASE_URL).setTo("some-base-url");
+        runThucydides().withProperty(ThucydidesSystemProperty.THUCYDIDES_TIMEOUT).setTo(5);
+        runThucydides().withProperty(ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER).setTo(true);
     }
 
 }

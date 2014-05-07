@@ -35,10 +35,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static net.thucydides.core.ThucydidesSystemProperty.UNIQUE_BROWSER;
+import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW;
 
 public class ThucydidesReportingRunner extends Runner {
 	private List<Description> storyDescriptions;
@@ -134,7 +135,7 @@ public class ThucydidesReportingRunner extends Runner {
 
 	@Override
 	public void run(RunNotifier notifier) {
-        getConfiguredEmbedder().embedderControls().doIgnoreFailureInView(true);
+        getConfiguredEmbedder().embedderControls().doIgnoreFailureInView(getIgnoreFailuresInView());
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
         getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
         if (metaFiltersAreDefined()) {
@@ -330,6 +331,10 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     public boolean usingUniqueBrowser() {
-        return environmentVariables.getPropertyAsBoolean(UNIQUE_BROWSER, false);
+        return environmentVariables.getPropertyAsBoolean(THUCYDIDES_USE_UNIQUE_BROWSER, false);
     }
+
+    protected boolean getIgnoreFailuresInView() { return environmentVariables.getPropertyAsBoolean(IGNORE_FAILURES_IN_VIEW.getName(),true); }
+
+
 }

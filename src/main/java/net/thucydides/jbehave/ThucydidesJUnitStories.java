@@ -230,7 +230,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
     }
 
     protected void useUniqueSession() {
-        getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.UNIQUE_BROWSER.getPropertyName(), "true");
+        getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER.getPropertyName(), "true");
     }
 
     public ThucydidesConfigurationBuilder runThucydides() {

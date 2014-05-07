@@ -48,7 +48,12 @@ public enum ThucydidesJBehaveSystemProperties {
      * the test runner to look in, e.g. "/my/package;/my/other/package"
      * If the stories are in the root package or in the "stories" folder, this is not required.
      */
-    JBEHAVE_STORY_PACKAGES;
+    JBEHAVE_STORY_PACKAGES,
+
+    /**
+     * Controls the ignoreFailuresInView flag in JBehave (see http://jbehave.org/reference/stable/running-stories.html).
+     */
+    IGNORE_FAILURES_IN_VIEW;
 
     public String getName() {return toString().toLowerCase().replaceAll("_",".");}
 

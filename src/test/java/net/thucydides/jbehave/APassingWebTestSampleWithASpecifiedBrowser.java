@@ -7,7 +7,7 @@ public class APassingWebTestSampleWithASpecifiedBrowser extends ThucydidesJUnitS
     public APassingWebTestSampleWithASpecifiedBrowser() {
         findStoriesCalled("aPassingBehaviorWithSeleniumAndFirefox.story");
         runThucydides().withDriver("htmlunit");
-        runThucydides().withProperty(ThucydidesSystemProperty.UNIQUE_BROWSER).setTo(true);
+        runThucydides().withProperty(ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER).setTo(true);
     }
 
 
