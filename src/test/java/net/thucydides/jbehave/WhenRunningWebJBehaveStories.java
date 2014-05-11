@@ -25,7 +25,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
     @Before
     public void reset_driver() {
-        environmentVariables.setProperty("webdriver.driver", "firefox");
+        environmentVariables.setProperty("webdriver.driver", "phantomjs");
     }
 
     @Test
