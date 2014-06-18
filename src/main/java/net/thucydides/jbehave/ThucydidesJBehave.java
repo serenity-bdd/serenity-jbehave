@@ -10,12 +10,16 @@ import net.thucydides.jbehave.converters.YearMonthListConverter;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
+import org.jbehave.core.failures.FailureStrategy;
+import org.jbehave.core.failures.PendingStepStrategy;
+import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.ParameterConverters;
+import org.junit.internal.AssumptionViolatedException;
 
 import java.util.List;
 import java.util.Properties;
@@ -63,6 +67,24 @@ public class ThucydidesJBehave {
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
                                 .withFailureTrace(true).withFailureTraceCompression(true)
                                 .withReporters(new ThucydidesReporter(systemConfiguration)))
-                .useStoryLoader(new UTF8StoryLoader());
+                .useStoryLoader(new UTF8StoryLoader())
+                .useFailureStrategy(new IgnoreAssumptionViolations());
+    }
+
+    private static class IgnoreAssumptionViolations implements FailureStrategy {
+        @Override
+        public void handleFailure(Throwable throwable) throws Throwable {
+            if (throwable instanceof AssumptionViolatedException) {
+                return;
+            }
+            if ( throwable instanceof UUIDExceptionWrapper){
+                if (throwable.getCause() instanceof AssumptionViolatedException) {
+                    return;
+                } else {
+                    throw ((UUIDExceptionWrapper) throwable).getCause();
+                }
+            }
+            throw throwable;
+        }
     }
 }

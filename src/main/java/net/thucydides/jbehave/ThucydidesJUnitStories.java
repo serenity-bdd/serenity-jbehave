@@ -7,19 +7,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.steps.ExecutedStepDescription;
-import net.thucydides.core.steps.StepEventBus;
-import net.thucydides.core.steps.StepFailure;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
-import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
@@ -29,9 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.jbehave.core.reporters.Format.CONSOLE;
-import static org.jbehave.core.reporters.Format.HTML;
-import static org.jbehave.core.reporters.Format.XML;
+import static org.jbehave.core.reporters.Format.*;
 
 /**
  * A JUnit-runnable test case designed to run a set of ThucydidesWebdriverIntegration-enabled JBehave stories in a given package.

@@ -10,10 +10,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
-import static net.thucydides.core.model.TestResult.FAILURE;
-import static net.thucydides.core.model.TestResult.PENDING;
-import static net.thucydides.core.model.TestResult.SKIPPED;
-import static net.thucydides.core.model.TestResult.SUCCESS;
+import static net.thucydides.core.model.TestResult.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -80,6 +77,20 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getStepCount(), is(4));
     }
 
+    @Test
+    public void stories_with_failing_assumptions_should_be_ignored() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories pendingStory = newStory("aBehaviorWithAFailingAssumption.story");
+
+        // When
+        run(pendingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.IGNORED));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+    }
     @Test
     public void implemented_pending_stories_should_be_reported_as_pending() throws Throwable {
 
@@ -344,7 +355,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(2));
-        assertThat(outcomes.get(0).getResult(), is(PENDING));
+        assertThat(outcomes.get(0).getResult(), is(IGNORED));
         assertThat(outcomes.get(1).getResult(), is(SUCCESS));
     }
 

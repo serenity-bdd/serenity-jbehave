@@ -26,6 +26,7 @@ import org.jbehave.core.steps.StepMonitor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
@@ -56,6 +58,9 @@ public class ThucydidesReportingRunner extends Runner {
     private final String SKIP_FILTER = " -skip";
     private final String IGNORE_FILTER = " -ignore";
     private final String DEFAULT_METAFILTER = SKIP_FILTER + IGNORE_FILTER;
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ThucydidesReportingRunner.class);
+
 
     @SuppressWarnings("unchecked")
     public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
@@ -100,6 +105,7 @@ public class ThucydidesReportingRunner extends Runner {
                     getStoryPathsFromJUnitStories(testClass);
                 }
             } catch(Throwable e) {
+                LOGGER.error("Could not load story paths",e);
                 return Collections.EMPTY_LIST;
             }
         }

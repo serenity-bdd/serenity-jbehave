@@ -60,6 +60,8 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
         assertThat(outcomes.size(), is(2));
         assertThat(outcomes.get(0).getIssueKeys(), hasItems("MYPROJ-123", "MYPROJ-456"));
         assertThat(outcomes.get(1).getIssueKeys(), hasItems("MYPROJ-123", "MYPROJ-789"));
+
+        System.clearProperty("thucydides.project.key");
     }
 
 

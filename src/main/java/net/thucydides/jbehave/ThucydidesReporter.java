@@ -23,16 +23,7 @@ import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.jbehave.core.model.ExamplesTable;
-import org.jbehave.core.model.GivenStories;
-import org.jbehave.core.model.GivenStory;
-import org.jbehave.core.model.Lifecycle;
-import org.jbehave.core.model.Meta;
-import org.jbehave.core.model.Narrative;
-import org.jbehave.core.model.OutcomesTable;
-import org.jbehave.core.model.Scenario;
-import org.jbehave.core.model.Story;
-import org.jbehave.core.model.StoryDuration;
+import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.junit.internal.AssumptionViolatedException;
 
@@ -41,10 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static ch.lambdaj.Lambda.convert;
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.flatten;
-import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.Lambda.*;
 
 public class ThucydidesReporter implements StoryReporter {
 
