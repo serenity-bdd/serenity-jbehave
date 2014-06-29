@@ -65,23 +65,13 @@ public class ClassFinder {
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            dirs.add(urlToFile(resource));
+            dirs.add(new File(resource.getFile()));
         }
         List<Class<?>> classes = Lists.newArrayList();
         for (File directory : dirs) {
             classes.addAll(findClasses(directory, packageName));
         }
         return classes;
-    }
-
-    private File urlToFile(final URL url) {
-        try {
-            return new File(
-                    url.toURI()
-            );
-        } catch (final Exception e) {
-            throw new RuntimeException("failed to convert URL [" + url + "] to File", e);
-        }
     }
 
 

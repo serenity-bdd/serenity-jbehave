@@ -4,15 +4,15 @@
     <parent>
         <artifactId>thucydides</artifactId>
         <groupId>net.thucydides</groupId>
-        <version>0.9.250</version>
+        <version>0.9.255</version>
     </parent>
     <groupId>net.thucydides</groupId>
     <artifactId>thucydides-jbehave-plugin</artifactId>
-    <version>0.9.251-SNAPSHOT</version>
+    <version>0.9.255-SNAPSHOT</version>
     <name>thucydides-jbehave-plugin</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jbehave.core.version>3.9.2</jbehave.core.version>
+        <jbehave.core.version>3.9.3</jbehave.core.version>
         <embeddables>**/*Stories.java</embeddables>
     </properties>
     <scm>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>0.9.250</version>
+            <version>0.9.255</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-test-utils</artifactId>
-            <version>0.9.250</version>
+            <version>0.9.255</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-sample-alternative-resources</artifactId>
-            <version>0.9.131-NS</version>
+            <version>0.9.255</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -120,9 +120,8 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.2.1</version>
-            <!--<scope>test</scope>-->
+            <artifactId>groovy</artifactId>
+            <version>2.3.3</version>
         </dependency>
     </dependencies>
 </project>

@@ -29,7 +29,7 @@ public class WhenConfiguringJBehaveStorySteps extends AbstractJBehaveStory {
     public void should_find_stories_in_a_subdirectory_in_the_jar_file() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("a_story_in_the_stories_directory.story");
+        ThucydidesJUnitStories story = newStory("annotatedstories/a_story_in_the_stories_directory.story");
 
         // When
         run(story);
