@@ -59,7 +59,7 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     public EnvironmentVariables getEnvironmentVariables() {
         if (environmentVariables == null) {
-            environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class).copy();
+            environmentVariables = Injectors.getInjector().getProvider(EnvironmentVariables.class).get().copy();
         }
         return environmentVariables;
     }

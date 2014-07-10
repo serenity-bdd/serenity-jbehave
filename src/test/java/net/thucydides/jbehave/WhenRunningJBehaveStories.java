@@ -43,7 +43,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
 
     @Test
     public void a_story_should_read_properties_from_the_thucydides_properties_file() throws Throwable {
-        EnvironmentVariables environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class);
+        EnvironmentVariables environmentVariables = Injectors.getInjector().getProvider(EnvironmentVariables.class).get() ;
         assertThat(environmentVariables.getProperty("environment.variables.are.set"), is("true"));
     }
 

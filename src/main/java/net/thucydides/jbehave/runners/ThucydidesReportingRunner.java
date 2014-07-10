@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.thucydides.core.guice.Injectors;
+import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.jbehave.ThucydidesJUnitStories;
@@ -116,7 +117,7 @@ public class ThucydidesReportingRunner extends Runner {
         if (configurableEmbedder instanceof ThucydidesJUnitStories) {
             return ((ThucydidesJUnitStories) configurableEmbedder).getEnvironmentVariables();
         } else {
-            return Injectors.getInjector().getInstance(EnvironmentVariables.class);
+            return Injectors.getInjector().getProvider(EnvironmentVariables.class).get() ;
         }
     }
 
@@ -164,7 +165,12 @@ public class ThucydidesReportingRunner extends Runner {
             }
             getConfiguredEmbedder().generateCrossReference();
 		}
-	}
+        shutdownTestSuite();
+    }
+
+    private void shutdownTestSuite() {
+        StepEventBus.getEventBus().testSuiteFinished();
+    }
 
     List<CandidateSteps> getCandidateSteps() {
         if (candidateSteps == null) {
