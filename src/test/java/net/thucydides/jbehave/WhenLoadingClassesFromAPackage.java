@@ -48,10 +48,9 @@ public class WhenLoadingClassesFromAPackage {
         assertThat(classes.size(), is(0));
     }
 
-    @Ignore("Known issue - doesn't load from JAR depenencies")
     @Test
     public void shouldLoadClassesFromDependencies() throws IOException, ClassNotFoundException {
-        List<Class<?>> classes = ClassFinder.loadClasses().annotatedWith(Given.class).fromPackage("net.thucydides.jbehave");
+        List<Class<?>> classes = ClassFinder.loadClasses().annotatedWith(Ignore.class).fromPackage("net.thucydides.jbehave");
         List<String> classnames = convert(classes, new PropertyExtractor("name"));
         assertThat(classnames, hasItem("net.thucydides.jbehave.SomeBoilerplateSteps"));
     }
@@ -61,5 +60,31 @@ public class WhenLoadingClassesFromAPackage {
         List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.thucydides.jbehave");
         List<String> classnames = convert(classes, new PropertyExtractor("name"));
         assertThat(classnames, hasItem("net.thucydides.jbehave.SomeBoilerplateSteps"));
+    }
+
+    // enable testing from an IDE, where otherwise the classpath is setup to depend directly on .class files, without packaging to .jar
+    @Test
+    public void shouldLoadClassesInAGivenPackageFromADependencyJar() throws Exception {
+        List<Class<?>> classes = net.thucydides.core.reflection.ClassFinder.loadClasses().fromPackage("org.junit.runners");
+        List<String> classnames = convert(classes, new PropertyExtractor("name"));
+        assertThat(classnames, hasItem("org.junit.runners.JUnit4"));
+    }
+
+    // enable testing from an IDE, where otherwise the classpath is setup to depend directly on .class files, without packaging to .jar
+    @Test
+    public void shouldLoadNestedClassesInAGivenPackageFromADependencyJar() throws Exception {
+        List<Class<?>> classes = net.thucydides.core.reflection.ClassFinder.loadClasses().fromPackage("org.junit.runners");
+        List<String> classnames = convert(classes, new PropertyExtractor("name"));
+        assertThat(classnames, hasItem("org.junit.runners.model.RunnerScheduler"));
+    }
+
+    // enable testing from an IDE, where otherwise the classpath is setup to depend directly on .class files, without packaging to .jar
+    @Test
+    public void shouldLoadAnnotatedClassesInAGivenPackageFromADependencyJar() throws Exception {
+        List<Class<?>> classes = net.thucydides.core.reflection.ClassFinder.loadClasses()
+                                                                           .annotatedWith(Deprecated.class)
+                                                                           .fromPackage("junit.framework");
+        List<String> classnames = convert(classes, new PropertyExtractor("name"));
+        assertThat(classnames, hasItem("junit.framework.Assert"));
     }
 }
