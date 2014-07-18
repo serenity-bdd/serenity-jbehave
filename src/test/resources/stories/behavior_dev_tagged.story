@@ -1,6 +1,7 @@
 Meta:
 @environment dev
 @speed fast
+@driver phantomjs
 
 Scenario: A scenario for DEV
 

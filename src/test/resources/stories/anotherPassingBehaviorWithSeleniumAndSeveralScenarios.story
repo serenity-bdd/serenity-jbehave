@@ -1,3 +1,6 @@
+Meta:
+@driver phantomjs
+
 Scenario: Another web scenario that uses selenium
 
 Given I am on the test page

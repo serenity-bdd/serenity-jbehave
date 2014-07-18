@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,18 +61,22 @@ public class ClassFinder {
     }
 
     private List<Class<?>> allClassesInPackage(String packageName) {
-        String path = packageName.replace('.', '/');
-        Enumeration<URL> resources = classResourcesOn(path);
-        List<File> dirs = new ArrayList<File>();
-        while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
+        try {
+            String path = packageName.replace('.', '/');
+            Enumeration<URL> resources = classResourcesOn(path);
+            List<URI> dirs = new ArrayList<URI>();
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
+                dirs.add(resource.toURI());
+            }
+            List<Class<?>> classes = Lists.newArrayList();
+            for (URI directory : dirs) {
+                classes.addAll(findClasses(directory, packageName));
+            }
+            return classes;
+        } catch (Exception e) {
+            throw new RuntimeException("failed to find all classes in package [" + packageName + "]", e);
         }
-        List<Class<?>> classes = Lists.newArrayList();
-        for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName));
-        }
-        return classes;
     }
 
 
@@ -127,11 +132,53 @@ public class ClassFinder {
      * @param packageName The package name for classes found inside the base directory
      * @return The classes
      */
-    private List<Class<?>> findClasses(File directory, String packageName) {
-        List<Class<?>> classes = Lists.newArrayList();
-        if (isJar(directory)) {
-            return classesFromJar(directory, packageName);
+    private List<Class<?>> findClasses(URI directory, String packageName) {
+        try {
+            final String scheme = directory.getScheme();
+            final String schemeSpecificPart = directory.getSchemeSpecificPart();
+
+            if (scheme.equals("jar") && schemeSpecificPart.contains("!")) {
+                return findClassesInJar(directory, packageName);
+            } else if (scheme.equals("file")) {
+                return findClassesInFileSystemDirectory(directory, packageName);
+            }
+
+            throw new IllegalArgumentException("cannot handle URI with scheme [" + scheme + "]");
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "failed to find classes" +
+                            "in directory=[" + directory + "], with packageName=[" + packageName + "]",
+                    e
+            );
         }
+
+    }
+
+    private List<Class<?>> findClassesInJar(URI jarDirectory, String packageName) throws IOException {
+        final String schemeSpecificPart = jarDirectory.getSchemeSpecificPart();
+
+        List<Class<?>> classes = Lists.newArrayList();
+        String [] split = schemeSpecificPart.split("!");
+        URL jar = new URL(split[0]);
+        ZipInputStream zip = new ZipInputStream(jar.openStream());
+        ZipEntry entry;
+        while ((entry = zip.getNextEntry()) != null) {
+            if (entry.getName().endsWith(".class")) {
+                String className = classNameFor(entry);
+                if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
+                    classes.add(loadClassWithName(className));
+                }
+            }
+        }
+
+        return classes;
+    }
+
+    private List<Class<?>> findClassesInFileSystemDirectory(URI jarDirectory, String packageName) {
+        List<Class<?>> classes = Lists.newArrayList();
+
+        File directory = new File(jarDirectory);
+
         if (!directory.exists()) {
             return classes;
         }
@@ -139,41 +186,18 @@ public class ClassFinder {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    classes.addAll(findClasses(file, packageName + "." + file.getName()));
+                    classes.addAll(findClasses(file.toURI(), packageName + "." + file.getName()));
                 } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
                     classes.add(correspondingClass(packageName, file));
                 }
             }
         }
-        return classes;
-    }
 
-    private List<Class<?>> classesFromJar(File directory, String packageName) {
-        try {
-            List<Class<?>> classes = Lists.newArrayList();
-            String [] split = directory.getPath().split("!");
-            URL jar = new URL(split[0]);
-            ZipInputStream zip = new ZipInputStream(jar.openStream());
-            ZipEntry entry;
-            while ((entry = zip.getNextEntry()) != null)
-                if (entry.getName().endsWith(".class")) {
-                    String className = classNameFor(entry);
-                    if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
-                        classes.add(loadClassWithName(className));
-                    }
-                }
-            return classes;
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not find or access class for " + directory, e);
-        }
+        return classes;
     }
 
     private static String classNameFor(ZipEntry entry) {
         return entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
-    }
-
-    private boolean isJar(File dir) {
-        return dir.getPath().startsWith("file:") && dir.getPath().contains("!");
     }
 
     private Class<?> loadClassWithName(String className){
@@ -182,7 +206,7 @@ public class ClassFinder {
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Could not find or access class for " + className, e);
         }
-     }
+    }
 
     private Class<?> correspondingClass(String packageName, File file) {
         String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);

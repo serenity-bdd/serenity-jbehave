@@ -1,6 +1,7 @@
 Meta:
 @environment uat
 @speed slow
+@driver phantomjs
 
 Scenario: A scenario for UAT
 

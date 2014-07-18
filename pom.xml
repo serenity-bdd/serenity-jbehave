@@ -34,7 +34,9 @@
                     <systemPropertyVariables>
                         <thucydides.logging>QUIET</thucydides.logging>
                     </systemPropertyVariables>
-                    <threadCount>1</threadCount>
+                    <threadCountMethods>8</threadCountMethods>
+                    <forkCount>4</forkCount>
+                    <reuseForks>true</reuseForks>
                 </configuration>
             </plugin>
         </plugins>
@@ -43,7 +45,7 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
-            <version>0.9.262</version>
+            <version>0.9.263-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jbehave</groupId>
@@ -85,13 +87,13 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-test-utils</artifactId>
-            <version>0.9.262</version>
+            <version>0.9.263-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-sample-alternative-resources</artifactId>
-            <version>0.9.262</version>
+            <version>0.9.263-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -122,6 +124,11 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
             <version>2.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
         </dependency>
     </dependencies>
 </project>

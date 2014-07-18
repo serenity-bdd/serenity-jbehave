@@ -1,3 +1,5 @@
+Meta:
+@driver phantomjs
 
 Scenario: Looking up the definition of 'apple'
 GivenStories: stories/precondition/aPreconditionToLookUpADefinition.story

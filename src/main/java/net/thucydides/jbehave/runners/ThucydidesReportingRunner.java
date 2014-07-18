@@ -1,5 +1,6 @@
 package net.thucydides.jbehave.runners;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
@@ -9,6 +10,7 @@ import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.jbehave.ThucydidesJUnitStories;
+import net.thucydides.jbehave.annotations.Metafilter;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
@@ -292,13 +294,24 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     private String getMetafilterSetting() {
-        String metaFilters = environmentVariables.getProperty(METAFILTER.getName(),DEFAULT_METAFILTER);
-        if (isGroovy(metaFilters)) {
-            metaFilters = addGroovyMetafilterValuesTo(metaFilters);
+        Optional<String> environmentMetafilters = getEnvironmentMetafilters();
+        Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
+        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(DEFAULT_METAFILTER));
+        if (isGroovy(metafilters)) {
+            metafilters = addGroovyMetafilterValuesTo(metafilters);
         } else {
-            metaFilters = addDefaultMetafilterValuesTo(metaFilters);
+            metafilters = addDefaultMetafilterValuesTo(metafilters);
         }
-        return metaFilters;
+        return metafilters;
+    }
+
+    private Optional<String> getEnvironmentMetafilters() {
+        return Optional.fromNullable(environmentVariables.getProperty(METAFILTER.getName()));
+    }
+    
+    private Optional<String> getAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
+        return (testClass.getAnnotation(Metafilter.class) != null) ?
+                Optional.of(testClass.getAnnotation(Metafilter.class).value()) : Optional.<String>absent();
     }
 
     private boolean isGroovy(String metaFilters) {

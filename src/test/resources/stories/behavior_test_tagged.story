@@ -1,6 +1,7 @@
 Meta:
 @environment test
 @speed fast
+@driver phantomjs
 
 Scenario: A scenario for TEST
 

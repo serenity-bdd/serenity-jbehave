@@ -3,7 +3,7 @@ package net.thucydides.jbehave;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.util.EnvironmentVariables;
-import org.junit.Ignore;
+import net.thucydides.jbehave.annotations.Metafilter;
 import org.junit.Test;
 
 import java.util.List;
@@ -96,6 +96,39 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
         ThucydidesJUnitStories allStories = new ThucydidesJUnitStories(systemConfiguration);
+        allStories.setSystemConfiguration(systemConfiguration);
+        allStories.setEnvironmentVariables(environmentVariables);
+
+        // When
+        run(allStories);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(4));
+    }
+
+    @Test
+    public void should_be_possible_to_define_metafilters_in_annotations() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories allStories = new WithAnAnnotatedMetafilter();
+        allStories.setSystemConfiguration(systemConfiguration);
+        allStories.setEnvironmentVariables(environmentVariables);
+
+        // When
+        run(allStories);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+    }
+
+    @Test
+    public void system_property_metafilters_should_override_annotations() throws Throwable {
+
+        // Given
+        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
+        ThucydidesJUnitStories allStories = new WithAnAnnotatedMetafilter();
         allStories.setSystemConfiguration(systemConfiguration);
         allStories.setEnvironmentVariables(environmentVariables);
 

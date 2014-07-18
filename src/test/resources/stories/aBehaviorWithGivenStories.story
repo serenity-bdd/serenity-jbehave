@@ -1,3 +1,6 @@
+Meta:
+@driver phantomjs
+
 GivenStories: stories/precondition/aPreconditionToFile.story
 
 Scenario: A scenario that uses selenium
