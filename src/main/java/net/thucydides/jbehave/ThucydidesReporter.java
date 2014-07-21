@@ -146,6 +146,9 @@ public class ThucydidesReporter implements StoryReporter {
         shouldNestScenarios(true);
     }
 
+
+
+
     public void beforeScenario(String scenarioTitle) {
 
         if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
@@ -427,6 +430,7 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void scenarioNotAllowed(Scenario scenario, String s) {
+        StepEventBus.getEventBus().testIgnored();
     }
 
     private void startScenarioCalled(String scenarioTitle) {
