@@ -147,7 +147,7 @@ public class ClassFinder {
         } catch (Exception e) {
             throw new RuntimeException(
                     "failed to find classes" +
-                            "in directory=[" + directory + "], with packageName=[" + packageName + "]",
+                    "in directory=[" + directory + "], with packageName=[" + packageName + "]",
                     e
             );
         }
@@ -206,7 +206,7 @@ public class ClassFinder {
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Could not find or access class for " + className, e);
         }
-    }
+     }
 
     private Class<?> correspondingClass(String packageName, File file) {
         String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);

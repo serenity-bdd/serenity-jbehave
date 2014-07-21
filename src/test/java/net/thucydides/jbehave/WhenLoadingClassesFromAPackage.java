@@ -82,8 +82,8 @@ public class WhenLoadingClassesFromAPackage {
     @Test
     public void shouldLoadAnnotatedClassesInAGivenPackageFromADependencyJar() throws Exception {
         List<Class<?>> classes = net.thucydides.core.reflection.ClassFinder.loadClasses()
-                .annotatedWith(Deprecated.class)
-                .fromPackage("junit.framework");
+                                                                           .annotatedWith(Deprecated.class)
+                                                                           .fromPackage("junit.framework");
         List<String> classnames = convert(classes, new PropertyExtractor("name"));
         assertThat(classnames, hasItem("junit.framework.Assert"));
     }
