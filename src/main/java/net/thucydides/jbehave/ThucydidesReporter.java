@@ -2,6 +2,7 @@ package net.thucydides.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -11,6 +12,7 @@ import net.thucydides.core.ThucydidesListeners;
 import net.thucydides.core.ThucydidesReports;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.TestOutcome;
+import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestTag;
 import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
@@ -44,6 +46,13 @@ public class ThucydidesReporter implements StoryReporter {
     private static final String OPEN_PARAM_CHAR = "\uff5f";
     private static final String CLOSE_PARAM_CHAR = "\uff60";
 
+    private static final String PENDING = "pending";
+    private static final String SKIP = "skip";
+    private static final String WIP = "wip";
+
+    private static Optional<TestResult> forcedStoryResult;
+    private static Optional<TestResult> forcedScenarioResult;
+
     private GivenStoryMonitor givenStoryMonitor;
 
     public ThucydidesReporter(Configuration systemConfiguration) {
@@ -52,7 +61,17 @@ public class ThucydidesReporter implements StoryReporter {
         reportServiceThreadLocal = new ThreadLocal<ReportService>();
         baseStepListeners = Lists.newArrayList();
         givenStoryMonitor = new GivenStoryMonitor();
+        clearStoryResult();
+        clearScenarioResult();
 
+    }
+
+    private void clearStoryResult() {
+        forcedStoryResult = Optional.absent();
+    }
+
+    private void clearScenarioResult() {
+        forcedScenarioResult = Optional.absent();
     }
 
     protected void clearListeners() {
@@ -104,6 +123,7 @@ public class ThucydidesReporter implements StoryReporter {
     public void beforeStory(Story story, boolean givenStory) {
         System.out.println("Before story" + story.getName());
 
+        clearStoryResult();
         currentStoryIs(story);
         noteAnyGivenStoriesFor(story);
         storyMetadata = getMetadataFrom(story.getMeta());
@@ -146,10 +166,9 @@ public class ThucydidesReporter implements StoryReporter {
         shouldNestScenarios(true);
     }
 
-
-
-
     public void beforeScenario(String scenarioTitle) {
+
+        clearScenarioResult();
 
         if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
@@ -166,6 +185,19 @@ public class ThucydidesReporter implements StoryReporter {
         } else {
             startScenarioCalled(scenarioTitle);
         }
+        if (pendingScenario()) {
+            StepEventBus.getEventBus().testPending();
+        } else if (skippedScenario()) {
+            StepEventBus.getEventBus().testIgnored();
+        }
+    }
+
+    private boolean pendingScenario() {
+        return (forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.PENDING);
+    }
+
+    private boolean skippedScenario() {
+        return (forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.SKIPPED);
     }
 
     private boolean isCurrentScenario(String scenarioTitle) {
@@ -382,6 +414,21 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private void registerStoryMeta(Meta metaData) {
+        if (isPending(metaData)) {
+            forcedStoryResult = Optional.of(TestResult.PENDING);
+            StepEventBus.getEventBus().suspendTest();
+        } else if (isSkipped(metaData)) {
+            forcedStoryResult = Optional.of(TestResult.SKIPPED);
+            StepEventBus.getEventBus().suspendTest();
+        }
+    }
+
+    private void registerScenarioMeta(Meta metaData) {
+        if (isPending(metaData)) {
+            forcedScenarioResult = Optional.of(TestResult.PENDING);
+        } else if (isSkipped(metaData)) {
+            forcedScenarioResult = Optional.of(TestResult.SKIPPED);
+        }
     }
 
     private String removeSuffixFrom(String name) {
@@ -454,6 +501,15 @@ public class ThucydidesReporter implements StoryReporter {
         registerFeaturesAndEpics(meta);
         registerTags(meta);
         registerMetadata(meta);
+        registerScenarioMeta(meta);
+    }
+
+    private boolean isPending(Meta metaData) {
+        return (metaData.hasProperty(PENDING));
+    }
+
+    private boolean isSkipped(Meta metaData) {
+        return (metaData.hasProperty(WIP)|| metaData.hasProperty(SKIP));
     }
 
     public void afterScenario() {
@@ -461,9 +517,32 @@ public class ThucydidesReporter implements StoryReporter {
             StepEventBus.getEventBus().stepFinished();
         } else {
             StepEventBus.getEventBus().testFinished();
+            if (isPendingScenario() || isPendingStory()) {
+                StepEventBus.getEventBus().setAllStepsTo(TestResult.PENDING);
+            }
+            if (isSkippedScenario() || isSkippedStory()) {
+                StepEventBus.getEventBus().setAllStepsTo(TestResult.SKIPPED);
+            }
             activeScenarios.pop();
         }
     }
+
+    private boolean isPendingScenario() {
+        return forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.PENDING;
+    }
+
+    private boolean isSkippedScenario() {
+        return forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.SKIPPED;
+    }
+
+    private boolean isPendingStory() {
+        return forcedStoryResult.or(TestResult.UNDEFINED) == TestResult.PENDING;
+    }
+
+    private boolean isSkippedStory() {
+        return forcedStoryResult.or(TestResult.UNDEFINED) == TestResult.SKIPPED;
+    }
+
 
     public void givenStories(GivenStories givenStories) {
         givenStoryMonitor.enteringGivenStory();

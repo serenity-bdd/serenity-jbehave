@@ -466,6 +466,96 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
+    public void should_be_able_to_declare_a_story_as_pending_using_a_tag() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aTaggedPendingBehaviorWithSeveralScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.PENDING));
+    }
+
+    @Test
+    public void should_be_able_to_declare_a_story_as_wip_using_a_tag() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aTaggedWIPBehaviorWithSeveralScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SKIPPED));
+    }
+
+    @Test
+    public void should_be_able_to_declare_a_scenario_as_pending_or_skipped_using_a_tag() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(5));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(3).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(4).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void a_tagged_pending_outcome_should_have_pending_steps() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(1).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(1).countTestSteps(), is(4));
+        assertThat(outcomes.get(1).getTestSteps().get(0).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(1).getTestSteps().get(1).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(1).getTestSteps().get(2).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(1).getTestSteps().get(3).getResult(), is(TestResult.PENDING));
+    }
+
+    @Test
+    public void a_tagged_skipped_outcome_should_have_skipped_steps() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(2).countTestSteps(), is(4));
+        assertThat(outcomes.get(2).getTestSteps().get(0).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(2).getTestSteps().get(1).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(2).getTestSteps().get(2).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(2).getTestSteps().get(3).getResult(), is(TestResult.SKIPPED));
+    }
+
+
+    @Test
     public void should_not_reset_steps_for_each_scenario_if_configured() throws Throwable {
 
         environmentVariables.setProperty("reset.steps.each.scenario","false");

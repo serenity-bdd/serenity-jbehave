@@ -81,7 +81,7 @@ public class ThucydidesJBehave {
                 if (throwable.getCause() instanceof AssumptionViolatedException) {
                     return;
                 } else {
-                    throw ((UUIDExceptionWrapper) throwable).getCause();
+                    throw throwable.getCause();
                 }
             }
             throw throwable;

@@ -37,14 +37,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
-import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW;
+import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.*;
 
 public class ThucydidesReportingRunner extends Runner {
 	private List<Description> storyDescriptions;
@@ -58,9 +54,9 @@ public class ThucydidesReportingRunner extends Runner {
     private final Class<? extends ConfigurableEmbedder> testClass;
     private final EnvironmentVariables environmentVariables;
 
-    private final String SKIP_FILTER = " -skip";
+//    private final String SKIP_FILTER = " -skip";
     private final String IGNORE_FILTER = " -ignore";
-    private final String DEFAULT_METAFILTER = SKIP_FILTER + IGNORE_FILTER;
+    private final String DEFAULT_METAFILTER = IGNORE_FILTER;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ThucydidesReportingRunner.class);
 
@@ -253,7 +249,7 @@ public class ThucydidesReportingRunner extends Runner {
 	private List<Description> buildDescriptionFromStories() {
 		JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
 		StoryRunner storyRunner = new StoryRunner();
-		List<Description> storyDescriptions = new ArrayList<Description>();
+		List<Description> storyDescriptions = new ArrayList<>();
 
 		addSuite(storyDescriptions, "BeforeStories");
 		addStories(storyDescriptions, storyRunner, descriptionGenerator);
@@ -319,9 +315,6 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     private String addDefaultMetafilterValuesTo(String metaFilters) {
-        if (!metaFilters.contains(SKIP_FILTER)) {
-            metaFilters = metaFilters + ", " + SKIP_FILTER;
-        }
         if (!metaFilters.contains(IGNORE_FILTER)) {
             metaFilters = metaFilters + ", " + IGNORE_FILTER;
         }
