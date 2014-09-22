@@ -18,6 +18,7 @@ import org.jbehave.core.steps.InjectableStepsFactory;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -158,10 +159,20 @@ public class ThucydidesJUnitStories extends JUnitStories {
 
     private List<URL> allClasspathRoots() {
         try {
-            return Collections.list(getClassLoader().getResources("."));
+            List<URL> baseRoots = Collections.list(getClassLoader().getResources("."));
+            return addGradleResourceRootsTo(baseRoots);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not load the classpath roots when looking for story files",e);
         }
+    }
+
+    private List<URL> addGradleResourceRootsTo(List<URL> baseRoots) throws MalformedURLException {
+        List<URL> rootsWithGradleResources = Lists.newArrayList(baseRoots);
+        for(URL baseUrl : baseRoots) {
+           String gradleResourceUrl = baseUrl.toString().replace("/build/classes/", "build/resources/");
+           rootsWithGradleResources.add(new URL(gradleResourceUrl));
+        }
+        return rootsWithGradleResources;
     }
 
     /**

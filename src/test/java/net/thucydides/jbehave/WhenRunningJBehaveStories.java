@@ -514,6 +514,12 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
         assertThat(outcomes.get(3).getResult(), is(TestResult.SKIPPED));
         assertThat(outcomes.get(4).getResult(), is(TestResult.SUCCESS));
+
+        // And
+
+        assertThat(outcomes.get(1).getStepCount(), is(4));
+        assertThat(outcomes.get(2).getStepCount(), is(4));
+        assertThat(outcomes.get(3).getStepCount(), is(4));
     }
 
     @Test

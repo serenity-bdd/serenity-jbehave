@@ -28,6 +28,11 @@ public class StorySteps {
         assumeTrue(true);
     }
 
+    @Given("a step that is executed before each scenario")
+    public void beforeEachScenario() {
+        System.out.println("Before each scenario");
+    }
+
     @Given("I have an implemented JBehave scenario")
     public void givenIHaveAnImplementedJBehaveScenario() {
         assert steps != null;
