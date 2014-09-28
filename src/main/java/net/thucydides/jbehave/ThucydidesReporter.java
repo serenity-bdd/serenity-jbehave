@@ -25,6 +25,7 @@ import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
+import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.junit.internal.AssumptionViolatedException;
@@ -222,7 +223,7 @@ public class ThucydidesReporter implements StoryReporter {
 
         net.thucydides.core.model.Story userStory
                 = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
-                .withNarrative(story.getNarrative().asA());
+                .withNarrative(story.getNarrative().asString(new Keywords()).trim());
         StepEventBus.getEventBus().testSuiteStarted(userStory);
         registerTags(story);
     }
