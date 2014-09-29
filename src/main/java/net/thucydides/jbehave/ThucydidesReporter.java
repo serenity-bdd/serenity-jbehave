@@ -223,9 +223,14 @@ public class ThucydidesReporter implements StoryReporter {
 
         net.thucydides.core.model.Story userStory
                 = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
-                .withNarrative(story.getNarrative().asString(new Keywords()).trim());
+                .withNarrative(getNarrativeFrom(story));
         StepEventBus.getEventBus().testSuiteStarted(userStory);
         registerTags(story);
+    }
+
+    private String getNarrativeFrom(Story story) {
+        return (!story.getNarrative().isEmpty()) ?
+             story.getNarrative().asString(new Keywords()).trim() : "";
     }
 
     private void noteAnyGivenStoriesFor(Story story) {
