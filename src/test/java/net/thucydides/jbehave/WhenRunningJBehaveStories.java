@@ -577,4 +577,38 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
         assertThat(outcomes.get(1).getResult(), is(TestResult.FAILURE));
     }
+
+    @Test
+    public void shared_variables_between_steps_are_allowed_if_configured() throws Throwable {
+
+        // Given
+        environmentVariables.setProperty("reset.steps.each.scenario","false");
+        ThucydidesJUnitStories sharedVariablesStory = newStory("aBehaviorWithSharedVariables.story");
+
+        // When
+        run(sharedVariablesStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(SUCCESS));
+    }
+
+    @Test
+    public void variables_are_reset_between_steps_by_default() throws Throwable {
+
+        // Given
+        ThucydidesJUnitStories sharedVariablesStory = newStory("aBehaviorWithSharedVariables.story");
+
+        // When
+        run(sharedVariablesStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(SUCCESS));
+        assertThat(outcomes.get(1).getResult(), is(FAILURE));
+    }
+
 }
