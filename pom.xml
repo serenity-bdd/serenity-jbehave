@@ -4,11 +4,11 @@
     <parent>
         <artifactId>thucydides</artifactId>
         <groupId>net.thucydides</groupId>
-        <version>0.9.271</version>
+        <version>0.9.275</version>
     </parent>
     <groupId>net.thucydides</groupId>
     <artifactId>thucydides-jbehave-plugin</artifactId>
-    <version>0.9.274-SNAPSHOT</version>
+    <version>0.9.275-SNAPSHOT</version>
     <name>thucydides-jbehave-plugin</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -88,13 +88,13 @@
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-test-utils</artifactId>
-            <version>0.9.271</version>
+            <version>0.9.275</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-sample-alternative-resources</artifactId>
-            <version>0.9.271</version>
+            <version>0.9.275</version>
             <scope>test</scope>
         </dependency>
         <dependency>
