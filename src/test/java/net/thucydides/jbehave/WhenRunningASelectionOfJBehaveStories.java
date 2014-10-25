@@ -3,7 +3,6 @@ package net.thucydides.jbehave;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.jbehave.annotations.Metafilter;
 import org.junit.Test;
 
 import java.util.List;
@@ -76,7 +75,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat");
-        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(systemConfiguration);
+        ThucydidesJUnitStories uatStory = new ASampleBehaviorForUatOnly(systemConfiguration);
         uatStory.setSystemConfiguration(systemConfiguration);
         uatStory.setEnvironmentVariables(environmentVariables);
 
@@ -164,7 +163,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "-environment uat");
 
         // Given
-        ThucydidesJUnitStories uatStory = new ABehaviorForUatOnly(systemConfiguration);
+        ThucydidesJUnitStories uatStory = new ASampleBehaviorForUatOnly(systemConfiguration);
 
         // When
         run(uatStory);

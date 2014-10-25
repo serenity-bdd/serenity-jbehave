@@ -1,5 +1,5 @@
 Meta:
-@driver phantomjs
+@driver htmlunit
 
 Scenario: A scenario that uses selenium
 

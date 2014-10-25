@@ -6,6 +6,7 @@ import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.webdriver.WebDriverFacade;
 import net.thucydides.jbehave.pages.StaticSitePage;
+import org.jbehave.core.annotations.Alias;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class SomeSeleniumSteps {
 
-    @Managed
+    @Managed(driver="htmlunit")
     public WebDriver webDriver;
 
     @ManagedPages
@@ -83,6 +84,7 @@ public class SomeSeleniumSteps {
     }
 
     @Then("I should see entered values of <expectedFirstname> and <expectedLastname>")
+    @Alias("I should see <firstname> and <lastname> in the names fields")
     public void thenIShouldSeeInTheNamesFields(String expectedFirstname,
                                                String expectedLastname) {
         StaticSitePage indexPage = page;
