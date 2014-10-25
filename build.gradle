@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+//    apply plugin: 'maven-publish'
+//    apply plugin: 'com.jfrog.bintray'
+//    apply plugin: 'release'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '0.9.276-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
+
+test {
+    include '**/When*'
+    exclude '**/*$*'
+    exclude '**/integration/**'
+    exclude '**/samples/**'
+    exclude '**/*Sample*'
+    maxParallelForks = 4
+}
+
+dependencies {
+    compile 'net.thucydides:thucydides-core:0.9.275'
+    compile 'org.jbehave:jbehave-core:3.9.3'
+    compile 'de.codecentric:jbehave-junit-runner:1.1.0'
+    compile 'org.reflections:reflections:0.9.8'
+    compile 'com.googlecode.lambdaj:lambdaj:2.3.3'
+    compile("org.codehaus.groovy:groovy-all:2.3.3")
+
+    testCompile "ch.qos.logback:logback-classic:1.0.13"
+    testCompile 'org.easytesting:fest-assert:1.4'
+    testCompile 'net.thucydides:thucydides-test-utils:0.9.275'
+    testCompile 'net.thucydides:thucydides-sample-alternative-resources:0.9.275'
+    testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
+    testCompile 'org.springframework:spring-beans:3.1.2.RELEASE'
+    testCompile 'org.springframework:spring-context:3.1.2.RELEASE'
+    testCompile 'org.springframework:spring-context-support:3.1.2.RELEASE'
+    testCompile "junit:junit:4.11"
+}
