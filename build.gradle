@@ -97,10 +97,56 @@ publishing {
             artifact javadocJar {
                 classifier "javadoc"
             }
+
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'thucydides-jbehave'
+                    description 'Thucydides JBehave integration'
+                    url 'https://github.com/thucydides-webtests/thucydides-jbehave'
+                    scm {
+                        url 'scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git'
+                        connection 'scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git'
+                        developerConnection 'scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'johnsmart'
+                            name 'John Ferguson Smart'
+                            email 'john.smart@wakaleo.com'
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
+task createPom << {
+    pom {
+        project {
+            groupId 'org.example'
+            artifactId 'test'
+            version '1.0.0'
+
+            inceptionYear '2008'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}
 
 bintray {
     user = bintrayUsername //this usually comes form gradle.properties file in ~/.gradle
