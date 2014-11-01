@@ -1,16 +1,31 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
-//    apply plugin: 'maven-publish'
-//    apply plugin: 'com.jfrog.bintray'
-//    apply plugin: 'release'
+apply from: "$rootDir/gradle/versioning.gradle"
 
+ext {
+    bintrayBaseUrl = 'https://api.bintray.com/maven'
+    bintrayRepository = 'maven'
+    bintrayPackage = 'thucydides-jbehave'
+}
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = '0.9.276-SNAPSHOT'
+
+group = 'net.thucydides'
 
 repositories {
     mavenLocal()
@@ -18,7 +33,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.1'
 }
 
 test {
@@ -28,6 +43,27 @@ test {
     exclude '**/samples/**'
     exclude '**/*Sample*'
     maxParallelForks = 4
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": "Thucydides JBehave Plugin",
+                   "Implementation-Version": project.version.toString())
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
 }
 
 dependencies {
@@ -47,4 +83,35 @@ dependencies {
     testCompile 'org.springframework:spring-context:3.1.2.RELEASE'
     testCompile 'org.springframework:spring-context-support:3.1.2.RELEASE'
     testCompile "junit:junit:4.11"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+        }
+    }
+}
+
+
+bintray {
+    user = bintrayUsername //this usually comes form gradle.properties file in ~/.gradle
+    key = bintrayApiKey //this usually comes form gradle.properties file in ~/.gradle
+    publications = ['mavenJava'] // see publications closure
+    pkg {
+        repo = 'maven'
+        userOrg = 'thucydides'
+        name = 'thucydides-jbehave'
+        desc = 'Thucydides JBehave plugin'
+        licenses = ['Apache-2.0']
+        labels = ['thucydides','jbehave','bdd']
+    }
 }
