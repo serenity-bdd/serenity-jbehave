@@ -20,12 +20,12 @@ apply from: "$rootDir/gradle/versioning.gradle"
 ext {
     bintrayBaseUrl = 'https://api.bintray.com/maven'
     bintrayRepository = 'maven'
-    bintrayPackage = 'thucydides-jbehave'
+    bintrayPackage = 'serenity-jbehave'
 }
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-group = 'net.thucydides'
+group = 'net.serenity'
 
 repositories {
     mavenLocal()
@@ -47,7 +47,7 @@ test {
 
 jar {
     manifest {
-        attributes("Implementation-Title": "Thucydides JBehave Plugin",
+        attributes("Implementation-Title": "Serenity JBehave Plugin",
                    "Implementation-Version": project.version.toString())
     }
 }
@@ -67,7 +67,7 @@ artifacts {
 }
 
 dependencies {
-    compile 'net.thucydides:thucydides-core:0.9.275'
+    compile 'net.serenity:core:0.9.275'
     compile 'org.jbehave:jbehave-core:3.9.3'
     compile 'de.codecentric:jbehave-junit-runner:1.1.0'
     compile 'org.reflections:reflections:0.9.8'
@@ -76,8 +76,8 @@ dependencies {
 
     testCompile "ch.qos.logback:logback-classic:1.0.13"
     testCompile 'org.easytesting:fest-assert:1.4'
-    testCompile 'net.thucydides:thucydides-test-utils:0.9.275'
-    testCompile 'net.thucydides:thucydides-sample-alternative-resources:0.9.275'
+    testCompile 'net.serenity:serenity-test-utils:0.9.275'
+    testCompile 'net.serenity:serenity-sample-alternative-resources:0.9.275'
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
     testCompile 'org.springframework:spring-beans:3.1.2.RELEASE'
     testCompile 'org.springframework:spring-context:3.1.2.RELEASE'
@@ -101,13 +101,13 @@ publishing {
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
-                    name 'thucydides-jbehave'
-                    description 'Thucydides JBehave integration'
-                    url 'https://github.com/thucydides-webtests/thucydides-jbehave'
+                    name 'serenity-jbehave'
+                    description 'Serenity JBehave integration'
+                    url 'https://github.com/serenity-bdd/serenity-jbehave'
                     scm {
-                        url 'scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git'
-                        connection 'scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git'
-                        developerConnection 'scm:git:git@github.com:thucydides-webtests/thucydides-jbehave.git'
+                        url 'scm:git:git@github.com:serenity-bdd/serenity-jbehave.git'
+                        connection 'scm:git:git@github.com:serenity-bdd/serenity-jbehave.git'
+                        developerConnection 'scm:git:git@github.com:serenity-bdd/serenity-jbehave.git'
                     }
                     licenses {
                         license {
@@ -129,35 +129,17 @@ publishing {
     }
 }
 
-task createPom << {
-    pom {
-        project {
-            groupId 'org.example'
-            artifactId 'test'
-            version '1.0.0'
-
-            inceptionYear '2008'
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-        }
-    }.writeTo("pom.xml")
-}
-
 bintray {
+
     user = bintrayUsername //this usually comes form gradle.properties file in ~/.gradle
     key = bintrayApiKey //this usually comes form gradle.properties file in ~/.gradle
     publications = ['mavenJava'] // see publications closure
     pkg {
         repo = 'maven'
-        userOrg = 'thucydides'
-        name = 'thucydides-jbehave'
-        desc = 'Thucydides JBehave plugin'
+        userOrg = 'serenity'
+        name = 'serenity-jbehave'
+        desc = 'Serenity JBehave plugin'
         licenses = ['Apache-2.0']
-        labels = ['thucydides','jbehave','bdd']
+        labels = ['serenity','jbehave','bdd']
     }
 }
