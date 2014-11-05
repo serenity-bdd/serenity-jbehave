@@ -21,11 +21,13 @@ ext {
     bintrayBaseUrl = 'https://api.bintray.com/maven'
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
+    serenityCoreVersion = '1.0.13'
 }
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-group = 'net.serenity'
+group = 'net.serenity-bdd'
 
 repositories {
     mavenLocal()
@@ -67,7 +69,8 @@ artifacts {
 }
 
 dependencies {
-    compile 'net.serenity:core:0.9.275'
+    compile "net.serenity-bdd:core:${project.serenityCoreVersion}"
+
     compile 'org.jbehave:jbehave-core:3.9.3'
     compile 'de.codecentric:jbehave-junit-runner:1.1.0'
     compile 'org.reflections:reflections:0.9.8'
@@ -76,8 +79,8 @@ dependencies {
 
     testCompile "ch.qos.logback:logback-classic:1.0.13"
     testCompile 'org.easytesting:fest-assert:1.4'
-    testCompile 'net.serenity:serenity-test-utils:0.9.275'
-    testCompile 'net.serenity:serenity-sample-alternative-resources:0.9.275'
+    testCompile "net.serenity-bdd:serenity-test-utils:${project.serenityCoreVersion}"
+    testCompile "net.serenity-bdd:serenity-sample-alternative-resources:${project.serenityCoreVersion}"
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
     testCompile 'org.springframework:spring-beans:3.1.2.RELEASE'
     testCompile 'org.springframework:spring-context:3.1.2.RELEASE'
