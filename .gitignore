@@ -1,6 +1,7 @@
 test*.db
 .project
 .settings
+.gradle
 target
 .idea
 .classpath
