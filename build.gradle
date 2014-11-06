@@ -53,8 +53,18 @@ ext {
 
 version = versionCounter.nextVersion
 
+task createNewVersionTag(type: Exec) {
+    executable "sh"
+    args "-c", "git tag -a v$version -m'release tag'"
+}
+
+task publishNewVersionTag(type: Exec, dependsOn: 'createNewVersionTag') {
+    executable "sh"
+    args "-c", "git push origin v$version"
+}
+
 task tagNextVersion() {
-    versionCounter.tagNextVersion()
+    dependsOn publishNewVersionTag
 }
 
 task wrapper(type: Wrapper) {
@@ -150,4 +160,8 @@ uploadArchives {
             }
         }
     }
+}
+
+uploadArchives.doLast {
+    dependsOn 'publishNewVersionTag'
 }
