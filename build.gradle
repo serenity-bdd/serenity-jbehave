@@ -24,7 +24,6 @@ apply plugin: 'com.jfrog.bintray'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = 'net.serenity-bdd'
-name = 'serenity-jbehave'
 
 repositories {
     mavenLocal()
@@ -75,7 +74,7 @@ jar {
 
     manifest {
         attributes("Implementation-Title": "Serenity JBehave Plugin",
-                   "Implementation-Version": project.version.toString())
+                "Implementation-Version": project.version.toString())
     }
 }
 
@@ -116,6 +115,36 @@ dependencies {
 uploadArchives {
     repositories {
         mavenDeployer {
+            pom.artifactId = 'serenity-jbehave'
+            pom.project {
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                url 'https://github.com/serenity-bdd/$project.name'
+                scm {
+                    url 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+                    connection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+                    developerConnection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+                }
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'johnsmart'
+                        name 'John Ferguson Smart'
+                        email 'john.smart@wakaleo.com'
+                    }
+                }
+            }
             repository(url: bintrayBaseUrl + '/serenity/maven/serenity-jbehave') {
                 authentication(userName: bintrayUsername, password: bintrayApiKey)
             }
