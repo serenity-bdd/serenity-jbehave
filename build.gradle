@@ -118,7 +118,6 @@ publishing {
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
-                    name 'serenity-jbehave'
                     group 'net.serenity-bdd'
                     description 'Serenity JBehave integration'
                     url 'https://github.com/serenity-bdd/serenity-jbehave'
