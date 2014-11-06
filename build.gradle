@@ -26,8 +26,8 @@ buildVersion {
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-
 group = 'net.serenity-bdd'
+version = buildVersion.version
 
 repositories {
     mavenLocal()
@@ -36,6 +36,11 @@ repositories {
 
 ext {
     serenityCoreVersion = '1.0.13'
+    bintrayBaseUrl = 'https://api.bintray.com/maven'
+    bintrayRepository = 'maven'
+    bintrayPackage = 'serenity-jbehave'
+    projectDescription = 'Serenity JBehave integration'
+
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
     }
@@ -51,7 +56,6 @@ task wrapper(type: Wrapper) {
 test {
     include '**/When*'
     exclude '**/*$*'
-    exclude '**/integration/**'
     exclude '**/samples/**'
     exclude '**/*Sample*'
     maxParallelForks = 4
