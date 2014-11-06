@@ -24,6 +24,7 @@ apply plugin: 'com.jfrog.bintray'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = 'net.serenity-bdd'
+name = 'serenity-jbehave'
 
 repositories {
     mavenLocal()
@@ -31,7 +32,6 @@ repositories {
 }
 
 ext {
-
     bintrayBaseUrl = 'https://api.bintray.com/maven'
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
