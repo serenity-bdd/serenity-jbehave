@@ -106,7 +106,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
 
-            println "Publishing $project.name:$project.group:$project.version"
+            logger.info "Publishing $project.name:$project.group:$project.version"
 
             from components.java
 
@@ -133,7 +133,6 @@ publishing {
                         license {
                             name 'The Apache Software License, Version 2.0'
                             url 'http://www.apache.org/license/LICENSE-2.0.txt'
-                            distribution 'repo'
                         }
                     }
                     developers {
