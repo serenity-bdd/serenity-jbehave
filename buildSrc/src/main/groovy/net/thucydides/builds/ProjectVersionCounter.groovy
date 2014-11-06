@@ -7,17 +7,6 @@ class ProjectVersionCounter {
         this.isRelease = isRelease
     }
 
-    @Override
-    String toString() {
-        String fullVersion = "$major.$minor"
-        if (build) {
-            fullVersion += ".$build"
-        } else {
-            fullVersion += "-SNAPSHOT"
-        }
-        fullVersion
-    }
-
     def getNextVersion() {
         def currentVersion = "git describe --tags".execute().text
         if (currentVersion.isEmpty()) {
@@ -33,7 +22,8 @@ class ProjectVersionCounter {
     }
 
     def tagNextVersion() {
-        println "git tag -a $nextVersion -m'release tag'".execute().text
-        println "git push origin $nextVersion".execute().text
+        println "Creating a tag in git for $nextVersion"
+        "git tag -a v$nextVersion -m'release tag'".execute().text
+        "git push origin --tags".execute().text
     }
 }
