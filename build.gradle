@@ -35,7 +35,6 @@ repositories {
 }
 
 ext {
-    serenityCoreVersion = '1.0.13'
     bintrayBaseUrl = 'https://api.bintray.com/maven'
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
@@ -47,6 +46,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
+    serenityCoreVersion = '1.0.13'
 }
 
 task wrapper(type: Wrapper) {
