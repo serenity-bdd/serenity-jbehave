@@ -121,7 +121,6 @@ publishing {
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
-                    name "$project.name"
                     description "Serenity JBehave integration"
 
                     url 'https://github.com/serenity-bdd/$project.name'
