@@ -1,3 +1,5 @@
+import net.thucydides.builds.ProjectVersionCounter
+
 buildscript {
     repositories {
         jcenter()
@@ -9,6 +11,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
         classpath 'nz.org.geonet:gradle-build-version-plugin:1.0.4'
     }
+
 }
 
 apply plugin: 'java'
@@ -16,18 +19,11 @@ apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'build-version'
-
-buildVersion {
-    releaseTagPattern = "^v(\\d+\\.\\d+\\.\\d+)"
-}
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = 'net.serenity-bdd'
-version = buildVersion.version
 
 repositories {
     mavenLocal()
@@ -35,10 +31,13 @@ repositories {
 }
 
 ext {
+
     bintrayBaseUrl = 'https://api.bintray.com/maven'
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
+
+    versionCounter = new ProjectVersionCounter(project.hasProperty("releaseBuild"))
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -47,6 +46,16 @@ ext {
         bintrayApiKey = ''
     }
     serenityCoreVersion = '1.0.13'
+
+    if (!project.hasProperty("bintrayApiKey")) {
+        bintrayApiKey = ''
+    }
+}
+
+version = versionCounter.nextVersion
+
+task tagNextVersion() {
+    versionCounter.tagNextVersion()
 }
 
 task wrapper(type: Wrapper) {
@@ -62,6 +71,8 @@ test {
 }
 
 jar {
+    println "Publishing $project.name:$project.group:$project.version"
+
     manifest {
         attributes("Implementation-Title": "Serenity JBehave Plugin",
                    "Implementation-Version": project.version.toString())
@@ -102,72 +113,12 @@ dependencies {
     testCompile "junit:junit:4.11"
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-
-            logger.info "Publishing $project.name:$project.group:$project.version"
-
-            from components.java
-
-            artifact sourcesJar {
-                classifier "sources"
-            }
-
-            artifact javadocJar {
-                classifier "javadoc"
-            }
-
-            pom.withXml {
-                asNode().children().last() + {
-                    resolveStrategy = Closure.DELEGATE_FIRST
-                    description "Serenity JBehave integration"
-
-                    url 'https://github.com/serenity-bdd/$project.name'
-                    scm {
-                        url 'scm:git:git@github.com:serenity-bdd/$project.name.git'
-                        connection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
-                        developerConnection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
-                    }
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id 'johnsmart'
-                            name 'John Ferguson Smart'
-                            email 'john.smart@wakaleo.com'
-                        }
-                    }
-                }
-                // Preserve compile-scope dependencies
-                asNode().dependencies.'*'.findAll() {
-                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
-                        dep.name == it.artifactId.text()
-                    }
-                }.each() {
-                    it.scope*.value = 'compile'
-                }
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: bintrayBaseUrl + '/serenity/maven/serenity-jbehave') {
+                authentication(userName: bintrayUsername, password: bintrayApiKey)
             }
         }
-    }
-}
-
-bintray {
-    user = bintrayUsername //this usually comes form gradle.properties file in ~/.gradle
-    key = bintrayApiKey //this usually comes form gradle.properties file in ~/.gradle
-    publications = ['mavenJava'] // see publications closure
-    pkg {
-        repo = 'maven'
-        userOrg = 'serenity'
-        name = 'serenity-jbehave'
-        desc = 'Serenity JBehave plugin'
-        websiteUrl = 'https://github.com/serenity-bdd/serenity-jbehave'
-        issueTrackerUrl = 'https://github.com/serenity-bdd/serenity-jbehave/issues'
-        licenses = ['Apache-2.0']
-        labels = ['serenity','jbehave','bdd']
     }
 }
