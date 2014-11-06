@@ -119,6 +119,7 @@ publishing {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
                     name 'serenity-jbehave'
+                    group 'net.serenity-bdd'
                     description 'Serenity JBehave integration'
                     url 'https://github.com/serenity-bdd/serenity-jbehave'
                     scm {
@@ -155,6 +156,8 @@ bintray {
         userOrg = 'serenity'
         name = 'serenity-jbehave'
         desc = 'Serenity JBehave plugin'
+        websiteUrl = 'https://github.com/serenity-bdd/serenity-jbehave'
+        issueTrackerUrl = 'https://github.com/serenity-bdd/serenity-jbehave/issues'
         licenses = ['Apache-2.0']
         labels = ['serenity','jbehave','bdd']
     }
