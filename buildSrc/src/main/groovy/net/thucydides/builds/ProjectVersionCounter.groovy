@@ -19,12 +19,12 @@ class ProjectVersionCounter {
     }
 
     def getNextVersion() {
-        def currentVersion = "git describe --exact-match --abbrev=0".execute().text
+        def currentVersion = "git describe --tags".execute().text
         if (currentVersion.isEmpty()) {
             currentVersion = "v0.1.0"
         }
         def matcher = currentVersion =~ "\\d+"
-        def majorMinorNumbers = "v" + matcher[0] + "." + matcher[1]
+        def majorMinorNumbers = matcher[0] + "." + matcher[1]
         def currentBuildNumber = Integer.valueOf(matcher[2])
         def nextBuildNumber = currentBuildNumber + 1
         return (isRelease) ?
