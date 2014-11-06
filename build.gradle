@@ -19,6 +19,12 @@ apply plugin: 'com.jfrog.bintray'
 apply from: "$rootDir/gradle/versioning.gradle"
 
 ext {
+    if (!project.hasProperty("bintrayUsername")) {
+        bintrayUsername = 'wakaleo'
+    }
+    if (!project.hasProperty("bintrayApiKey")) {
+        bintrayApiKey = ''
+    }
     bintrayBaseUrl = 'https://api.bintray.com/maven'
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
