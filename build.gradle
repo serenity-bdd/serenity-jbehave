@@ -11,7 +11,6 @@ buildscript {
     }
 }
 
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
@@ -21,17 +20,8 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'build-version'
 
-ext {
-    if (!project.hasProperty("bintrayUsername")) {
-        bintrayUsername = 'wakaleo'
-    }
-    if (!project.hasProperty("bintrayApiKey")) {
-        bintrayApiKey = ''
-    }
-    bintrayBaseUrl = 'https://api.bintray.com/maven'
-    bintrayRepository = 'maven'
-    bintrayPackage = 'serenity-jbehave'
-    serenityCoreVersion = '1.0.13'
+buildVersion {
+    releaseTagPattern = "^v(\\d+\\.\\d+\\.\\d+)"
 }
 
 sourceCompatibility = 1.7
@@ -42,6 +32,16 @@ group = 'net.serenity-bdd'
 repositories {
     mavenLocal()
     jcenter()
+}
+
+ext {
+    serenityCoreVersion = '1.0.13'
+    if (!project.hasProperty("bintrayUsername")) {
+        bintrayUsername = 'wakaleo'
+    }
+    if (!project.hasProperty("bintrayApiKey")) {
+        bintrayApiKey = ''
+    }
 }
 
 task wrapper(type: Wrapper) {
