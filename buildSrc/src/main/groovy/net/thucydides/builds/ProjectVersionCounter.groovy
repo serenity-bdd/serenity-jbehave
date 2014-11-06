@@ -34,5 +34,6 @@ class ProjectVersionCounter {
 
     def tagNextVersion() {
         println "git tag -a $nextVersion -m'release tag'".execute().text
+        println "git push origin $nextVersion".execute().text
     }
 }
