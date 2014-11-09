@@ -9,7 +9,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
-        classpath 'nz.org.geonet:gradle-build-version-plugin:1.0.4'
     }
 
 }
@@ -19,6 +18,7 @@ apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 sourceCompatibility = 1.7
@@ -44,7 +44,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.0.13'
+    serenityCoreVersion = '1.0.3'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -120,6 +120,62 @@ dependencies {
     testCompile 'org.springframework:spring-context:3.1.2.RELEASE'
     testCompile 'org.springframework:spring-context-support:3.1.2.RELEASE'
     testCompile "junit:junit:4.11"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+
+            println "Publishing $project.name:$project.group:$project.version"
+
+            from components.java
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name "$project.name"
+                    description "$projectDescription"
+
+                    url 'https://github.com/serenity-bdd/$project.name'
+                    scm {
+                        url 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+                        connection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+                        developerConnection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'johnsmart'
+                            name 'John Ferguson Smart'
+                            email 'john.smart@wakaleo.com'
+                        }
+                    }
+                }
+                // Preserve compile-scope dependencies
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each() {
+                    it.scope*.value = 'compile'
+                }
+            }
+        }
+    }
 }
 
 uploadArchives {

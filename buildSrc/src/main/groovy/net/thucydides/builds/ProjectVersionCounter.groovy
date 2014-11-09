@@ -20,10 +20,4 @@ class ProjectVersionCounter {
                 majorMinorNumbers + "." + nextBuildNumber :
                 majorMinorNumbers + "." + nextBuildNumber + "-SNAPSHOT"
     }
-
-    def tagNextVersion() {
-        println "Creating a tag in git for $nextVersion"
-        "git tag -a v$nextVersion -m'release tag'".execute()
-        "git push origin --tags".execute()
-    }
 }
