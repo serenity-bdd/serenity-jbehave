@@ -2,10 +2,8 @@ import net.thucydides.builds.ProjectVersionCounter
 
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
-        maven {
-            url 'https://geonet.artifactoryonline.com/geonet/public-releases'
-        }
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
@@ -28,6 +26,9 @@ group = 'net.serenity-bdd'
 repositories {
     mavenLocal()
     jcenter()
+    maven {
+        url 'http://dl.bintray.com/serenity/maven/'
+    }
 }
 
 ext {
