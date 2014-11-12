@@ -218,7 +218,3 @@ uploadArchives {
         }
     }
 }
-
-uploadArchives.doLast {
-    dependsOn 'publishNewVersionTag'
-}
