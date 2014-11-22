@@ -3,6 +3,8 @@ package net.thucydides.jbehave.steps;
 import net.thucydides.core.annotations.Pending;
 import net.thucydides.core.annotations.Step;
 
+import static org.junit.Assume.assumeTrue;
+
 public class SomeThucydidesSteps {
 
     @Step
@@ -25,4 +27,8 @@ public class SomeThucydidesSteps {
         System.out.println("PENDING STEP");
     }
 
+    @Step
+    public void failedAssumption() {
+        assumeTrue(false);
+    }
 }

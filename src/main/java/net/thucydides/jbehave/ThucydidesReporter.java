@@ -94,10 +94,6 @@ public class ThucydidesReporter implements StoryReporter {
 
     protected ReportService getReportService() {
         return ThucydidesReports.getReportService(systemConfiguration);
-//        if (reportServiceThreadLocal.get() == null) {
-//            reportServiceThreadLocal.set(ThucydidesReports.getReportService(systemConfiguration));
-//        }
-//        return reportServiceThreadLocal.get();
     }
 
     public void storyNotAllowed(Story story, String filter) {
@@ -122,8 +118,6 @@ public class ThucydidesReporter implements StoryReporter {
     private Map<String, String> storyMetadata;
 
     public void beforeStory(Story story, boolean givenStory) {
-        System.out.println("Before story" + story.getName());
-
         clearStoryResult();
         currentStoryIs(story);
         noteAnyGivenStoriesFor(story);
@@ -160,7 +154,6 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private void startTestForFirstScenarioIn(Story story) {
-        System.out.println("Starting first test for " + story.getName());
         Scenario firstScenario = story.getScenarios().get(0);
         startScenarioCalled(firstScenario.getTitle());
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle("Preconditions"));
@@ -615,8 +608,34 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     public void successful(String title) {
-        StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
-        StepEventBus.getEventBus().stepFinished();
+        if (annotatedResultTakesPriority()) {
+            processAnnotatedResult(title);
+        } else{
+            StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
+            StepEventBus.getEventBus().stepFinished();
+        }
+    }
+
+    private void processAnnotatedResult(String title) {
+        TestResult forcedResult = StepEventBus.getEventBus().getForcedResult().get();
+        switch (forcedResult) {
+            case PENDING:
+                StepEventBus.getEventBus().stepPending();
+                break;
+            case IGNORED:
+                StepEventBus.getEventBus().stepIgnored();
+                break;
+            case SKIPPED:
+                StepEventBus.getEventBus().stepIgnored();
+                break;
+            default:
+                StepEventBus.getEventBus().stepIgnored();
+        }
+
+    }
+
+    private boolean annotatedResultTakesPriority() {
+        return StepEventBus.getEventBus().getForcedResult().isPresent();
     }
 
     public void ignorable(String title) {
@@ -627,6 +646,7 @@ public class ThucydidesReporter implements StoryReporter {
     public void pending(String stepTitle) {
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepPending();
+
     }
 
     public void notPerformed(String stepTitle) {

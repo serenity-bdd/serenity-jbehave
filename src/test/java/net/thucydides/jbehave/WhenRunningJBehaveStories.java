@@ -251,7 +251,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // And
         assertThat(outcomes.get(0).getResult() , is(PENDING));
         // And
-        assertThat(outcomes.get(0), containsResults(SUCCESS, SUCCESS, SUCCESS, SUCCESS, SUCCESS, SUCCESS, PENDING, PENDING, SUCCESS));
+        assertThat(outcomes.get(0), containsResults(SUCCESS, SUCCESS, SUCCESS, SUCCESS, SUCCESS, SUCCESS, PENDING, PENDING, PENDING));
 
     }
 
