@@ -1,6 +1,8 @@
 package net.thucydides.jbehave.steps;
 
+import net.thucydides.core.PendingStepException;
 import net.thucydides.core.annotations.Steps;
+import net.thucydides.core.steps.StepEventBus;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Pending;
@@ -20,7 +22,7 @@ public class StorySteps {
 
     @Given("I have a failing precondition")
     public void failAPrecondition() {
-        assumeTrue(false);
+        steps.failedAssumption();
     }
 
     @Given("I have a passing precondition")
@@ -85,6 +87,16 @@ public class StorySteps {
     @Given("a stock of <symbol> and a threshold of <threshold>")
     public void givenAStock(@Named("symbol") String symbol, @Named("threshold") double threshold) {
         System.out.println("Stock " + symbol);
+    }
+
+    @Given("I need this test to be pending")
+    public void pendingTest() {
+        StepEventBus.getEventBus().testPending();
+    }
+
+    @Given("I need this test to be ignore")
+    public void ignoreTest() {
+        StepEventBus.getEventBus().testIgnored();
     }
 
     @When("the stock is traded at <price>")

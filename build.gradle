@@ -45,7 +45,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.0.6'
+    serenityCoreVersion = '1.0.8-SNAPSHOT'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -106,7 +106,7 @@ artifacts {
 dependencies {
     compile "net.serenity-bdd:core:${project.serenityCoreVersion}"
 
-    compile 'org.jbehave:jbehave-core:3.9.3'
+    compile 'org.jbehave:jbehave-core:3.9.5'
     compile 'de.codecentric:jbehave-junit-runner:1.1.0'
     compile 'org.reflections:reflections:0.9.8'
     compile 'com.googlecode.lambdaj:lambdaj:2.3.3'
@@ -217,6 +217,14 @@ uploadArchives {
             repository(url: bintrayBaseUrl + '/serenity/maven/serenity-jbehave') {
                 authentication(userName: bintrayUsername, password: bintrayApiKey)
             }
+        }
+    }
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
 }
