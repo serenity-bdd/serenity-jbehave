@@ -58,8 +58,8 @@ public class ThucydidesReporter implements StoryReporter {
 
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
-        thucydidesListenersThreadLocal = new ThreadLocal<ThucydidesListeners>();
-        reportServiceThreadLocal = new ThreadLocal<ReportService>();
+        thucydidesListenersThreadLocal = new ThreadLocal<>();
+        reportServiceThreadLocal = new ThreadLocal<>();
         baseStepListeners = Lists.newArrayList();
         givenStoryMonitor = new GivenStoryMonitor();
         clearStoryResult();

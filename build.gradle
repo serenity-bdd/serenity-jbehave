@@ -45,7 +45,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.0.8'
+    serenityCoreVersion = '1.0.9'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -77,7 +77,7 @@ test {
     exclude '**/*$*'
     exclude '**/samples/**'
     exclude '**/*Sample*'
-    maxParallelForks = 4
+//    maxParallelForks = 4
 }
 
 jar {
