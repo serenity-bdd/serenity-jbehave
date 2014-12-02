@@ -1,4 +1,5 @@
-import net.thucydides.builds.ProjectVersionCounter
+import org.ajoberstar.grgit.*
+import org.ajoberstar.gradle.git.release.opinion.Strategies
 
 buildscript {
     repositories {
@@ -7,8 +8,16 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
+        classpath 'org.ajoberstar:gradle-git:0.12.0'
     }
+}
 
+apply plugin: 'org.ajoberstar.release-base'
+release {
+    grgit = Grgit.open(project.file('.'))
+    versionStrategy Strategies.FINAL
+    versionStrategy Strategies.PRE_RELEASE
+    defaultVersionStrategy Strategies.SNAPSHOT
 }
 
 apply plugin: 'java'
@@ -37,8 +46,6 @@ ext {
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
 
-    versionCounter = new ProjectVersionCounter(project.hasProperty("releaseBuild"))
-
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
     }
@@ -50,22 +57,6 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-}
-
-version = versionCounter.nextVersion
-
-task createNewVersionTag(type: Exec) {
-    executable "sh"
-    args "-c", "git tag -a v$version -m'release tag'"
-}
-
-task publishNewVersionTag(type: Exec, dependsOn: 'createNewVersionTag') {
-    executable "sh"
-    args "-c", "git push origin v$version"
-}
-
-task tagNextVersion() {
-    dependsOn publishNewVersionTag
 }
 
 task wrapper(type: Wrapper) {
