@@ -5,11 +5,11 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
+import net.serenity_bdd.jbehave.SerenityStories;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import net.thucydides.jbehave.ThucydidesJUnitStories;
 import net.thucydides.jbehave.annotations.Metafilter;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
@@ -112,8 +112,8 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     private EnvironmentVariables environmentVariablesFrom(ConfigurableEmbedder configurableEmbedder) {
-        if (configurableEmbedder instanceof ThucydidesJUnitStories) {
-            return ((ThucydidesJUnitStories) configurableEmbedder).getEnvironmentVariables();
+        if (configurableEmbedder instanceof SerenityStories) {
+            return ((SerenityStories) configurableEmbedder).getEnvironmentVariables();
         } else {
             return Injectors.getInjector().getProvider(EnvironmentVariables.class).get() ;
         }
@@ -150,7 +150,7 @@ public class ThucydidesReportingRunner extends Runner {
         JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(), new Keywords());
 		// tell the reporter how to handle pending steps
 		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
-	
+
 		addToStoryReporterFormats(junitReporter);
 
 		try {
@@ -206,8 +206,6 @@ public class ThucydidesReportingRunner extends Runner {
 		Method method = makeStoryPathsMethodPublic(testClass);
 		storyPaths = ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
 	}
-
-
 
 	private Method makeStoryPathsMethodPublic(
 			Class<? extends ConfigurableEmbedder> testClass)
@@ -304,7 +302,7 @@ public class ThucydidesReportingRunner extends Runner {
     private Optional<String> getEnvironmentMetafilters() {
         return Optional.fromNullable(environmentVariables.getProperty(METAFILTER.getName()));
     }
-    
+
     private Optional<String> getAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
         return (testClass.getAnnotation(Metafilter.class) != null) ?
                 Optional.of(testClass.getAnnotation(Metafilter.class).value()) : Optional.<String>absent();
@@ -353,6 +351,4 @@ public class ThucydidesReportingRunner extends Runner {
     }
 
     protected boolean getIgnoreFailuresInView() { return environmentVariables.getPropertyAsBoolean(IGNORE_FAILURES_IN_VIEW.getName(),true); }
-
-
 }

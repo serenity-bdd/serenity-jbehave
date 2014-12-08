@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
@@ -8,6 +8,7 @@ import net.thucydides.core.screenshots.SingleThreadScreenshotProcessor;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
+import net.thucydides.jbehave.AStorySample;
 import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,10 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/** @deprecated All tests should be moved to serenity_bdd namespace, and this class exists there already
- *
- */
-@Deprecated
 public class AbstractJBehaveStory {
 
     protected MockEnvironmentVariables environmentVariables;
@@ -69,7 +66,7 @@ public class AbstractJBehaveStory {
         }
     }
 
-    protected void run(ThucydidesJUnitStories stories) throws Throwable {
+    protected void run(SerenityStories stories) throws Throwable {
         ThucydidesReportingRunner runner;
 
         AlertingNotifier notifier = new AlertingNotifier();
@@ -100,7 +97,7 @@ public class AbstractJBehaveStory {
     }
 
 
-    protected ThucydidesJUnitStories newStory(String storyPattern) {
+    protected SerenityStories newStory(String storyPattern) {
         return new AStorySample(storyPattern, systemConfiguration, environmentVariables);
     }
 

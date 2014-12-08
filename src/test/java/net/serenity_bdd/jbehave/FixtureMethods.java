@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.BeforeStory;

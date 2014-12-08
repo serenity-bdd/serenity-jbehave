@@ -1,7 +1,8 @@
-package net.thucydides.jbehave.steps;
+package net.serenity_bdd.jbehave.steps;
 
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.steps.StepEventBus;
+import net.thucydides.jbehave.steps.SomeThucydidesSteps;
 import org.jbehave.core.annotations.*;
 
 import java.util.Date;
@@ -10,10 +11,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 
-/** @deprecated Once all tests have been moved to serenity_bdd namespace, these steps will no longer be required.
- *
- */
-@Deprecated
 public class StorySteps {
 
     @Steps

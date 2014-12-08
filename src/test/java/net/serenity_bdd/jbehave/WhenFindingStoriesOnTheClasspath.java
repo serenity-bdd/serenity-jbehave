@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Before;

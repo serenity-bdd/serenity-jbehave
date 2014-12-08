@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
@@ -12,9 +12,10 @@ import static org.hamcrest.Matchers.is;
 
 public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory {
 
-    final static class AllStoriesSample extends ThucydidesJUnitStories {}
+    final static class AllStoriesSample extends SerenityStories {
+    }
 
-    final static class AStorySample extends ThucydidesJUnitStories {
+    final static class AStorySample extends SerenityStories {
 
         public AStorySample() {
             super();
@@ -29,12 +30,12 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void all_stories_on_the_classpath_should_be_run_by_default() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = new AllStoriesSample();
-        assertThat(stories.getRootPackage(), is("net.thucydides.jbehave"));
+        SerenityStories stories = new AllStoriesSample();
+        assertThat(stories.getRootPackage(), is("net.serenity_bdd.jbehave"));
         assertThat(stories.getStoryPath(), is("**/*.story"));
     }
 
-    final static class StoriesInTheSubsetFolderSample extends ThucydidesJUnitStories {
+    final static class StoriesInTheSubsetFolderSample extends SerenityStories {
         StoriesInTheSubsetFolderSample(EnvironmentVariables environmentVariables) {
             super(environmentVariables);
             findStoriesIn("stories/subset");
@@ -45,7 +46,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void a_subset_of_the_stories_can_be_run_individually() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = new StoriesInTheSubsetFolderSample(environmentVariables);
+        SerenityStories stories = new StoriesInTheSubsetFolderSample(environmentVariables);
 
         // When
         run(stories);
@@ -60,7 +61,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void stories_with_a_matching_name_can_be_run() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = newStory("*PassingBehavior.story");
+        SerenityStories stories = newStory("*PassingBehavior.story");
 
         // When
         run(stories);
@@ -75,8 +76,8 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat");
-        ThucydidesJUnitStories uatStory = new ASampleBehaviorForUatOnly(systemConfiguration);
-        uatStory.setSystemConfiguration(systemConfiguration);
+        SerenityStories uatStory = new ASampleBehaviorForUatOnly(systemConfiguration);
+//        uatStory.setSystemConfiguration(systemConfiguration);
         uatStory.setEnvironmentVariables(environmentVariables);
 
         // When
@@ -94,7 +95,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
-        ThucydidesJUnitStories allStories = new ThucydidesJUnitStories(systemConfiguration);
+        SerenityStories allStories = new SerenityStories(systemConfiguration);
         allStories.setSystemConfiguration(systemConfiguration);
         allStories.setEnvironmentVariables(environmentVariables);
 
@@ -110,7 +111,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void should_be_possible_to_define_metafilters_in_annotations() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories allStories = new WithAnAnnotatedMetafilter();
+        SerenityStories allStories = new WithAnAnnotatedMetafilter();
         allStories.setSystemConfiguration(systemConfiguration);
         allStories.setEnvironmentVariables(environmentVariables);
 
@@ -127,7 +128,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
-        ThucydidesJUnitStories allStories = new WithAnAnnotatedMetafilter();
+        SerenityStories allStories = new WithAnAnnotatedMetafilter();
         allStories.setSystemConfiguration(systemConfiguration);
         allStories.setEnvironmentVariables(environmentVariables);
 
@@ -143,9 +144,9 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void should_be_possible_to_define_groovy_metafilters() throws Throwable {
 
         // Given
-        systemConfiguration.getEnvironmentVariables().setProperty("webdriver.driver","htmlunit");
+        systemConfiguration.getEnvironmentVariables().setProperty("webdriver.driver", "htmlunit");
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "groovy:true==false");
-        ThucydidesJUnitStories allStories = new ThucydidesJUnitStories(systemConfiguration);
+        SerenityStories allStories = new SerenityStories(systemConfiguration);
         allStories.setSystemConfiguration(systemConfiguration);
         allStories.setEnvironmentVariables(environmentVariables);
 
@@ -163,7 +164,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "-environment uat");
 
         // Given
-        ThucydidesJUnitStories uatStory = new ASampleBehaviorForUatOnly(systemConfiguration);
+        SerenityStories uatStory = new ASampleBehaviorForUatOnly(systemConfiguration);
 
         // When
         run(uatStory);
@@ -173,7 +174,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         assertThat(outcomes.size(), is(0));
     }
 
-    final class AnotherStorySample extends ThucydidesJUnitStories {
+    final class AnotherStorySample extends SerenityStories {
 
         public AnotherStorySample() {
             super(environmentVariables);
@@ -185,7 +186,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void test_should_run_stories_in_a_specified_place() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AnotherStorySample();
+        SerenityStories story = new AnotherStorySample();
 
         // When
         run(story);

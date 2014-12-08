@@ -1,8 +1,8 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.webdriver.Configuration;
 
-public class ABehaviorContainingSlowTests extends ThucydidesJUnitStories {
+public class ABehaviorContainingSlowTests extends SerenityStories {
     public ABehaviorContainingSlowTests(Configuration configuration) {
         super(configuration);
         findStoriesCalled("**/aSlowBehavior.story");

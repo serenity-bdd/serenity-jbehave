@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 
 public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
 
-    final static class AStorySample extends ThucydidesJUnitStories {
+    final static class AStorySample extends SerenityStories {
 
         public AStorySample() {
             super();
@@ -24,12 +24,11 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     }
 
 
-
     @Test
     public void should_run_before_story_methods() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = new AStorySample("aPassingBehavior.story");
+        SerenityStories stories = new AStorySample("aPassingBehavior.story");
         stories.setSystemConfiguration(systemConfiguration);
 
         FixtureMethods.beforeStoryCalledCount = 0;
@@ -45,7 +44,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     public void should_run_before_scenario_methods() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = new AStorySample("aPassingBehaviorWithSeveralScenarios.story");
+        SerenityStories stories = new AStorySample("aPassingBehaviorWithSeveralScenarios.story");
         stories.setSystemConfiguration(systemConfiguration);
 
         FixtureMethods.beforeScenarioCalledCount = 0;
@@ -61,7 +60,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     public void should_run_before_scenario_methods_for_lots_of_stories() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories stories = new AStorySample("*PassingBehavior.story");
+        SerenityStories stories = new AStorySample("*PassingBehavior.story");
         stories.setSystemConfiguration(systemConfiguration);
 
         FixtureMethods.beforeScenarioCalledCount = 0;
@@ -74,7 +73,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     }
 
 
-    final class AnotherStorySample extends ThucydidesJUnitStories {
+    final class AnotherStorySample extends SerenityStories {
 
         public AnotherStorySample() {
             super(environmentVariables);
@@ -86,7 +85,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     public void should_not_run_given_stories_separately() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AnotherStorySample();
+        SerenityStories story = new AnotherStorySample();
 
         // When
         run(story);
@@ -111,7 +110,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
 
     }
 
-    final class AnotherSingleStorySample extends ThucydidesJUnitStories {
+    final class AnotherSingleStorySample extends SerenityStories {
 
         public AnotherSingleStorySample() {
             super(environmentVariables);
@@ -124,7 +123,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     public void should_count_preconditions_as_step() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = new AnotherSingleStorySample();
+        SerenityStories story = new AnotherSingleStorySample();
 
         // When
         run(story);
@@ -153,7 +152,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     public void should_run_stories_with_composite_steps() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("aBehaviorWithCompositeSteps.story");
+        SerenityStories story = newStory("aBehaviorWithCompositeSteps.story");
 
         // When
         run(story);

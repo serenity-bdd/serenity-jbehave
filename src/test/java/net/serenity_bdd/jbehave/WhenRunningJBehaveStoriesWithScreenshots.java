@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.greaterThan;
 
 public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveStory {
 
-    final static class AStorySample extends ThucydidesJUnitStories {
+    final static class AStorySample extends SerenityStories {
         public AStorySample() {
             super();
         }
@@ -25,7 +25,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     public void web_tests_should_take_screenshots() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("aPassingBehaviorWithSeleniumAndFirefox.story");
+        SerenityStories story = newStory("aPassingBehaviorWithSeleniumAndFirefox.story");
 
         // When
         run(story);
@@ -40,7 +40,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     public void web_tests_should_take_screenshots_with_multiple_scenarios() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("aPassingBehaviorWithSeleniumAndSeveralScenarios.story");
+        SerenityStories story = newStory("aPassingBehaviorWithSeleniumAndSeveralScenarios.story");
         story.setEnvironmentVariables(environmentVariables);
 
         // When
@@ -57,7 +57,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     public void web_tests_should_take_screenshots_for_multiple_tests() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("*PassingBehaviorWithSeleniumAndSeveralScenarios.story");
+        SerenityStories story = newStory("*PassingBehaviorWithSeleniumAndSeveralScenarios.story");
 
         // When
         run(story);
@@ -65,10 +65,10 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
 
-        TestStep given1 = givenStepIn(outcomes,0);
-        TestStep given2 = givenStepIn(outcomes,1);
-        TestStep given3 = givenStepIn(outcomes,2);
-        TestStep given4 = givenStepIn(outcomes,3);
+        TestStep given1 = givenStepIn(outcomes, 0);
+        TestStep given2 = givenStepIn(outcomes, 1);
+        TestStep given3 = givenStepIn(outcomes, 2);
+        TestStep given4 = givenStepIn(outcomes, 3);
 
         assertThat(given1.getScreenshots().size(), greaterThan(0));
         assertThat(given2.getScreenshots().size(), greaterThan(0));
@@ -80,7 +80,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     public void web_tests_should_take_screenshots_with_nested_step_libraries() throws Throwable {
 
         // Given
-        ThucydidesJUnitStories story = newStory("**/aPassingWebTestSampleWithNestedSteps.story");
+        SerenityStories story = newStory("**/aPassingWebTestSampleWithNestedSteps.story");
         story.setEnvironmentVariables(environmentVariables);
 
         // When

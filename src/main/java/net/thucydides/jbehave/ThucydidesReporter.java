@@ -7,9 +7,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.thucydides.core.Thucydides;
-import net.thucydides.core.ThucydidesListeners;
-import net.thucydides.core.ThucydidesReports;
+import net.serenity_bdd.core.Serenity;
+import net.serenity_bdd.core.SerenityListeners;
+import net.serenity_bdd.core.SerenityReports;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
@@ -39,7 +39,7 @@ import static ch.lambdaj.Lambda.*;
 
 public class ThucydidesReporter implements StoryReporter {
 
-    private ThreadLocal<ThucydidesListeners> thucydidesListenersThreadLocal;
+    private ThreadLocal<SerenityListeners> serenityListenersThreadLocal;
     private ThreadLocal<ReportService> reportServiceThreadLocal;
     private final List<BaseStepListener> baseStepListeners;
 
@@ -58,7 +58,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     public ThucydidesReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
-        thucydidesListenersThreadLocal = new ThreadLocal<>();
+        serenityListenersThreadLocal = new ThreadLocal<>();
         reportServiceThreadLocal = new ThreadLocal<>();
         baseStepListeners = Lists.newArrayList();
         givenStoryMonitor = new GivenStoryMonitor();
@@ -76,24 +76,24 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     protected void clearListeners() {
-        thucydidesListenersThreadLocal.remove();
+        serenityListenersThreadLocal.remove();
         reportServiceThreadLocal.remove();
         givenStoryMonitor.clear();
     }
 
-    protected ThucydidesListeners getThucydidesListeners() {
-        if (thucydidesListenersThreadLocal.get() == null) {
-            ThucydidesListeners listeners = ThucydidesReports.setupListeners(systemConfiguration);
-            thucydidesListenersThreadLocal.set(listeners);
+    protected SerenityListeners getSerenityListeners() {
+        if (serenityListenersThreadLocal.get() == null) {
+            SerenityListeners listeners = SerenityReports.setupListeners(systemConfiguration);
+            serenityListenersThreadLocal.set(listeners);
             synchronized (baseStepListeners) {
                 baseStepListeners.add(listeners.getBaseStepListener());
             }
         }
-        return thucydidesListenersThreadLocal.get();
+        return serenityListenersThreadLocal.get();
     }
 
     protected ReportService getReportService() {
-        return ThucydidesReports.getReportService(systemConfiguration);
+        return SerenityReports.getReportService(systemConfiguration);
     }
 
     public void storyNotAllowed(Story story, String filter) {
@@ -130,7 +130,7 @@ public class ThucydidesReporter implements StoryReporter {
 
             ThucydidesStepFactory.resetContext();
 
-            getThucydidesListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
+            getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
 
             if (!isAStoryLevelGiven(story)) {
                 startTestSuiteForStory(story);
@@ -395,12 +395,12 @@ public class ThucydidesReporter implements StoryReporter {
     }
 
     private void registerMetadata(Meta metaData) {
-        Thucydides.getCurrentSession().clearMetaData();
+        Serenity.getCurrentSession().clearMetaData();
 
         Map<String, String> scenarioMetadata = getMetadataFrom(metaData);
         scenarioMetadata.putAll(storyMetadata);
         for (String key : scenarioMetadata.keySet()) {
-            Thucydides.getCurrentSession().addMetaData(key, scenarioMetadata.get(key));
+            Serenity.getCurrentSession().addMetaData(key, scenarioMetadata.get(key));
         }
     }
 

@@ -1,4 +1,4 @@
-package net.thucydides.jbehave;
+package net.serenity_bdd.jbehave;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -15,7 +15,7 @@ import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.JBEHAVE_S
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.STORY_DIRECTORY;
 
 class StoryPathFinder {
-    
+
     private final String storyNames;
     private final EnvironmentVariables environmentVariables;
 
