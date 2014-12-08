@@ -27,4 +27,8 @@ public class ThucydidesJUnitStories extends SerenityStories {
     protected ThucydidesJUnitStories(net.thucydides.core.webdriver.Configuration configuration) {
         super(configuration);
     }
+
+    public ThucydidesConfigurationBuilder runThucydides() {
+        return super.runSerenity();
+    }
 }

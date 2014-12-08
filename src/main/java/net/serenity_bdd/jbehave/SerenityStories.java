@@ -244,7 +244,7 @@ public class SerenityStories extends JUnitStories {
         getSystemConfiguration().setIfUndefined(ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER.getPropertyName(), "true");
     }
 
-    public ThucydidesConfigurationBuilder runThucydides() {
+    public ThucydidesConfigurationBuilder runSerenity() {
         return new ThucydidesConfigurationBuilder(this);
     }
 
