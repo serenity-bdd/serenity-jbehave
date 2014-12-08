@@ -1,6 +1,6 @@
 package net.thucydides.jbehave.steps;
 
-import net.thucydides.core.PendingStepException;
+import net.serenity_bdd.core.PendingStepException;
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.steps.StepEventBus;
 import org.jbehave.core.annotations.Given;
