@@ -5,12 +5,10 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.jbehave.ThucydidesJBehave;
-import net.thucydides.jbehave.ThucydidesStepFactory;
-import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
@@ -27,7 +25,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.jbehave.core.reporters.Format.*;
+import static org.jbehave.core.reporters.Format.CONSOLE;
+import static org.jbehave.core.reporters.Format.HTML;
+import static org.jbehave.core.reporters.Format.XML;
 
 /**
  * A JUnit-runnable test case designed to run a set of SerenityWebdriverIntegration-enabled JBehave stories in a given package.
@@ -249,10 +249,10 @@ public class SerenityStories extends JUnitStories {
     }
 
     public class ThucydidesConfigurationBuilder {
-        private final SerenityStories thucydidesJUnitStories;
+        private final SerenityStories serenityStories;
 
-        public ThucydidesConfigurationBuilder(SerenityStories thucydidesJUnitStories) {
-            this.thucydidesJUnitStories = thucydidesJUnitStories;
+        public ThucydidesConfigurationBuilder(SerenityStories serenityStories) {
+            this.serenityStories = serenityStories;
         }
 
         public ThucydidesConfigurationBuilder withDriver(String driver) {
@@ -261,11 +261,11 @@ public class SerenityStories extends JUnitStories {
         }
 
         public ThucydidesPropertySetter withProperty(ThucydidesSystemProperty property) {
-            return new ThucydidesPropertySetter(thucydidesJUnitStories, property);
+            return new ThucydidesPropertySetter(serenityStories, property);
         }
 
         public ThucydidesPropertySetter withProperty(String property) {
-            return new ThucydidesPropertySetter(thucydidesJUnitStories, property);
+            return new ThucydidesPropertySetter(serenityStories, property);
         }
 
         public ThucydidesConfigurationBuilder inASingleSession() {
@@ -275,32 +275,32 @@ public class SerenityStories extends JUnitStories {
     }
 
     public class ThucydidesPropertySetter {
-        private final SerenityStories thucydidesJUnitStories;
+        private final SerenityStories serenityStories;
         private final String propertyToSet;
 
-        public ThucydidesPropertySetter(SerenityStories thucydidesJUnitStories,
+        public ThucydidesPropertySetter(SerenityStories serenityStories,
                                         ThucydidesSystemProperty propertyToSet) {
-            this.thucydidesJUnitStories = thucydidesJUnitStories;
+            this.serenityStories = serenityStories;
             this.propertyToSet = propertyToSet.getPropertyName();
         }
 
-        public ThucydidesPropertySetter(SerenityStories thucydidesJUnitStories,
+        public ThucydidesPropertySetter(SerenityStories serenityStories,
                                         String propertyToSet) {
-            this.thucydidesJUnitStories = thucydidesJUnitStories;
+            this.serenityStories = serenityStories;
             this.propertyToSet = propertyToSet;
         }
 
         public void setTo(boolean value) {
-            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet,
+            serenityStories.getSystemConfiguration().setIfUndefined(propertyToSet,
                     Boolean.toString(value));
         }
 
         public void setTo(String value) {
-            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet, value);
+            serenityStories.getSystemConfiguration().setIfUndefined(propertyToSet, value);
         }
 
         public void setTo(Integer value) {
-            thucydidesJUnitStories.getSystemConfiguration().setIfUndefined(propertyToSet,
+            serenityStories.getSystemConfiguration().setIfUndefined(propertyToSet,
                     Integer.toString(value));
         }
     }

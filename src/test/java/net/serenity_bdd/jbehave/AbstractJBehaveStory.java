@@ -1,5 +1,6 @@
 package net.serenity_bdd.jbehave;
 
+import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
@@ -8,8 +9,6 @@ import net.thucydides.core.screenshots.SingleThreadScreenshotProcessor;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
-import net.thucydides.jbehave.AStorySample;
-import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;

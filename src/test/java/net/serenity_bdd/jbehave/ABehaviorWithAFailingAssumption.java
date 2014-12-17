@@ -1,9 +1,8 @@
 package net.serenity_bdd.jbehave;
 
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.jbehave.ThucydidesJUnitStory;
 
-public class ABehaviorWithAFailingAssumption extends ThucydidesJUnitStory {
+public class ABehaviorWithAFailingAssumption extends SerenityStory {
     public ABehaviorWithAFailingAssumption() {
     }
 

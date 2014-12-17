@@ -1,8 +1,5 @@
 package net.serenity_bdd.jbehave.converters;
 
-import net.serenity_bdd.jbehave.converters.DateTimeConverter;
-import net.serenity_bdd.jbehave.converters.TimeConverter;
-import net.serenity_bdd.jbehave.converters.YearMonthConverter;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.YearMonth;

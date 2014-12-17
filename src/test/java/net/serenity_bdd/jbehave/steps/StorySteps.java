@@ -2,8 +2,11 @@ package net.serenity_bdd.jbehave.steps;
 
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.steps.StepEventBus;
-import net.thucydides.jbehave.steps.SomeThucydidesSteps;
-import org.jbehave.core.annotations.*;
+import org.jbehave.core.annotations.Given;
+import org.jbehave.core.annotations.Named;
+import org.jbehave.core.annotations.Pending;
+import org.jbehave.core.annotations.Then;
+import org.jbehave.core.annotations.When;
 
 import java.util.Date;
 
