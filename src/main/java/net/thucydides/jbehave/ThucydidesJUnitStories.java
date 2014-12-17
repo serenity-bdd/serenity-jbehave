@@ -2,7 +2,7 @@ package net.thucydides.jbehave;
 
 import net.serenity_bdd.jbehave.SerenityStories;
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
+import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import org.junit.runner.RunWith;
 
 /**
@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
  * You can redefine these constraints as follows:
  */
 @Deprecated
-@RunWith(ThucydidesReportingRunner.class)
+@RunWith(SerenityReportingRunner.class)
 public class ThucydidesJUnitStories extends SerenityStories {
 
     public ThucydidesJUnitStories() {

@@ -8,7 +8,7 @@ import net.thucydides.core.screenshots.SingleThreadScreenshotProcessor;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
-import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
+import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -70,11 +70,11 @@ public class AbstractJBehaveStory {
     }
 
     protected void run(ThucydidesJUnitStories stories) throws Throwable {
-        ThucydidesReportingRunner runner;
+        SerenityReportingRunner runner;
 
         AlertingNotifier notifier = new AlertingNotifier();
         try {
-            runner = new ThucydidesReportingRunner(stories.getClass(), stories);
+            runner = new SerenityReportingRunner(stories.getClass(), stories);
             runner.run(notifier);
         } catch(Throwable e) {
             throw e;

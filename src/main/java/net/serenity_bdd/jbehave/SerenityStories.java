@@ -10,7 +10,7 @@ import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.jbehave.ThucydidesJBehave;
 import net.thucydides.jbehave.ThucydidesStepFactory;
-import net.thucydides.jbehave.runners.ThucydidesReportingRunner;
+import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
@@ -34,7 +34,7 @@ import static org.jbehave.core.reporters.Format.*;
  * By default, it will look for *.story files on the classpath, and steps in or underneath the current package.
  * You can redefine these constraints as follows:
  */
-@RunWith(ThucydidesReportingRunner.class)
+@RunWith(SerenityReportingRunner.class)
 public class SerenityStories extends JUnitStories {
 
     public static final String DEFAULT_STORY_NAME = "**/*.story";

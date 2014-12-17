@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.runners;
+package net.serenity_bdd.jbehave.runners;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
 import static net.thucydides.jbehave.ThucydidesJBehaveSystemProperties.*;
 
-public class ThucydidesReportingRunner extends Runner {
+public class SerenityReportingRunner extends Runner {
 	private List<Description> storyDescriptions;
 	private Embedder configuredEmbedder;
 	private List<String> storyPaths;
@@ -58,16 +58,16 @@ public class ThucydidesReportingRunner extends Runner {
     private final String IGNORE_FILTER = " -ignore";
     private final String DEFAULT_METAFILTER = IGNORE_FILTER;
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ThucydidesReportingRunner.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
 
 
     @SuppressWarnings("unchecked")
-    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
+    public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
         this(testClass, testClass.newInstance());
     }
 
-    public ThucydidesReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
-                                     ConfigurableEmbedder embedder) throws Throwable {
+    public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
+                                   ConfigurableEmbedder embedder) throws Throwable {
         this.configurableEmbedder = embedder;
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
