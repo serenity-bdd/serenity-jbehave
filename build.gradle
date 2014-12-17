@@ -102,7 +102,9 @@ dependencies {
 
     compile 'org.jbehave:jbehave-core:3.9.5'
     compile 'de.codecentric:jbehave-junit-runner:1.1.0'
-    compile 'org.reflections:reflections:0.9.8'
+    compile ('org.reflections:reflections:0.9.8') {
+        exclude group: 'guava', module: 'guava'
+    }
     compile 'com.googlecode.lambdaj:lambdaj:2.3.3'
     compile("org.codehaus.groovy:groovy-all:2.3.3")
 
