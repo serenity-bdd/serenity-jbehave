@@ -39,10 +39,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.METAFILTER;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
 
 public class SerenityReportingRunner extends Runner {

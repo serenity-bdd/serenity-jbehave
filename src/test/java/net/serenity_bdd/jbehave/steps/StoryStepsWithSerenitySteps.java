@@ -5,10 +5,10 @@ import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
-public class StoryStepsWithThucydidesSteps {
+public class StoryStepsWithSerenitySteps {
 
     @Steps
-    SomeThucydidesSteps steps;
+    SomeSerenitySteps steps;
 
     @Given("the scenario has steps")
     public void givenTheScenarioHasSteps() {

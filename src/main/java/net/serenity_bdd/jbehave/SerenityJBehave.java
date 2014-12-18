@@ -26,7 +26,7 @@ import java.util.Properties;
 /**
  * A convenience class designed to make it easier to set up JBehave tests with ThucydidesWebdriverIntegration.
  */
-public class ThucydidesJBehave {
+public class SerenityJBehave {
 
     private static final CrossReference xref = new CrossReference();
 
@@ -65,7 +65,7 @@ public class ThucydidesJBehave {
                                 .withViewResources(viewResources)
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
                                 .withFailureTrace(true).withFailureTraceCompression(true)
-                                .withReporters(new ThucydidesReporter(systemConfiguration)))
+                                .withReporters(new SerenityReporter(systemConfiguration)))
                 .useStoryLoader(new UTF8StoryLoader())
                 .useFailureStrategy(new IgnoreAssumptionViolations());
     }

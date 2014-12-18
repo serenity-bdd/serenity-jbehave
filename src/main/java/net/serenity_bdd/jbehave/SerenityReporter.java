@@ -49,7 +49,7 @@ import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.flatten;
 import static ch.lambdaj.Lambda.on;
 
-public class ThucydidesReporter implements StoryReporter {
+public class SerenityReporter implements StoryReporter {
 
     private ThreadLocal<SerenityListeners> serenityListenersThreadLocal;
     private ThreadLocal<ReportService> reportServiceThreadLocal;
@@ -68,7 +68,7 @@ public class ThucydidesReporter implements StoryReporter {
 
     private GivenStoryMonitor givenStoryMonitor;
 
-    public ThucydidesReporter(Configuration systemConfiguration) {
+    public SerenityReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
         serenityListenersThreadLocal = new ThreadLocal<>();
         reportServiceThreadLocal = new ThreadLocal<>();
@@ -498,12 +498,12 @@ public class ThucydidesReporter implements StoryReporter {
 
     private boolean shouldRestartDriverBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                ThucydidesJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
+                SerenityJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
     }
 
     private boolean shouldResetStepsBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                ThucydidesJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
+                SerenityJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
     }
 
 
@@ -568,10 +568,10 @@ public class ThucydidesReporter implements StoryReporter {
     public void beforeExamples(List<String> steps, ExamplesTable table) {
         exampleCount = 0;
         exampleData = ImmutableList.copyOf(table.getRows());
-        StepEventBus.getEventBus().useExamplesFrom(thucydidesTableFrom(table));
+        StepEventBus.getEventBus().useExamplesFrom(serenityTableFrom(table));
     }
 
-    private DataTable thucydidesTableFrom(ExamplesTable table) {
+    private DataTable serenityTableFrom(ExamplesTable table) {
         return DataTable.withHeaders(table.getHeaders()).andMappedRows(table.getRows()).build();
 
     }

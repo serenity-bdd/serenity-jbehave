@@ -5,7 +5,7 @@ import net.thucydides.core.annotations.Step;
 
 import static org.junit.Assume.assumeTrue;
 
-public class SomeThucydidesSteps {
+public class SomeSerenitySteps {
 
     @Step
     public void step1() {

@@ -74,7 +74,7 @@ public class SerenityStories extends JUnitStories {
             if (environmentVariables != null) {
                 thucydidesConfiguration = thucydidesConfiguration.withEnvironmentVariables(environmentVariables);
             }
-            configuration = ThucydidesJBehave.defaultConfiguration(thucydidesConfiguration, formats, this);
+            configuration = SerenityJBehave.defaultConfiguration(thucydidesConfiguration, formats, this);
         }
         return configuration;
     }
