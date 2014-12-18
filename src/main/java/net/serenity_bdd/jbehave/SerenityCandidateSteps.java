@@ -11,21 +11,21 @@ import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
 
-public class ThucydidesCandidateSteps implements CandidateSteps {
+public class SerenityCandidateSteps implements CandidateSteps {
     private final CandidateSteps candidateSteps;
 
-    public ThucydidesCandidateSteps(CandidateSteps candidateSteps) {
+    public SerenityCandidateSteps(CandidateSteps candidateSteps) {
         this.candidateSteps = candidateSteps;
     }
 
     public List<StepCandidate> listCandidates() {
-        return convert(candidateSteps.listCandidates(), toThucydidesStepCandidates());
+        return convert(candidateSteps.listCandidates(), toSerenityStepCandidates());
     }
 
-    private Converter<StepCandidate, StepCandidate> toThucydidesStepCandidates() {
+    private Converter<StepCandidate, StepCandidate> toSerenityStepCandidates() {
         return new Converter<StepCandidate, StepCandidate>() {
             public StepCandidate convert(StepCandidate stepCandidate) {
-                return new ThucydidesStepCandidate(stepCandidate);
+                return new SerenityStepCandidate(stepCandidate);
             }
         };
     }

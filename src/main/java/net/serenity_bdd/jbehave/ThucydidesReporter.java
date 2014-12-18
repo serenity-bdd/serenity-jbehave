@@ -140,7 +140,7 @@ public class ThucydidesReporter implements StoryReporter {
 
             configureDriver(story);
 
-            ThucydidesStepFactory.resetContext();
+            SerenityStepFactory.resetContext();
 
             getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
 
@@ -181,7 +181,7 @@ public class ThucydidesReporter implements StoryReporter {
         }
 
         if (shouldResetStepsBeforeEachScenario()) {
-            ThucydidesStepFactory.resetContext();
+            SerenityStepFactory.resetContext();
         }
 
         if(isCurrentScenario(scenarioTitle)) {

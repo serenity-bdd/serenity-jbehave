@@ -16,11 +16,11 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-public class ThucydidesStepCandidate extends StepCandidate {
+public class SerenityStepCandidate extends StepCandidate {
 
     private final StepCandidate stepCandidate;
 
-    public ThucydidesStepCandidate(StepCandidate stepCandidate) {
+    public SerenityStepCandidate(StepCandidate stepCandidate) {
 
         super(stepCandidate.getPatternAsString(),
                 stepCandidate.getPriority(),

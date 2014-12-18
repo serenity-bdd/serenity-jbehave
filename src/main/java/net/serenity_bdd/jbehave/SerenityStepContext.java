@@ -12,13 +12,13 @@ import java.util.Map;
 /**
  * Keeps track of instantiated JBehave step libraries used in ThucydidesWebdriverIntegration tests.
  */
-public class ThucydidesStepContext {
+public class SerenityStepContext {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ThucydidesStepContext.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SerenityStepContext.class);
 
     private Map<Class<?>, Object> stepInstances = Maps.newHashMap();
 
-    public ThucydidesStepContext() {
+    public SerenityStepContext() {
     }
 
     public Object newInstanceOf(final Class<?> type) {
@@ -34,7 +34,7 @@ public class ThucydidesStepContext {
                     newInstance = type.newInstance();
                 }
             } catch (Exception e) {
-                throw new ThucydidesStepInitializationError(e);
+                throw new SerenityStepInitializationError(e);
             }
             stepInstances.put(type, newInstance);
             return newInstance;

@@ -81,7 +81,7 @@ public class SerenityStories extends JUnitStories {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return ThucydidesStepFactory.withStepsFromPackage(getRootPackage(), configuration()).andClassLoader(getClassLoader());
+        return SerenityStepFactory.withStepsFromPackage(getRootPackage(), configuration()).andClassLoader(getClassLoader());
     }
 
     /**
