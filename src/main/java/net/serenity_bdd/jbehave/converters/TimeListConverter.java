@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.converters;
+package net.serenity_bdd.jbehave.converters;
 
 import org.jbehave.core.steps.ParameterConverters;
 import org.joda.time.LocalTime;

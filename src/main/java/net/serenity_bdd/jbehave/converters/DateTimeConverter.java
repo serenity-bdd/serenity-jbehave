@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.converters;
+package net.serenity_bdd.jbehave.converters;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;

@@ -1,17 +1,16 @@
 package net.thucydides.jbehave;
 
-import net.thucydides.jbehave.converters.DateListConverter;
-import net.thucydides.jbehave.converters.DateTimeConverter;
-import net.thucydides.jbehave.converters.DateTimeListConverter;
-import net.thucydides.jbehave.converters.TimeConverter;
-import net.thucydides.jbehave.converters.TimeListConverter;
-import net.thucydides.jbehave.converters.YearMonthConverter;
-import net.thucydides.jbehave.converters.YearMonthListConverter;
+import net.serenity_bdd.jbehave.converters.DateListConverter;
+import net.serenity_bdd.jbehave.converters.DateTimeConverter;
+import net.serenity_bdd.jbehave.converters.DateTimeListConverter;
+import net.serenity_bdd.jbehave.converters.TimeConverter;
+import net.serenity_bdd.jbehave.converters.TimeListConverter;
+import net.serenity_bdd.jbehave.converters.YearMonthConverter;
+import net.serenity_bdd.jbehave.converters.YearMonthListConverter;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.failures.FailureStrategy;
-import org.jbehave.core.failures.PendingStepStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.reporters.CrossReference;
