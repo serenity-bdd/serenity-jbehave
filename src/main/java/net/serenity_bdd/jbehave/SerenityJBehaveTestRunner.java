@@ -7,11 +7,11 @@ import org.junit.runners.model.InitializationError;
 import java.util.Collections;
 import java.util.List;
 
-public class ThucydidesJBehaveTestRunner extends Suite {
+public class SerenityJBehaveTestRunner extends Suite {
 
     private final Class<?> testClass;
 
-    public ThucydidesJBehaveTestRunner(Class<?> klass) throws InitializationError {
+    public SerenityJBehaveTestRunner(Class<?> klass) throws InitializationError {
         super(klass, Collections.<Runner>emptyList());
         this.testClass = klass;
     }

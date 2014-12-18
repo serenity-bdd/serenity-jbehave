@@ -1,7 +1,7 @@
 package net.serenity_bdd.jbehave;
 
 import com.thoughtworks.paranamer.Paranamer;
-import net.thucydides.jbehave.reflection.Extract;
+import net.serenity_bdd.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.steps.InjectableStepsFactory;
@@ -16,11 +16,11 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-public class ThucydidesStepCandidate extends StepCandidate {
+public class SerenityStepCandidate extends StepCandidate {
 
     private final StepCandidate stepCandidate;
 
-    public ThucydidesStepCandidate(StepCandidate stepCandidate) {
+    public SerenityStepCandidate(StepCandidate stepCandidate) {
 
         super(stepCandidate.getPatternAsString(),
                 stepCandidate.getPriority(),

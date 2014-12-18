@@ -3,7 +3,7 @@ package net.serenity_bdd.jbehave;
 /**
  * Specifies system property values for the JBehave configuration.
  */
-public enum ThucydidesJBehaveSystemProperties {
+public enum SerenityJBehaveSystemProperties {
 
     /**
      * Set the JBehave ignoreFailuresInStories options.
@@ -26,7 +26,7 @@ public enum ThucydidesJBehaveSystemProperties {
     METAFILTER,
 
     /**
-     * Force Thucydides to restart the browser before each scenario.
+     * Force Serenity to restart the browser before each scenario.
      */
     RESTART_BROWSER_EACH_SCENARIO,
 

@@ -11,8 +11,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.JBEHAVE_STORY_PACKAGES;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.STORY_DIRECTORY;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.JBEHAVE_STORY_PACKAGES;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.STORY_DIRECTORY;
 
 class StoryPathFinder {
 

@@ -1,4 +1,4 @@
-package net.thucydides.jbehave.reflection;
+package net.serenity_bdd.jbehave.reflection;
 
 import java.lang.reflect.Field;
 

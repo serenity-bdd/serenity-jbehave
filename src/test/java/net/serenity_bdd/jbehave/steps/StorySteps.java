@@ -17,7 +17,7 @@ import static org.junit.Assume.assumeTrue;
 public class StorySteps {
 
     @Steps
-    SomeThucydidesSteps steps;
+    SomeSerenitySteps steps;
 
     @Given("I have a failing precondition")
     public void failAPrecondition() {

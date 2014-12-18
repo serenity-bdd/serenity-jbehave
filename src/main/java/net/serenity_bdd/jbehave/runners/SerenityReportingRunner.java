@@ -6,11 +6,11 @@ import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.serenity_bdd.jbehave.SerenityStories;
+import net.serenity_bdd.jbehave.annotations.Metafilter;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import net.thucydides.jbehave.annotations.Metafilter;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
@@ -39,10 +39,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.METAFILTER;
-import static net.serenity_bdd.jbehave.ThucydidesJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.METAFILTER;
+import static net.serenity_bdd.jbehave.SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS;
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
 
 public class SerenityReportingRunner extends Runner {
@@ -293,7 +293,8 @@ public class SerenityReportingRunner extends Runner {
     private String getMetafilterSetting() {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(DEFAULT_METAFILTER));
+        Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
+        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or(DEFAULT_METAFILTER)));
         if (isGroovy(metafilters)) {
             metafilters = addGroovyMetafilterValuesTo(metafilters);
         } else {
@@ -304,6 +305,17 @@ public class SerenityReportingRunner extends Runner {
 
     private Optional<String> getEnvironmentMetafilters() {
         return Optional.fromNullable(environmentVariables.getProperty(METAFILTER.getName()));
+    }
+
+    /**
+     * When Metafilter in thucydides package is removed, this method and callers will be removed
+     * @param testClass
+     * @return
+     */
+    @Deprecated
+    private Optional<String> getThucAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
+        return (testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class) != null) ?
+                Optional.of(testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class).value()) : Optional.<String>absent();
     }
 
     private Optional<String> getAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {

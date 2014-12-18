@@ -19,15 +19,15 @@ import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
 
-public class ThucydidesStepFactory extends AbstractStepsFactory {
+public class SerenityStepFactory extends AbstractStepsFactory {
 
-    private static final ThreadLocal<ThucydidesStepContext> context = new ThreadLocal<ThucydidesStepContext>();
+    private static final ThreadLocal<SerenityStepContext> context = new ThreadLocal<SerenityStepContext>();
 
     private final String rootPackage;
     private ClassLoader classLoader;
     private DependencyInjectorService dependencyInjectorService;
 
-    public ThucydidesStepFactory(Configuration configuration, String rootPackage, ClassLoader classLoader) {
+    public SerenityStepFactory(Configuration configuration, String rootPackage, ClassLoader classLoader) {
         super(configuration);
         this.rootPackage = rootPackage;
         this.classLoader = classLoader;
@@ -40,7 +40,7 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
 
     public List<CandidateSteps> createCandidateSteps() {
         List<CandidateSteps> coreCandidateSteps = super.createCandidateSteps();
-        return convert(coreCandidateSteps, toThucydidesCandidateSteps());
+        return convert(coreCandidateSteps, toSerenityCandidateSteps());
     }
 
     @Override
@@ -67,10 +67,10 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         return candidateClasses;
     }
 
-    private Converter<CandidateSteps, CandidateSteps> toThucydidesCandidateSteps() {
+    private Converter<CandidateSteps, CandidateSteps> toSerenityCandidateSteps() {
         return new Converter<CandidateSteps, CandidateSteps>() {
             public CandidateSteps convert(CandidateSteps candidateSteps) {
-                return new ThucydidesCandidateSteps(candidateSteps);
+                return new SerenityCandidateSteps(candidateSteps);
             }
         };
     }
@@ -94,9 +94,9 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
     }
 
 
-    public ThucydidesStepContext getContext() {
+    public SerenityStepContext getContext() {
         if (context.get() == null) {
-            context.set(new ThucydidesStepContext());
+            context.set(new SerenityStepContext());
         }
         return context.get();
     }
@@ -105,16 +105,16 @@ public class ThucydidesStepFactory extends AbstractStepsFactory {
         context.remove();
     }
 
-    public static ThucydidesStepFactory withStepsFromPackage(String rootPackage, Configuration configuration) {
-        return new ThucydidesStepFactory(configuration, rootPackage, defaultClassLoader());
+    public static SerenityStepFactory withStepsFromPackage(String rootPackage, Configuration configuration) {
+        return new SerenityStepFactory(configuration, rootPackage, defaultClassLoader());
     }
 
     private static ClassLoader defaultClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    public ThucydidesStepFactory andConfiguration(Configuration configuration) {
-        return new ThucydidesStepFactory(configuration, this.rootPackage, this.classLoader);
+    public SerenityStepFactory andConfiguration(Configuration configuration) {
+        return new SerenityStepFactory(configuration, this.rootPackage, this.classLoader);
     }
 
     public InjectableStepsFactory andClassLoader(ClassLoader classLoader) {
