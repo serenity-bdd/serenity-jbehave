@@ -9,7 +9,9 @@ import java.util.List;
 
 import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.havingTag;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
 
 public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
 

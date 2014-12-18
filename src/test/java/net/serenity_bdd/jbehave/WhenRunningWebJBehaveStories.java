@@ -3,7 +3,6 @@ package net.serenity_bdd.jbehave;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
-import net.thucydides.jbehave.*;
 import org.junit.Before;
 import org.junit.Test;
 

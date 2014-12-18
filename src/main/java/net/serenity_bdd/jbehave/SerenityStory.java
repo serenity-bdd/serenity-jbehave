@@ -3,7 +3,6 @@ package net.serenity_bdd.jbehave;
 import com.google.common.collect.Lists;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
-import net.thucydides.jbehave.ThucydidesJUnitStories;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import static org.apache.commons.lang3.StringUtils.join;
  * Run an individual JBehave story in JUnit, where the name of the story is derived from the name of the test.
  * For example, a class called MyStory.java would run a JBehave story called "my_story.story" or MyStory.story.
  */
-public class SerenityStory extends ThucydidesJUnitStories {
+public class SerenityStory extends SerenityStories {
     public SerenityStory() {
         findStoriesCalled(storynamesDerivedFromClassName());
     }
