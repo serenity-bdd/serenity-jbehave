@@ -1,7 +1,7 @@
 package net.serenity_bdd.jbehave;
 
 import com.thoughtworks.paranamer.Paranamer;
-import net.thucydides.jbehave.reflection.Extract;
+import net.serenity_bdd.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.steps.InjectableStepsFactory;
