@@ -1,7 +1,7 @@
 package net.thucydides.jbehave;
 
-import net.serenity_bdd.jbehave.SerenityStories;
-import net.serenity_bdd.jbehave.runners.SerenityReportingRunner;
+import net.serenitybdd.jbehave.SerenityStories;
+import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.runner.RunWith;
 

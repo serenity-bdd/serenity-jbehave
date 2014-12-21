@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
-    <bean id="widgetService" class="net.serenity_bdd.jbehave.steps.WidgetService">
+    <bean id="widgetService" class="net.serenitybdd.jbehave.steps.WidgetService">
         <property name="name"><value>Widgets</value></property>
         <property name="quota"><value>1</value></property>
     </bean>

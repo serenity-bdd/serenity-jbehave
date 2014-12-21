@@ -1,6 +1,6 @@
 package net.thucydides.jbehave;
 
-import net.serenity_bdd.jbehave.SerenityStory;
+import net.serenitybdd.jbehave.SerenityStory;
 import net.thucydides.core.util.EnvironmentVariables;
 
 /**
