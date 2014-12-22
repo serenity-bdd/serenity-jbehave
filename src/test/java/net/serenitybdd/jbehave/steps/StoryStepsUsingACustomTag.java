@@ -1,6 +1,6 @@
 package net.serenitybdd.jbehave.steps;
 
-import net.serenity_bdd.core.Serenity;
+import net.serenitybdd.core.Serenity;
 import org.jbehave.core.annotations.BeforeStory;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
