@@ -2,8 +2,8 @@ package net.serenitybdd.jbehave;
 
 import ch.lambdaj.function.convert.Converter;
 import com.google.common.collect.Lists;
+import net.serenitybdd.core.di.DependencyInjector;
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.steps.DependencyInjector;
 import net.thucydides.core.steps.PageObjectDependencyInjector;
 import net.thucydides.core.steps.StepAnnotations;
 import net.thucydides.core.steps.StepFactory;
@@ -35,7 +35,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
     }
 
     private StepFactory getStepFactory() {
-        return ThucydidesWebDriverSupport.getStepFactory().thatThrowsExcpetionsImmediately();
+        return ThucydidesWebDriverSupport.getStepFactory();
     }
 
     public List<CandidateSteps> createCandidateSteps() {
