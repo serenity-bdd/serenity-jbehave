@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.serenitybdd.core.Serenity;
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
@@ -50,6 +51,7 @@ public class SerenityStories extends JUnitStories {
     private List<Format> formats = Arrays.asList(CONSOLE, HTML, XML);
 
     public SerenityStories() {
+        Serenity.throwExceptionsImmediately();
     }
 
     protected SerenityStories(EnvironmentVariables environmentVariables) {
