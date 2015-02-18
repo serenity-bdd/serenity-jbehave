@@ -56,7 +56,7 @@ public class SerenityReportingRunner extends Runner {
 
 //    private final String SKIP_FILTER = " -skip";
     private final String IGNORE_FILTER = " -ignore";
-    private final String DEFAULT_METAFILTER = IGNORE_FILTER;
+    private final String DEFAULT_METAFILTER = IGNORE_FILTER; //+ " " + SKIP_FILTER;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
 

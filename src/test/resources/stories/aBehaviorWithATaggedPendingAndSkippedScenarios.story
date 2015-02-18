@@ -33,6 +33,8 @@ When I run the scenario
 Then I should get a successful result
 
 Scenario: 5) Another scenario that works
+Meta:
+@ignore
 
 Given I have an implemented JBehave scenario
 And the scenario works

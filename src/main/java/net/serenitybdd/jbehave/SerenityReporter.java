@@ -63,7 +63,6 @@ public class SerenityReporter implements StoryReporter {
     private static final String SKIP = "skip";
     private static final String WIP = "wip";
 
-    private static Optional<TestResult> forcedStoryResult;
     private static Optional<TestResult> forcedScenarioResult;
 
     private GivenStoryMonitor givenStoryMonitor;
@@ -74,13 +73,8 @@ public class SerenityReporter implements StoryReporter {
         reportServiceThreadLocal = new ThreadLocal<>();
         baseStepListeners = Lists.newArrayList();
         givenStoryMonitor = new GivenStoryMonitor();
-        clearStoryResult();
         clearScenarioResult();
 
-    }
-
-    private void clearStoryResult() {
-        forcedStoryResult = Optional.absent();
     }
 
     private void clearScenarioResult() {
@@ -116,7 +110,7 @@ public class SerenityReporter implements StoryReporter {
 
     private Stack<Story> storyStack = new Stack<Story>();
 
-    private Stack<String> activeScenarios = new Stack<String>();
+    private Stack<String> activeScenarios = new Stack<>();
     private List<String> givenStories = Lists.newArrayList();
 
     private Story currentStory() {
@@ -130,7 +124,6 @@ public class SerenityReporter implements StoryReporter {
     private Map<String, String> storyMetadata;
 
     public void beforeStory(Story story, boolean givenStory) {
-        clearStoryResult();
         currentStoryIs(story);
         noteAnyGivenStoriesFor(story);
         storyMetadata = getMetadataFrom(story.getMeta());
@@ -153,6 +146,7 @@ public class SerenityReporter implements StoryReporter {
         } else if(givenStory) {
             shouldNestScenarios(true);
         }
+        registerStoryMeta(story.getMeta());
     }
 
     private boolean nestScenarios = false;
@@ -191,19 +185,6 @@ public class SerenityReporter implements StoryReporter {
         } else {
             startScenarioCalled(scenarioTitle);
         }
-        if (pendingScenario()) {
-            StepEventBus.getEventBus().testPending();
-        } else if (skippedScenario()) {
-            StepEventBus.getEventBus().testIgnored();
-        }
-    }
-
-    private boolean pendingScenario() {
-        return (forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.PENDING);
-    }
-
-    private boolean skippedScenario() {
-        return (forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.SKIPPED);
     }
 
     private boolean isCurrentScenario(String scenarioTitle) {
@@ -426,12 +407,24 @@ public class SerenityReporter implements StoryReporter {
 
     private void registerStoryMeta(Meta metaData) {
         if (isPending(metaData)) {
-            forcedStoryResult = Optional.of(TestResult.PENDING);
             StepEventBus.getEventBus().suspendTest();
         } else if (isSkipped(metaData)) {
-            forcedStoryResult = Optional.of(TestResult.SKIPPED);
             StepEventBus.getEventBus().suspendTest();
         }
+    }
+
+    private Optional<TestResult> getStoryMetadataResult() {
+        if (isPending(currentStory().getMeta())) {
+            return Optional.of(TestResult.PENDING);
+        } else if (isSkipped(currentStory().getMeta())) {
+            return Optional.of(TestResult.SKIPPED);
+        } else {
+            return Optional.absent();
+        }
+    }
+
+    private Optional<TestResult> getScenarioMetadataResult() {
+       return forcedScenarioResult;
     }
 
     private void registerScenarioMeta(Meta metaData) {
@@ -513,6 +506,13 @@ public class SerenityReporter implements StoryReporter {
         registerTags(meta);
         registerMetadata(meta);
         registerScenarioMeta(meta);
+
+        if (isPendingScenario()) {
+            StepEventBus.getEventBus().testPending();
+        } else if (isSkippedScenario()) {
+            StepEventBus.getEventBus().testIgnored();
+        }
+
     }
 
     private boolean isPending(Meta metaData) {
@@ -539,19 +539,21 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isPendingScenario() {
-        return forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.PENDING;
+        return (getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.PENDING)
+                || (getScenarioMetadataResult().or(TestResult.UNDEFINED) == TestResult.PENDING);
     }
 
     private boolean isSkippedScenario() {
-        return forcedScenarioResult.or(TestResult.UNDEFINED) == TestResult.SKIPPED;
+        return (getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.SKIPPED)
+                || (getScenarioMetadataResult().or(TestResult.UNDEFINED) == TestResult.SKIPPED);
     }
 
     private boolean isPendingStory() {
-        return forcedStoryResult.or(TestResult.UNDEFINED) == TestResult.PENDING;
+        return getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.PENDING;
     }
 
     private boolean isSkippedStory() {
-        return forcedStoryResult.or(TestResult.UNDEFINED) == TestResult.SKIPPED;
+        return getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.SKIPPED;
     }
 
 

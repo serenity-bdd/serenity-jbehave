@@ -518,7 +518,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.PENDING));
         assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
         assertThat(outcomes.get(3).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(4).getResult(), is(TestResult.SUCCESS));
+        assertThat(outcomes.get(4).getResult(), is(TestResult.IGNORED));
 
         // And
 
@@ -614,6 +614,38 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.size(), is(2));
         assertThat(outcomes.get(0).getResult(), is(SUCCESS));
         assertThat(outcomes.get(1).getResult(), is(FAILURE));
+    }
+
+    @Test
+    public void skipped_stories_should_not_be_executed() throws Throwable {
+
+        // Given
+        SerenityStories sharedVariablesStory = newStory("aSkippedBehavior.story");
+
+        // When
+        run(sharedVariablesStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(SKIPPED));
+        assertThat(outcomes.get(1).getResult(), is(SKIPPED));
+    }
+
+    @Test
+    public void wip_or_skipped_stories_should_not_be_executed() throws Throwable {
+
+        // Given
+        SerenityStories sharedVariablesStory = newStory("aWIPBehavior.story");
+
+        // When
+        run(sharedVariablesStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(2));
+        assertThat(outcomes.get(0).getResult(), is(SKIPPED));
+        assertThat(outcomes.get(1).getResult(), is(SKIPPED));
     }
 
 }
