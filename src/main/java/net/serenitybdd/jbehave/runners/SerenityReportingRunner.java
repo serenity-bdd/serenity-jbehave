@@ -123,7 +123,9 @@ public class SerenityReportingRunner extends Runner {
 	public Description getDescription() {
         if (description == null) {
             description = Description.createSuiteDescription(configurableEmbedder.getClass());
-            description.getChildren().addAll(getDescriptions());
+            for (Description childDescription: getDescriptions()) {
+                description.addChild(childDescription);
+            }
         }
 		return description;
 	}
