@@ -352,7 +352,8 @@ public class SerenityReportingRunner extends Runner {
     }
 
     protected int getStoryTimeoutInSecs() {
-        return environmentVariables.getPropertyAsInteger(SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS.getName(), 300);
+        return environmentVariables.getPropertyAsInteger(SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS.getName(),
+                                                         (int) getConfiguredEmbedder().embedderControls().storyTimeoutInSecs());
     }
 
     protected List<String> getMetaFilters() {

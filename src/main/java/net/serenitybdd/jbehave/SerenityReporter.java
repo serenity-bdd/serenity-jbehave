@@ -134,7 +134,7 @@ public class SerenityReporter implements StoryReporter {
 
             SerenityStepFactory.resetContext();
 
-            getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
+            //??? getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
 
             if (!isAStoryLevelGiven(story)) {
                 startTestSuiteForStory(story);
@@ -456,9 +456,9 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private void closeBrowsersForThisStory() {
-        if (!systemConfiguration.getUseUniqueBrowser()) {
+//        if (!systemConfiguration.getUseUniqueBrowser()) {
             ThucydidesWebDriverSupport.closeAllDrivers();
-        }
+//        }
     }
 
     private boolean isAfterStory(Story currentStory) {
