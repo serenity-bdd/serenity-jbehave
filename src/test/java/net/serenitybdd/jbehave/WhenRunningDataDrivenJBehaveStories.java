@@ -60,6 +60,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
     }
 
+
     @Test
     public void a_failing_step_in_a_data_driven_test_should_not_affect_subsequent_steps() throws Throwable {
 
