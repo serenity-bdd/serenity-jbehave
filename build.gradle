@@ -52,7 +52,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.0.48'
+    serenityCoreVersion = '1.0.49'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -68,7 +68,7 @@ test {
     exclude '**/*$*'
     exclude '**/samples/**'
     exclude '**/*Sample*'
-//    maxParallelForks = 4
+    maxParallelForks = 4
     testLogging {
         exceptionFormat = 'full'
     }
@@ -109,12 +109,12 @@ dependencies {
 
     compile 'com.thoughtworks.xstream:xstream:1.4.5'
 
-    compile('org.jbehave:jbehave-core:3.9.5') {
+    compile('org.jbehave:jbehave-core:3.10') {
         exclude group: 'org.freemarker', module: 'freemarker'
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
 
-    compile('de.codecentric:jbehave-junit-runner:1.1.0') {
+    compile('de.codecentric:jbehave-junit-runner:1.2.0') {
         exclude group: 'org.mockito', module: 'mockito-core'
     }
     compile('org.reflections:reflections:0.9.8') {
@@ -136,8 +136,12 @@ dependencies {
     }
     testCompile ("net.serenity-bdd:serenity-test-utils:${project.serenityCoreVersion}") {
         exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.jbehave', module: 'jbehave-core'
     }
-    testCompile("net.serenity-bdd:serenity-sample-alternative-resources:${project.serenityCoreVersion}")
+    testCompile("net.serenity-bdd:serenity-sample-alternative-resources:${project.serenityCoreVersion}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.jbehave', module: 'jbehave-core'
+    }
     testCompile ('org.mockito:mockito-core:1.10.19') {
         exclude group: 'org.hamcrest', module:'hamcrest-core'
     }

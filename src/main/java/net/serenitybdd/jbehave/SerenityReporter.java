@@ -684,6 +684,11 @@ public class SerenityReporter implements StoryReporter {
     public void restarted(String s, Throwable throwable) {
     }
 
+    @Override
+    public void restartedStory(Story story, Throwable cause) {
+
+    }
+
     public void dryRun() {
     }
 
