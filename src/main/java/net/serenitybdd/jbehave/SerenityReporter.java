@@ -456,9 +456,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private void closeBrowsersForThisStory() {
-//        if (!systemConfiguration.getUseUniqueBrowser()) {
-            ThucydidesWebDriverSupport.closeAllDrivers();
-//        }
+        ThucydidesWebDriverSupport.closeAllDrivers();
     }
 
     private boolean isAfterStory(Story currentStory) {
