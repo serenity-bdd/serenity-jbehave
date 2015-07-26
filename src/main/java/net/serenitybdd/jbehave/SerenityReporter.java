@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import gherkin.formatter.model.Tag;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
@@ -59,6 +60,7 @@ public class SerenityReporter implements StoryReporter {
     private static final String CLOSE_PARAM_CHAR = "\uff60";
 
     private static final String PENDING = "pending";
+    private static final String MANUAL = "manual";
     private static final String SKIP = "skip";
     private static final String WIP = "wip";
 
@@ -431,6 +433,9 @@ public class SerenityReporter implements StoryReporter {
             forcedScenarioResult = Optional.of(TestResult.PENDING);
         } else if (isSkipped(metaData)) {
             forcedScenarioResult = Optional.of(TestResult.SKIPPED);
+        } else if (isManual(metaData)) {
+            StepEventBus.getEventBus().testIsManual();
+            StepEventBus.getEventBus().suspendTest();
         }
     }
 
@@ -514,6 +519,10 @@ public class SerenityReporter implements StoryReporter {
 
     private boolean isPending(Meta metaData) {
         return (metaData.hasProperty(PENDING));
+    }
+
+    private boolean isManual(Meta metaData) {
+        return (metaData.hasProperty(MANUAL));
     }
 
     private boolean isSkipped(Meta metaData) {
