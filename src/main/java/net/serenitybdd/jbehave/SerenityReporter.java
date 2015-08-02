@@ -38,6 +38,7 @@ import org.jbehave.core.model.Story;
 import org.jbehave.core.model.StoryDuration;
 import org.jbehave.core.reporters.StoryReporter;
 import org.junit.internal.AssumptionViolatedException;
+import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.util.List;
@@ -244,11 +245,14 @@ public class SerenityReporter implements StoryReporter {
         return story.getName().equalsIgnoreCase(givenStoryName);
     }
 
+    Map<Story, WebDriver> drivers = Maps.newConcurrentMap();
+
     private void configureDriver(Story story) {
         StepEventBus.getEventBus().setUniqueSession(systemConfiguration.getUseUniqueBrowser());
         String requestedDriver = getRequestedDriver(story.getMeta());
         if (StringUtils.isNotEmpty(requestedDriver)) {
             ThucydidesWebDriverSupport.initialize(requestedDriver);
+            drivers.put(story, ThucydidesWebDriverSupport.getDriver());
         } else {
             ThucydidesWebDriverSupport.initialize();
         }
@@ -449,8 +453,8 @@ public class SerenityReporter implements StoryReporter {
             givenStoryMonitor.exitingGivenStory();
             givenStoryDone(currentStory());
         } else {
+            closeBrowsersForThisStory();
             if (isAfterStory(currentStory())) {
-                closeBrowsersForThisStory();
                 generateReports();
             } else if (!isFixture(currentStory()) && !given && (!isAStoryLevelGiven(currentStory()))) {
                 StepEventBus.getEventBus().testSuiteFinished();
@@ -461,7 +465,11 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private void closeBrowsersForThisStory() {
-        ThucydidesWebDriverSupport.closeAllDrivers();
+        if (drivers.containsKey(currentStory())) {
+            drivers.get(currentStory()).close();
+            drivers.get(currentStory()).quit();
+            drivers.remove(currentStory());
+        }
     }
 
     private boolean isAfterStory(Story currentStory) {
