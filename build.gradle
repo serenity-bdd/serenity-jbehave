@@ -45,6 +45,8 @@ ext {
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
+    groovyVersion = '2.3.10'
+    junitVersion = '4.11'
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -60,7 +62,7 @@ ext {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.5'
 }
 
 test {
@@ -125,8 +127,8 @@ dependencies {
         exclude group: 'org.objenesis', module: 'objenesis'
         exclude group: 'org.hamcrest', module: 'hamcrest-all'
     }
-    compile("org.codehaus.groovy:groovy-all:2.3.3")
-    compile "junit:junit:4.11"
+    compile("org.codehaus.groovy:groovy-all:${groovyVersion}")
+    compile "junit:junit:${junitVersion}"
 
     testCompile ("ch.qos.logback:logback-classic:1.0.13") {
         exclude module: 'slf4j-api'
