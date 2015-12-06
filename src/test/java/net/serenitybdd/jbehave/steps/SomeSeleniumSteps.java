@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class SomeSeleniumSteps {
 
-    @Managed(driver="htmlunit")
+    @Managed(driver="chrome")
     public WebDriver webDriver;
 
     @ManagedPages
@@ -102,9 +102,9 @@ public class SomeSeleniumSteps {
         assertThat(page.lastName().getValue(), is($expectedLastname));
     }
 
-    @Then("I should be using HtmlUnit")
+    @Then("I should be using Chrome")
     public void andIShouldBeUsingHtmlUnit() {
-        assertThat(((WebDriverFacade)webDriver).getDriverClass().getName(), containsString("HtmlUnitDriver"));
+        assertThat(((WebDriverFacade)webDriver).getDriverClass().getName(), containsString("Chrome"));
     }
 
     @Given("the scenario throws an exception")

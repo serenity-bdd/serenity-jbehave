@@ -32,8 +32,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        TestStep given = givenStepIn(outcomes);
-        assertThat(given.getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
     }
 
     @Test
@@ -48,8 +47,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        TestStep given = givenStepIn(outcomes);
-        assertThat(given.getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
     }
 
 
@@ -64,16 +62,10 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-
-        TestStep given1 = givenStepIn(outcomes, 0);
-        TestStep given2 = givenStepIn(outcomes, 1);
-        TestStep given3 = givenStepIn(outcomes, 2);
-        TestStep given4 = givenStepIn(outcomes, 3);
-
-        assertThat(given1.getScreenshots().size(), greaterThan(0));
-        assertThat(given2.getScreenshots().size(), greaterThan(0));
-        assertThat(given3.getScreenshots().size(), greaterThan(0));
-        assertThat(given4.getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(1).getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(2).getScreenshots().size(), greaterThan(0));
+        assertThat(outcomes.get(3).getScreenshots().size(), greaterThan(0));
     }
 
     @Test
@@ -88,8 +80,6 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        TestStep given = givenStepIn(outcomes);
-        assertThat(given.getScreenshots().size(), greaterThan(0));
-
+        assertThat(outcomes.get(0).getScreenshots().size(), greaterThan(0));
     }
 }

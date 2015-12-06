@@ -46,9 +46,10 @@ ext {
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
     groovyVersion = '2.3.10'
-    junitVersion = '4.11'
+    junitVersion = '4.12'
     reflectionsVersion = '0.9.10'
     mockitoCoreVersion = '1.10.19'
+    jbehaveCoreVersion = '3.10'
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -103,8 +104,9 @@ artifacts {
 
 configurations.all {
     resolutionStrategy {
-      //  failOnVersionConflict()
-      //  force  "junit:junit:${junitVersion}"
+        failOnVersionConflict()
+        force  "junit:junit:${junitVersion}"
+        force  "org.mockito:mockito-core:${mockitoCoreVersion}"
     }
 }
 
@@ -114,7 +116,7 @@ dependencies {
 
     compile 'com.thoughtworks.xstream:xstream:1.4.5'
 
-    compile('org.jbehave:jbehave-core:3.10') {
+    compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
@@ -258,4 +260,9 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
+}
+
+task copyDeps(type: Copy) {
+    from configurations.runtime
+    into project.projectDir.path+"/lib"
 }

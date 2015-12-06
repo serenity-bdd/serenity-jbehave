@@ -24,4 +24,16 @@ public class SomeNestedSeleniumSteps {
     public void enters_the_last_name(String lastname) {
         pages.get(StaticSitePage.class).setLastName(lastname);
     }
+
+    @Step
+    public void open_first_page() {
+        pages.get(StaticSitePage.class).open();
+    }
+
+    @Step
+    public void reads_first_name() {
+        pages.get(StaticSitePage.class).firstName().getValue();
+    }
+
+
 }
