@@ -10,7 +10,7 @@ import org.jbehave.core.annotations.When;
 
 import java.io.IOException;
 
-import static net.thucydides.core.steps.StepData.withTestDataFrom;
+import static net.thucydides.core.steps.stepdata.StepData.withTestDataFrom;
 
 public class SomeDataDrivenSteps {
 

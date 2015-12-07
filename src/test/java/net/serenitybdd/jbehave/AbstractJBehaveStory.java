@@ -4,8 +4,6 @@ import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
-import net.thucydides.core.screenshots.ScreenshotProcessor;
-import net.thucydides.core.screenshots.SingleThreadScreenshotProcessor;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
@@ -32,8 +30,6 @@ public class AbstractJBehaveStory {
 
     protected File outputDirectory;
 
-    ScreenshotProcessor screenshotProcessor;
-
     protected List<Throwable> raisedErrors = new ArrayList<Throwable>();
 
     @Before
@@ -45,7 +41,6 @@ public class AbstractJBehaveStory {
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
         environmentVariables.setProperty("webdriver.driver", "phantomjs");
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
-        screenshotProcessor = new SingleThreadScreenshotProcessor(environmentVariables);// Injectors.getInjector().getInstance(ScreenshotProcessor.class);
         raisedErrors.clear();
         System.out.println("Report directory:" + this.outputDirectory);
     }
@@ -75,7 +70,6 @@ public class AbstractJBehaveStory {
         } catch(Throwable e) {
             throw e;
         } finally {
-            screenshotProcessor.waitUntilDone();
             if (notifier.getExceptionThrown() != null) {
                 raisedErrors.add(notifier.getExceptionThrown());
             }

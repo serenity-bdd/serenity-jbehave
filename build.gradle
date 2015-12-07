@@ -45,6 +45,11 @@ ext {
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
+    groovyVersion = '2.3.10'
+    junitVersion = '4.12'
+    reflectionsVersion = '0.9.10'
+    mockitoCoreVersion = '1.10.19'
+    jbehaveCoreVersion = '3.10'
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -52,7 +57,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.1.3'
+    serenityCoreVersion = '1.1.22-rc.10'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -60,7 +65,7 @@ ext {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.5'
 }
 
 test {
@@ -100,6 +105,8 @@ artifacts {
 configurations.all {
     resolutionStrategy {
         failOnVersionConflict()
+        force  "junit:junit:${junitVersion}"
+        force  "org.mockito:mockito-core:${mockitoCoreVersion}"
     }
 }
 
@@ -109,7 +116,7 @@ dependencies {
 
     compile 'com.thoughtworks.xstream:xstream:1.4.5'
 
-    compile('org.jbehave:jbehave-core:3.10') {
+    compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
@@ -117,7 +124,7 @@ dependencies {
     compile('de.codecentric:jbehave-junit-runner:1.2.0') {
         exclude group: 'org.mockito', module: 'mockito-core'
     }
-    compile('org.reflections:reflections:0.9.8') {
+    compile("org.reflections:reflections:${reflectionsVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'xml-apis', module: 'xml-apis'
     }
@@ -125,8 +132,8 @@ dependencies {
         exclude group: 'org.objenesis', module: 'objenesis'
         exclude group: 'org.hamcrest', module: 'hamcrest-all'
     }
-    compile("org.codehaus.groovy:groovy-all:2.3.3")
-    compile "junit:junit:4.11"
+    compile("org.codehaus.groovy:groovy-all:${groovyVersion}")
+    compile "junit:junit:${junitVersion}"
 
     testCompile ("ch.qos.logback:logback-classic:1.0.13") {
         exclude module: 'slf4j-api'
@@ -143,8 +150,9 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.jbehave', module: 'jbehave-core'
     }
-    testCompile ('org.mockito:mockito-core:1.10.19') {
+    testCompile ("org.mockito:mockito-core:${mockitoCoreVersion}") {
         exclude group: 'org.hamcrest', module:'hamcrest-core'
+        exclude group: 'org.objenesis', module: 'objenesis'
     }
 }
 
@@ -252,4 +260,9 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
+}
+
+task copyDeps(type: Copy) {
+    from configurations.runtime
+    into project.projectDir.path+"/lib"
 }
