@@ -45,7 +45,7 @@ ext {
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
-    groovyVersion = '2.3.10'
+    groovyVersion = '2.4.4'
     junitVersion = '4.12'
     reflectionsVersion = '0.9.10'
     mockitoCoreVersion = '1.10.19'
