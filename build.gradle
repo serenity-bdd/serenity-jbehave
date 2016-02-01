@@ -8,13 +8,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5'
-        classpath 'org.ajoberstar:gradle-git:0.12.0'
+        classpath 'org.ajoberstar:gradle-git:1.4.0-rc.1'
     }
 }
 
 apply plugin: 'org.ajoberstar.release-base'
 release {
-    grgit = Grgit.open(project.file('.'))
+    grgit = Grgit.open()
     versionStrategy Strategies.FINAL
     versionStrategy Strategies.PRE_RELEASE
     defaultVersionStrategy Strategies.SNAPSHOT
@@ -73,7 +73,7 @@ test {
     exclude '**/*$*'
     exclude '**/samples/**'
     exclude '**/*Sample*'
-    maxParallelForks = 4
+    maxParallelForks = Runtime.runtime.availableProcessors()
     testLogging {
         exceptionFormat = 'full'
     }
