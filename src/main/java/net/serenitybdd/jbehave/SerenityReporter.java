@@ -520,7 +520,7 @@ public class SerenityReporter implements StoryReporter {
         if (isPendingScenario()) {
             StepEventBus.getEventBus().testPending();
         } else if (isSkippedScenario()) {
-            StepEventBus.getEventBus().testIgnored();
+            StepEventBus.getEventBus().testSkipped();
         }
 
     }
