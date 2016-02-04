@@ -160,13 +160,14 @@ public class ClassFinder {
         List<Class<?>> classes = Lists.newArrayList();
         String [] split = schemeSpecificPart.split("!");
         URL jar = new URL(split[0]);
-        ZipInputStream zip = new ZipInputStream(jar.openStream());
-        ZipEntry entry;
-        while ((entry = zip.getNextEntry()) != null) {
-            if (entry.getName().endsWith(".class")) {
-                String className = classNameFor(entry);
-                if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
-                    classes.add(loadClassWithName(className));
+        try(ZipInputStream zip = new ZipInputStream(jar.openStream())) {
+            ZipEntry entry;
+            while ((entry = zip.getNextEntry()) != null) {
+                if (entry.getName().endsWith(".class")) {
+                    String className = classNameFor(entry);
+                    if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
+                        classes.add(loadClassWithName(className));
+                    }
                 }
             }
         }
