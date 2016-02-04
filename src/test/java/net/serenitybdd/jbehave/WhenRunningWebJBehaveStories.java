@@ -110,7 +110,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
 
         assertThat(story.getSystemConfiguration().getBaseUrl(), is("some-base-url"));
         assertThat(story.getSystemConfiguration().getElementTimeout(), is(5));
-        assertThat(story.getSystemConfiguration().getUseUniqueBrowser(), is(true));
+        assertThat(story.getSystemConfiguration().shouldUseAUniqueBrowser(), is(true));
     }
 
     @Test(expected = Throwable.class)
