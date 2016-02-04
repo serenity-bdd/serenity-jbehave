@@ -248,7 +248,7 @@ public class SerenityReporter implements StoryReporter {
     Map<Story, WebDriver> drivers = Maps.newConcurrentMap();
 
     private void configureDriver(Story story) {
-        StepEventBus.getEventBus().setUniqueSession(systemConfiguration.getUseUniqueBrowser());
+        StepEventBus.getEventBus().setUniqueSession(systemConfiguration.shouldUseAUniqueBrowser());
         String requestedDriver = getRequestedDriver(story.getMeta());
         if (StringUtils.isNotEmpty(requestedDriver)) {
             ThucydidesWebDriverSupport.initialize(requestedDriver);
