@@ -428,6 +428,10 @@ public class SerenityReporter implements StoryReporter {
         }
     }
 
+    private boolean isStoryManual(){
+        return isManual(currentStory().getMeta());
+    }
+
     private Optional<TestResult> getScenarioMetadataResult() {
        return forcedScenarioResult;
     }
@@ -437,7 +441,7 @@ public class SerenityReporter implements StoryReporter {
             forcedScenarioResult = Optional.of(TestResult.PENDING);
         } else if (isSkipped(metaData)) {
             forcedScenarioResult = Optional.of(TestResult.SKIPPED);
-        } else if (isManual(metaData)) {
+        } else if (isManual(metaData) || isStoryManual()) {
             StepEventBus.getEventBus().testIsManual();
             StepEventBus.getEventBus().suspendTest();
         }
@@ -522,7 +526,6 @@ public class SerenityReporter implements StoryReporter {
         } else if (isSkippedScenario()) {
             StepEventBus.getEventBus().testSkipped();
         }
-
     }
 
     private boolean isPending(Meta metaData) {
