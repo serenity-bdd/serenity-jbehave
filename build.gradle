@@ -49,7 +49,7 @@ ext {
     junitVersion = '4.12'
     reflectionsVersion = '0.9.10'
     mockitoCoreVersion = '1.10.19'
-    jbehaveCoreVersion = '3.10'
+    jbehaveCoreVersion = '4.0.5'
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -76,6 +76,7 @@ test {
     maxParallelForks = Runtime.runtime.availableProcessors()
     testLogging {
         exceptionFormat = 'full'
+        showStandardStreams = true
     }
 }
 
@@ -107,7 +108,8 @@ configurations.all {
         failOnVersionConflict()
         force "junit:junit:${junitVersion}",
             "org.mockito:mockito-core:${mockitoCoreVersion}",
-            "commons-collections:commons-collections:3.2.2"
+            "commons-collections:commons-collections:3.2.2",
+            "com.thoughtworks.xstream:xstream:1.4.8"
     }
 }
 
@@ -115,7 +117,6 @@ dependencies {
     compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}")
     compile 'commons-logging:commons-logging:1.2'
 
-    compile 'com.thoughtworks.xstream:xstream:1.4.5'
     compile 'com.thoughtworks.paranamer:paranamer:2.7'
 
     compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {

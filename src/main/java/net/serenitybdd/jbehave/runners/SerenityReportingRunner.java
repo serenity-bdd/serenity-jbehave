@@ -293,11 +293,9 @@ public class SerenityReportingRunner extends Runner {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
         Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or(DEFAULT_METAFILTER)));
+        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or("")));
         if (isGroovy(metafilters)) {
             metafilters = addGroovyMetafilterValuesTo(metafilters);
-        } else {
-            metafilters = addDefaultMetafilterValuesTo(metafilters);
         }
         return metafilters;
     }
@@ -326,20 +324,11 @@ public class SerenityReportingRunner extends Runner {
         return (metaFilters != null) && (metaFilters.startsWith("groovy:"));
     }
 
-    private String addDefaultMetafilterValuesTo(String metaFilters) {
-        if (!metaFilters.contains(IGNORE_FILTER)) {
-            metaFilters = metaFilters + ", " + IGNORE_FILTER;
-        }
-        return metaFilters;
-    }
 
     private String addGroovyMetafilterValuesTo(String metaFilters) {
         String skipAndIgnore = "";
         if (!metaFilters.contains("skip")) {
             skipAndIgnore = skipAndIgnore + " && !skip";
-        }
-        if (!metaFilters.contains("ignore")) {
-            skipAndIgnore = skipAndIgnore + " && !ignore";
         }
         if (!skipAndIgnore.isEmpty()) {
             return "groovy: (" + metaFilters.substring(7).trim() + ") " + skipAndIgnore;

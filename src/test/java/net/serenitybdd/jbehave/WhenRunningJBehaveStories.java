@@ -518,7 +518,7 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(1).getResult(), is(TestResult.PENDING));
         assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
         assertThat(outcomes.get(3).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(4).getResult(), is(TestResult.IGNORED));
+        assertThat("last scenario not IGNORED",outcomes.get(4).getResult(), is(TestResult.IGNORED));
 
         // And
 
