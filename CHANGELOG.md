@@ -1,14 +1,39 @@
 ## Serenity BDD JBehave change Log
 
-### upcoming (2016/02/18 14:29 +00:00)
+### v1.7.0 (2016/02/24 08:54 +00:00)
  
 **Pull requests:**
  
+- [#49](https://github.com/serenity-bdd/serenity-jbehave/pull/49) Tests are reorganised  to enable as more parallel tests as it possible ([@YamStranger](https://github.com/YamStranger))
+- [#48](https://github.com/serenity-bdd/serenity-jbehave/pull/48) Updating logging of tests ([@YamStranger](https://github.com/YamStranger))
+- [#47](https://github.com/serenity-bdd/serenity-jbehave/pull/47) Updated jbehave to 4.0.5 ([@YamStranger](https://github.com/YamStranger))
+- [#46](https://github.com/serenity-bdd/serenity-jbehave/pull/46) Updated @managed tag processing, added tests ([@YamStranger](https://github.com/YamStranger))
+- [#44](https://github.com/serenity-bdd/serenity-jbehave/pull/44) Updated serenity-core to 1.1.26 ([@YamStranger](https://github.com/YamStranger))
+- [#41](https://github.com/serenity-bdd/serenity-jbehave/pull/41) Updated contiributing guide - explaned multiline commits and pull requests name convention ([@YamStranger](https://github.com/YamStranger))
 - [#38](https://github.com/serenity-bdd/serenity-jbehave/pull/38) Updating serenity core to1.1.26-rc.1 ([@YamStranger](https://github.com/YamStranger))
 - [#37](https://github.com/serenity-bdd/serenity-jbehave/pull/37) Updating serenity core to1.25 ([@YamStranger](https://github.com/YamStranger))
  
 **Commits:**
  
+- [0551108](https://github.com/serenity-bdd/serenity-jbehave/commit/05511080046f0817486384bb6ab62eb21034a8f5) feat: updated managed tag processing ([@YamStranger](https://github.com/YamStranger))
+ 
+ > Now it is possible to mark as manages all scenarious in story file 
+ > ``` 
+ > Narrative: 
+ > ... 
+ > Meta: 
+ > [@manual](https://github.com/manual) 
+ > Scenario: A scenario that works and should me manual 
+ > Given I have an implemented JBehave scenario 
+ > ... 
+ > Scenario: A scenario that works and should me manual too 
+ > Given I have an implemented JBehave scenario 
+ > ... 
+- [2bc5efa](https://github.com/serenity-bdd/serenity-jbehave/commit/2bc5efa8094a10df6c79e08c95537bec57ac00b5) chore: updating logging of tests ([@YamStranger](https://github.com/YamStranger))
+- [5a398de](https://github.com/serenity-bdd/serenity-jbehave/commit/5a398dea1239fbe90fbdc4bfa5c1f62937ec3bb3) feat: updated jbehave to 4.0.5 ([@YamStranger](https://github.com/YamStranger))
+- [685490b](https://github.com/serenity-bdd/serenity-jbehave/commit/685490b48b194d8374064411ccf03859cf7e0303) chore: reorganisation of tests to enable as more parallel tests as it possible ([@YamStranger](https://github.com/YamStranger))
+- [7092c91](https://github.com/serenity-bdd/serenity-jbehave/commit/7092c91f111a9134eacde7d3810e384e6ba507da) docs: updating contributing docs ([@YamStranger](https://github.com/YamStranger))
+- [cab04ac](https://github.com/serenity-bdd/serenity-jbehave/commit/cab04ace2d742524cf04d2608513e15933a7e6e9) chore: updating serenty-core to 1.1.26 ([@YamStranger](https://github.com/YamStranger))
 - [d2c30c4](https://github.com/serenity-bdd/serenity-jbehave/commit/d2c30c4ee622e24f7e7d7287013683ec1108a56c) fix: core update ([@YamStranger](https://github.com/YamStranger))
 - [f061dac](https://github.com/serenity-bdd/serenity-jbehave/commit/f061dac7614aff3022bb4252ec9e2d7a7536e184) chore: serenity core updated ([@YamStranger](https://github.com/YamStranger))
  
