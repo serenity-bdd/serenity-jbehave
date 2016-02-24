@@ -76,7 +76,7 @@ test {
     maxParallelForks = Runtime.runtime.availableProcessors()
     testLogging {
         exceptionFormat = 'full'
-        showStandardStreams = true
+//        showStandardStreams = true
     }
 }
 
