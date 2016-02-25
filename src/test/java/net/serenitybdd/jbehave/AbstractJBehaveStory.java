@@ -3,6 +3,7 @@ package net.serenitybdd.jbehave;
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
+import net.thucydides.core.reports.TestOutcomeLoader;
 import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
@@ -77,16 +78,9 @@ public class AbstractJBehaveStory {
     }
 
     protected List<TestOutcome> loadTestOutcomes() throws IOException {
-
-        XMLTestOutcomeReporter outcomeReporter = new XMLTestOutcomeReporter();
+        TestOutcomeLoader loader = new TestOutcomeLoader();
         System.out.println("Loading test outcomes from " + outputDirectory);
-        List<TestOutcome> testOutcomes = outcomeReporter.loadReportsFrom(outputDirectory);
-        Collections.sort(testOutcomes, new Comparator<TestOutcome>() {
-            public int compare(TestOutcome testOutcome, TestOutcome testOutcome1) {
-                return testOutcome.getTitle().compareTo(testOutcome1.getTitle());
-            }
-        });
-        return testOutcomes;
+        return loader.loadFrom(outputDirectory);
     }
 
 
