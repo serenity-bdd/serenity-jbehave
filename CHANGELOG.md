@@ -1,5 +1,17 @@
 ## Serenity BDD JBehave change Log
 
+### upcoming (2016/03/01 07:14 +00:00)
+ 
+**Pull requests:**
+ 
+- [#52](https://github.com/serenity-bdd/serenity-jbehave/pull/52) Updated serenty core to 1.1.27 ([@YamStranger](https://github.com/YamStranger))
+- [#51](https://github.com/serenity-bdd/serenity-jbehave/pull/51) Updated loader of testOutcomes to use serenity core utilites ([@YamStranger](https://github.com/YamStranger))
+ 
+**Commits:**
+ 
+- [16d3b4e](https://github.com/serenity-bdd/serenity-jbehave/commit/16d3b4e8c9fe61a99e7e6a4f52ad9cdf97e45502) chore: updating serenty core to 1.1.27 ([@YamStranger](https://github.com/YamStranger))
+- [fb7f0c9](https://github.com/serenity-bdd/serenity-jbehave/commit/fb7f0c94b83bc6cd912736d5378a7fb0a499fa0a) feat: updating loader of stories to use serenity core utilites ([@YamStranger](https://github.com/YamStranger))
+ 
 ### v1.7.0 (2016/02/24 08:54 +00:00)
  
 **Pull requests:**
@@ -17,18 +29,18 @@
  
 - [0551108](https://github.com/serenity-bdd/serenity-jbehave/commit/05511080046f0817486384bb6ab62eb21034a8f5) feat: updated managed tag processing ([@YamStranger](https://github.com/YamStranger))
  
- > Now it is possible to mark as manages all scenarious in story file 
- > ``` 
- > Narrative: 
- > ... 
- > Meta: 
- > [@manual](https://github.com/manual) 
- > Scenario: A scenario that works and should me manual 
- > Given I have an implemented JBehave scenario 
- > ... 
- > Scenario: A scenario that works and should me manual too 
- > Given I have an implemented JBehave scenario 
- > ... 
+ > Now it is possible to mark as manages all scenarious in story file
+ > ```
+ > Narrative:
+ > ...
+ > Meta:
+ > [@manua](https://github.com/manua)l
+ > Scenario: A scenario that works and should me manual
+ > Given I have an implemented JBehave scenario
+ > ...
+ > Scenario: A scenario that works and should me manual too
+ > Given I have an implemented JBehave scenario
+ > ...
 - [2bc5efa](https://github.com/serenity-bdd/serenity-jbehave/commit/2bc5efa8094a10df6c79e08c95537bec57ac00b5) chore: updating logging of tests ([@YamStranger](https://github.com/YamStranger))
 - [5a398de](https://github.com/serenity-bdd/serenity-jbehave/commit/5a398dea1239fbe90fbdc4bfa5c1f62937ec3bb3) feat: updated jbehave to 4.0.5 ([@YamStranger](https://github.com/YamStranger))
 - [685490b](https://github.com/serenity-bdd/serenity-jbehave/commit/685490b48b194d8374064411ccf03859cf7e0303) chore: reorganisation of tests to enable as more parallel tests as it possible ([@YamStranger](https://github.com/YamStranger))
@@ -215,14 +227,14 @@
 - [6df9184](https://github.com/serenity-bdd/serenity-jbehave/commit/6df9184d513752a91d161a371aa478554485b3a5) Move Extract class to serenity_bdd package ([@mikezx6r](https://github.com/mikezx6r))
 - [787097c](https://github.com/serenity-bdd/serenity-jbehave/commit/787097cff4394b9a6419597ea01504a8bb5563c2) Move Metafilter to serenity_bdd package while keeping deprecated variation in thucydides package ([@mikezx6r](https://github.com/mikezx6r))
  
- > serenity_bdd annotation takes precedence over thucydides if both are defined 
+ > serenity_bdd annotation takes precedence over thucydides if both are defined
 - [80a2181](https://github.com/serenity-bdd/serenity-jbehave/commit/80a2181c141234c1bb3c73148cbc5a98cde52945) Fix issue with running reports and old version of guava being version used ([@mikezx6r](https://github.com/mikezx6r))
  
- > If using Maven, and only define a dependency on serenity:serenity-jbehave, Maven 
- > appears to resolve guava to the old version contained in reflections (0.11.0). 
- > This version of Guava does not contain many of the methods required to complete reporting. 
- > Adding this exclusion has all the tests pass, AND my FT suite completes successfully pointing at a 
- > local SNAPSHOT version of this project. 
+ > If using Maven, and only define a dependency on serenity:serenity-jbehave, Maven
+ > appears to resolve guava to the old version contained in reflections (0.11.0).
+ > This version of Guava does not contain many of the methods required to complete reporting.
+ > Adding this exclusion has all the tests pass, AND my FT suite completes successfully pointing at a
+ > local SNAPSHOT version of this project.
 - [88231c0](https://github.com/serenity-bdd/serenity-jbehave/commit/88231c007829e6f507ef53010d2f99af7f0093a6) Rename additional items to Serenity ([@mikezx6r](https://github.com/mikezx6r))
 - [b91449d](https://github.com/serenity-bdd/serenity-jbehave/commit/b91449deaa0a99e5b0c4aee1dd7deb32cba10a15) Move converters to new serenity_bdd namespace ([@mikezx6r](https://github.com/mikezx6r))
 - [becc449](https://github.com/serenity-bdd/serenity-jbehave/commit/becc449909bf67bb396fa4b29d571df02ca17238) Rename serenity_bdd to serenitybdd ([@mikezx6r](https://github.com/mikezx6r))
@@ -397,23 +409,23 @@
 - [3dd8f69](https://github.com/serenity-bdd/serenity-jbehave/commit/3dd8f6970f40d1ab3bedfe99ff6a147aee272c24) Fixed issue with scenarios that were skipped due to a metafilter setting appearing as passing ([@wakaleo](https://github.com/wakaleo))
 - [511166a](https://github.com/serenity-bdd/serenity-jbehave/commit/511166a57f8333378782ebb2f774052dd123fce7) THUCYDIDES-160: add ClassFinder tests for classes located in JAR files ([@cvmocanu](https://github.com/cvmocanu))
  
- > When they are run from an IDE like IntelliJ, the tests that use a maven 
- > dependency do not test finding classes that are packaged in a JAR file. 
- > This is because IntelliJ will setup the dependencies so that one module 
- > depends on another module&#39;s .class files directly. This way, the IDE 
- > does not have to waste time to package classes to jar files, and the 
- > development is faster. 
+ > When they are run from an IDE like IntelliJ, the tests that use a maven
+ > dependency do not test finding classes that are packaged in a JAR file.
+ > This is because IntelliJ will setup the dependencies so that one module
+ > depends on another module&#39;s .class files directly. This way, the IDE
+ > does not have to waste time to package classes to jar files, and the
+ > development is faster.
 - [55c0479](https://github.com/serenity-bdd/serenity-jbehave/commit/55c0479e5df7d767f148dd5e8dfc580dbad1887b) THUCYDIDES-160: fix broken test ([@cvmocanu](https://github.com/cvmocanu))
  
- > The class SomeBoilerplateSteps was not annotated with [@Given, so a test](https://github.com/Given, so a test) 
- > was failing. To make sure the test is fixed, please change the pom to 
- > depend on the latest version of thucydides-sample-alternative-resources. 
+ > The class SomeBoilerplateSteps was not annotated with [@Given, so a tes](https://github.com/Given, so a tes)t
+ > was failing. To make sure the test is fixed, please change the pom to
+ > depend on the latest version of thucydides-sample-alternative-resources.
 - [7325839](https://github.com/serenity-bdd/serenity-jbehave/commit/7325839524da73ce6148a94d48c052fd005c1a21) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.264 ([@wakaleo](https://github.com/wakaleo))
 - [9f3663d](https://github.com/serenity-bdd/serenity-jbehave/commit/9f3663dd4a851e1bc3203ed2702cce245640827c) THUCYDIDES-160: fix issue ([@cvmocanu](https://github.com/cvmocanu))
  
- > This commit fixes the loading of classes from jar files or file-system 
- > directories, when the path contains characters which need to be 
- > URL-encoded (e.g. the space character). 
+ > This commit fixes the loading of classes from jar files or file-system
+ > directories, when the path contains characters which need to be
+ > URL-encoded (e.g. the space character).
 - [b626344](https://github.com/serenity-bdd/serenity-jbehave/commit/b6263441fb34f503ee87f35d709c827bcf4ec7ca) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
 - [d366a56](https://github.com/serenity-bdd/serenity-jbehave/commit/d366a56a3a1bdcb97a89e48b8acbc3cc7d1cebe8) Updated dependencies ([@wakaleo](https://github.com/wakaleo))
  
@@ -453,12 +465,12 @@
 - [1dacbee](https://github.com/serenity-bdd/serenity-jbehave/commit/1dacbeec3357595f9eec565c1512372d330191bc) Updated versions ([@wakaleo](https://github.com/wakaleo))
 - [773cdd9](https://github.com/serenity-bdd/serenity-jbehave/commit/773cdd920c0be489d1cd36892c025269cfd4a275) fix THUCYDIDES-160 (no candidate steps found when path contains spaces)
  
- > The expression &quot;new File(url.getFile())&quot; is buggy because the result of 
- > &quot;url.getFile()&quot; contains url-encoded characters (like &quot;%20&quot; instead of 
- > space). 
- > The fix is to use &quot;new File(url.toURI())&quot; instead, since that takes care 
- > of decoding url-encoded characters. 
- > See also: http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4466485 
+ > The expression &quot;new File(url.getFile())&quot; is buggy because the result of
+ > &quot;url.getFile()&quot; contains url-encoded characters (like &quot;%20&quot; instead of
+ > space).
+ > The fix is to use &quot;new File(url.toURI())&quot; instead, since that takes care
+ > of decoding url-encoded characters.
+ > See also: http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4466485
 - [a8c6a94](https://github.com/serenity-bdd/serenity-jbehave/commit/a8c6a946351fc3907058cd859e084e29a4c3c344) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.255 ([@wakaleo](https://github.com/wakaleo))
 - [fa36401](https://github.com/serenity-bdd/serenity-jbehave/commit/fa364017ef5fc263f9066585151ca9e7fd876b8d) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
  
