@@ -1,5 +1,7 @@
 package net.serenitybdd.jbehave;
 
+import net.serenitybdd.jbehave.samples.levels.first.SerenityStorySampleForFistLevel;
+import net.serenitybdd.jbehave.samples.levels.second.SerenityStorySampleForSecondLevel;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.util.EnvironmentVariables;
@@ -8,12 +10,10 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory {
-
-    final static class AllStoriesSample extends SerenityStories {
-    }
 
     final static class AStorySample extends SerenityStories {
 
@@ -30,9 +30,13 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     public void all_stories_on_the_classpath_should_be_run_by_default() throws Throwable {
 
         // Given
-        SerenityStories stories = new AllStoriesSample();
-        assertThat(stories.getRootPackage(), is("net.serenitybdd.jbehave"));
-        assertThat(stories.getStoryPath(), is("**/*.story"));
+        SerenityStories first = new SerenityStorySampleForFistLevel();
+        SerenityStories second = new SerenityStorySampleForSecondLevel();
+        // Then
+        assertThat(first.getRootPackage(), equalTo(second.getRootPackage()));
+        assertThat(first.getStoryPath(), equalTo(second.getStoryPath()));
+        assertThat(first.stepsFactory().createCandidateSteps().containsAll(second.stepsFactory().createCandidateSteps()), is(true));
+        assertThat(first.getStoryPath(), is("**/*.story"));
     }
 
     final static class StoriesInTheSubsetFolderSample extends SerenityStories {
