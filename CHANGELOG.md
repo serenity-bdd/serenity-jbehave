@@ -1,9 +1,10 @@
 ## Serenity BDD JBehave change Log
 
-### upcoming (2016/03/02 17:30 +00:00)
+### upcoming (2016/03/04 15:25 +00:00)
  
 **Pull requests:**
  
+- [#58](https://github.com/serenity-bdd/serenity-jbehave/pull/58) Updated core to 1.1.29-rc.1 ([@YamStranger](https://github.com/YamStranger))
 - [#55](https://github.com/serenity-bdd/serenity-jbehave/pull/55) Changed loading of test classes. Now test classes can be loaded from directories and subdirectories based on root package ([@YamStranger](https://github.com/YamStranger))
 - [#52](https://github.com/serenity-bdd/serenity-jbehave/pull/52) Updated serenty core to 1.1.27 ([@YamStranger](https://github.com/YamStranger))
 - [#51](https://github.com/serenity-bdd/serenity-jbehave/pull/51) Updated loader of testOutcomes to use serenity core utilites ([@YamStranger](https://github.com/YamStranger))
@@ -11,6 +12,7 @@
 **Commits:**
  
 - [16d3b4e](https://github.com/serenity-bdd/serenity-jbehave/commit/16d3b4e8c9fe61a99e7e6a4f52ad9cdf97e45502) chore: updating serenty core to 1.1.27 ([@YamStranger](https://github.com/YamStranger))
+- [83b2d66](https://github.com/serenity-bdd/serenity-jbehave/commit/83b2d665ad7686a067c362d5ca9eae23b995cef6) chore: core updated to v1.1.29-rc.1 ([@YamStranger](https://github.com/YamStranger))
 - [dee66fb](https://github.com/serenity-bdd/serenity-jbehave/commit/dee66fb6ccb649a1fae7b8cbd19409c3527f9212) feat: added samples for using in tests ([@YamStranger](https://github.com/YamStranger))
 - [fb7f0c9](https://github.com/serenity-bdd/serenity-jbehave/commit/fb7f0c94b83bc6cd912736d5378a7fb0a499fa0a) feat: updating loader of stories to use serenity core utilites ([@YamStranger](https://github.com/YamStranger))
 - [fe2b010](https://github.com/serenity-bdd/serenity-jbehave/commit/fe2b010fb2542a70173ddc5c5f6b174be10eecac) feat: changed loading of test classes. Now classes can be loaded from more complex directory structure ([@YamStranger](https://github.com/YamStranger))
