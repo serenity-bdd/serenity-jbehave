@@ -188,7 +188,21 @@ public class SerenityStories extends JUnitStories {
      * The root package on the classpath containing the JBehave stories to be run.
      */
     protected String getRootPackage() {
-        return this.getClass().getPackage().getName();
+        final Package current = this.getClass().getPackage();
+        final String path=current.getName();
+        String[] elements = path.split("\\.");
+        if (elements.length >= 1) {
+            elements = Arrays.copyOfRange(elements, 0, elements.length - 1);
+        }
+        return concatElements(elements);
+    }
+
+    private String concatElements(final String[] subpaths) {
+        final StringBuilder builder = new StringBuilder();
+        for (String path : subpaths) {
+            builder.append(path).append(".");
+        }
+        return builder.substring(0, builder.length() - 1);
     }
 
     protected List<String> getStoryPathExpressions() {
@@ -216,7 +230,6 @@ public class SerenityStories extends JUnitStories {
     public void findStoriesCalled(String storyNames) {
         Set<String> storyPathElements = new StoryPathFinder(getEnvironmentVariables(), storyNames).findAllElements();
         storyNamePattern = Lambda.join(storyPathElements, ";");
-
     }
 
 

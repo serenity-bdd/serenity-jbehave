@@ -52,51 +52,6 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_should_use_a_different_browser_if_requested() throws Throwable {
-
-        // Given
-        SerenityStories story = newStory("aBehaviorWithSeleniumUsingADifferentBrowser.story");
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-    }
-
-    @Test
-    public void a_jbehave_step_library_can_use_page_objects_directly() throws Throwable {
-
-        // Given
-        SerenityStories story = newStory("aBehaviorWithSeleniumPageObjects.story");
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-    }
-
-    @Test
-    public void should_be_able_to_specify_the_browser_in_the_base_test() throws Throwable {
-
-        // Given
-        SerenityStories story = new APassingWebTestSampleWithASpecifiedBrowser();
-        story.setEnvironmentVariables(environmentVariables);
-
-        System.out.println("Output dir = " + outputDirectory.getAbsolutePath());
-        // When
-        run(story);
-
-        // Then
-        System.out.println("Loading from output dir = " + outputDirectory.getAbsolutePath());
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-    }
-
-    @Test
     public void should_be_able_to_set_thucydides_properties_in_the_base_test() throws Throwable {
 
         // Given
@@ -142,48 +97,5 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
         assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
 
-    }
-
-    @Test
-    public void data_driven_steps_should_appear_as_nested_steps() throws Throwable {
-
-        // Given
-        SerenityStories story = newStory("dataDrivenBehavior.story");
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> allOutcomes = loadTestOutcomes();
-        assertThat(allOutcomes.size(), is(1));
-
-        List<TestStep> topLevelSteps = allOutcomes.get(0).getTestSteps();
-        assertThat(topLevelSteps.size(), is(3));
-
-        List<TestStep> nestedDataDrivenSteps = topLevelSteps.get(2).getChildren().get(0).getChildren();
-        assertThat(nestedDataDrivenSteps.size(), is(3));
-
-    }
-
-    @Test
-    public void browser_should_not_closed_between_given_stories_and_scenario_steps() throws Throwable {
-
-        // Given
-        SerenityStories story = newStory("aBehaviorWithGivenStories.story");
-
-        // When
-        run(story);
-
-        // Then
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-    }
-
-    @Test
-    public void two_scenarii_using_the_same_given_story_should_return_two_test_outcomes() throws Throwable {
-        SerenityStories story = newStory("LookupADefinitionSuite.story");
-        run(story);
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(2));
     }
 }
