@@ -6,7 +6,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import gherkin.formatter.model.Tag;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
@@ -26,16 +25,7 @@ import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Keywords;
-import org.jbehave.core.model.ExamplesTable;
-import org.jbehave.core.model.GivenStories;
-import org.jbehave.core.model.GivenStory;
-import org.jbehave.core.model.Lifecycle;
-import org.jbehave.core.model.Meta;
-import org.jbehave.core.model.Narrative;
-import org.jbehave.core.model.OutcomesTable;
-import org.jbehave.core.model.Scenario;
-import org.jbehave.core.model.Story;
-import org.jbehave.core.model.StoryDuration;
+import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.junit.internal.AssumptionViolatedException;
 import org.openqa.selenium.WebDriver;
@@ -45,10 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static ch.lambdaj.Lambda.convert;
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.flatten;
-import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.Lambda.*;
 
 public class SerenityReporter implements StoryReporter {
 
@@ -110,7 +97,7 @@ public class SerenityReporter implements StoryReporter {
     public void storyCancelled(Story story, StoryDuration storyDuration) {
     }
 
-    private Stack<Story> storyStack = new Stack<Story>();
+    private Stack<Story> storyStack = new Stack<>();
 
     private Stack<String> activeScenarios = new Stack<>();
     private List<String> givenStories = Lists.newArrayList();
@@ -456,7 +443,7 @@ public class SerenityReporter implements StoryReporter {
             closeBrowsersForThisStory();
             if (isAfterStory(currentStory())) {
                 generateReports();
-            } else if (!isFixture(currentStory()) && !given && (!isAStoryLevelGiven(currentStory()))) {
+            } else if (!isFixture(currentStory()) && (!isAStoryLevelGiven(currentStory()))) {
                 StepEventBus.getEventBus().testSuiteFinished();
                 clearListeners();
             }
@@ -634,14 +621,14 @@ public class SerenityReporter implements StoryReporter {
 
     public void successful(String title) {
         if (annotatedResultTakesPriority()) {
-            processAnnotatedResult(title);
+            processAnnotatedResult();
         } else{
             StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
             StepEventBus.getEventBus().stepFinished();
         }
     }
 
-    private void processAnnotatedResult(String title) {
+    private void processAnnotatedResult() {
         TestResult forcedResult = StepEventBus.getEventBus().getForcedResult().get();
         switch (forcedResult) {
             case PENDING:

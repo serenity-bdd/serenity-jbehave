@@ -57,7 +57,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.1.25-rc.6'
+    serenityCoreVersion = '1.1.29-rc.1'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -115,8 +115,8 @@ dependencies {
     compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}")
     compile 'commons-logging:commons-logging:1.2'
 
-    compile 'com.thoughtworks.xstream:xstream:1.4.5'
-    compile 'com.thoughtworks.paranamer:paranamer:2.7'
+    compile 'com.thoughtworks.xstream:xstream:1.4.8'
+    compile 'com.thoughtworks.paranamer:paranamer:2.8'
 
     compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'
