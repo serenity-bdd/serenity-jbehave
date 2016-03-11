@@ -9,7 +9,10 @@ import com.google.common.collect.Maps;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
-import net.thucydides.core.model.*;
+import net.thucydides.core.model.DataTable;
+import net.thucydides.core.model.TestOutcome;
+import net.thucydides.core.model.TestResult;
+import net.thucydides.core.model.TestTag;
 import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
 import net.thucydides.core.steps.ExecutedStepDescription;
@@ -32,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import static ch.lambdaj.Lambda.*;
 
@@ -189,8 +191,10 @@ public class SerenityReporter implements StoryReporter {
         }
 
         if(isCurrentScenario(scenarioTitle)) {
-            //This is our scenario
-        } else if (shouldNestScenarios()) {
+            return;
+        }
+
+        if (shouldNestScenarios()) {
             startNewStep(scenarioTitle);
         } else {
             startScenarioCalled(scenarioTitle);
