@@ -1,6 +1,6 @@
 ## Serenity BDD JBehave change Log
 
-### upcoming (2016/03/04 15:25 +00:00)
+### v1.8.0 (2016/03/11 07:18 +00:00)
  
 **Pull requests:**
  
@@ -327,15 +327,9 @@
  
 **Commits:**
  
-- [2081cb8](https://github.com/serenity-bdd/serenity-jbehave/commit/2081cb874d5ea02d8aea294b5afa58c452dc5f55) New version numbering system ([@wakaleo](https://github.com/wakaleo))
- 
-### 1.0.15 (2014/11/06 04:26 +00:00)
- 
- 
-**Commits:**
- 
 - [07c5c79](https://github.com/serenity-bdd/serenity-jbehave/commit/07c5c790dba97775cd222ff2bcfc5fe9e9ff02be) Refactoring tests and adding a gradle build ([@wakaleo](https://github.com/wakaleo))
 - [0c5d2c1](https://github.com/serenity-bdd/serenity-jbehave/commit/0c5d2c16e7a16f142f6177f8eb6941111606b972) Look for artifacts in maven local as well as jcenter ([@wakaleo](https://github.com/wakaleo))
+- [2081cb8](https://github.com/serenity-bdd/serenity-jbehave/commit/2081cb874d5ea02d8aea294b5afa58c452dc5f55) New version numbering system ([@wakaleo](https://github.com/wakaleo))
 - [2706a33](https://github.com/serenity-bdd/serenity-jbehave/commit/2706a33028a618c9c0d77751fa0540b6db2da490) Fixing BinTray integration ([@wakaleo](https://github.com/wakaleo))
 - [474c1b7](https://github.com/serenity-bdd/serenity-jbehave/commit/474c1b71a38a0a75822db03d53ebb1c419be56f1) Fixing BinTray integration ([@wakaleo](https://github.com/wakaleo))
 - [51a7b48](https://github.com/serenity-bdd/serenity-jbehave/commit/51a7b48e997e75624c83272684af9a55efa7db67) Fine-tuning the gradle wrapper ([@wakaleo](https://github.com/wakaleo))
