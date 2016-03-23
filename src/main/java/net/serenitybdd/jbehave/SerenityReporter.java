@@ -182,7 +182,10 @@ public class SerenityReporter implements StoryReporter {
         logger.debug("scenario started ".concat(scenarioTitle));
         clearScenarioResult();
 
-        if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
+        if (managedDriverIsNotAlive()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+        } else if (shouldRestartDriverBeforeEachScenario()
+                && !shouldNestScenarios()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
 
@@ -203,6 +206,15 @@ public class SerenityReporter implements StoryReporter {
                 scenarioMetaProcessed.add(scenarioTitle);
             }
         }
+    }
+
+    private boolean managedDriverIsNotAlive() {
+        try {
+            ThucydidesWebDriverSupport.getDriver().getTitle();
+        } catch (Exception e) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isCurrentScenario(String scenarioTitle) {
