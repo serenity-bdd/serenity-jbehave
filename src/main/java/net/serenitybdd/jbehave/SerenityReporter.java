@@ -6,7 +6,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import gherkin.formatter.model.Tag;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
@@ -42,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import static ch.lambdaj.Lambda.*;
 
@@ -190,7 +188,10 @@ public class SerenityReporter implements StoryReporter {
         logger.debug("scenario started ".concat(scenarioTitle));
         clearScenarioResult();
 
-        if (shouldRestartDriverBeforeEachScenario() && !shouldNestScenarios()) {
+        if (managedDriverIsNotAlive()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+        } else if (shouldRestartDriverBeforeEachScenario()
+                && !shouldNestScenarios()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
 
@@ -209,6 +210,15 @@ public class SerenityReporter implements StoryReporter {
                 scenarioMetaProcessed.add(scenarioTitle);
             }
         }
+    }
+
+    private boolean managedDriverIsNotAlive() {
+        try {
+            ThucydidesWebDriverSupport.getDriver().getTitle();
+        } catch (Exception e) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isCurrentScenario(String scenarioTitle) {
