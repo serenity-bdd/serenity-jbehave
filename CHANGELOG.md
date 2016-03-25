@@ -1,5 +1,15 @@
 ## Serenity BDD JBehave change Log
 
+### upcoming (2016/03/25 12:02 +00:00)
+ 
+**Pull requests:**
+ 
+- [#64](https://github.com/serenity-bdd/serenity-jbehave/pull/64) Updated resetting If browser died it should be restarted even if not shouldRestartDriverBeforeEachScenario ([@YamStranger](https://github.com/YamStranger))
+ 
+**Commits:**
+ 
+- [d0c6745](https://github.com/serenity-bdd/serenity-jbehave/commit/d0c6745d3183f9da47354cf3407ea74ef57df724) fix: if browser died it should be resetted ([@YamStranger](https://github.com/YamStranger))
+ 
 ### v1.8.0 (2016/03/11 07:18 +00:00)
  
 **Pull requests:**
