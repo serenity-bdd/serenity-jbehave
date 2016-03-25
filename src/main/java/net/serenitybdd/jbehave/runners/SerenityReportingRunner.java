@@ -8,6 +8,8 @@ import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.annotations.Metafilter;
 import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
+import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
+import net.serenitybdd.jbehave.embedders.monitors.ReportingEmbedderMonitor;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
@@ -16,6 +18,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.Keywords;
+import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
@@ -44,7 +47,7 @@ import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE
 
 public class SerenityReportingRunner extends Runner {
 	private List<Description> storyDescriptions;
-	private Embedder configuredEmbedder;
+	private ExtendedEmbedder configuredEmbedder;
 	private List<String> storyPaths;
 	private Configuration configuration;
 	private Description description;
@@ -54,7 +57,7 @@ public class SerenityReportingRunner extends Runner {
     private final Class<? extends ConfigurableEmbedder> testClass;
     private final EnvironmentVariables environmentVariables;
 
-//    private final String SKIP_FILTER = " -skip";
+    private final String SKIP_FILTER = " -skip";
     private final String IGNORE_FILTER = " -ignore";
     private final String DEFAULT_METAFILTER = IGNORE_FILTER; //+ " " + SKIP_FILTER;
 
@@ -69,9 +72,12 @@ public class SerenityReportingRunner extends Runner {
     public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
                                    ConfigurableEmbedder embedder) throws Throwable {
         this.configurableEmbedder = embedder;
+        final ExtendedEmbedder extended = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
+        extended.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor());
+        this.configurableEmbedder.useEmbedder(
+                new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder()));
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
-
     }
 
     protected List<Description> getDescriptions() {
@@ -88,9 +94,9 @@ public class SerenityReportingRunner extends Runner {
         return configuration;
     }
 
-    Embedder getConfiguredEmbedder() {
+    ExtendedEmbedder getConfiguredEmbedder() {
         if (configuredEmbedder == null) {
-            configuredEmbedder = configurableEmbedder.configuredEmbedder();
+            configuredEmbedder = (ExtendedEmbedder)configurableEmbedder.configuredEmbedder();
         }
         return configuredEmbedder;
     }
@@ -230,7 +236,7 @@ public class SerenityReportingRunner extends Runner {
 		if (stepsFactory != null) {
 			candidateSteps = stepsFactory.createCandidateSteps();
 		} else {
-			Embedder embedder = configurableEmbedder.configuredEmbedder();
+			Embedder embedder = getConfiguredEmbedder();
 			candidateSteps = embedder.candidateSteps();
 			if (candidateSteps == null || candidateSteps.isEmpty()) {
 				candidateSteps = embedder.stepsFactory().createCandidateSteps();
@@ -293,7 +299,7 @@ public class SerenityReportingRunner extends Runner {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
         Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or("")));
+        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or(SKIP_FILTER+" "+IGNORE_FILTER)));
         if (isGroovy(metafilters)) {
             metafilters = addGroovyMetafilterValuesTo(metafilters);
         }

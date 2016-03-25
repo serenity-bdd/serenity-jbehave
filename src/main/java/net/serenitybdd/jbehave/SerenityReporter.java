@@ -179,7 +179,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void beforeScenario(String scenarioTitle) {
-        logger.debug("scenario started ".concat(scenarioTitle));
+        logger.debug("before scenario started ".concat(scenarioTitle));
         clearScenarioResult();
 
         if (managedDriverIsNotAlive()) {
@@ -246,7 +246,7 @@ public class SerenityReporter implements StoryReporter {
 
     private String getNarrativeFrom(Story story) {
         return (!story.getNarrative().isEmpty()) ?
-             story.getNarrative().asString(new Keywords()).trim() : "";
+                story.getNarrative().asString(new Keywords()).trim() : "";
     }
 
     private void noteAnyGivenStoriesFor(Story story) {
@@ -461,7 +461,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Optional<TestResult> getScenarioMetadataResult() {
-       return forcedScenarioResult;
+        return forcedScenarioResult;
     }
 
     private void registerScenarioMeta(Meta metaData) {
@@ -482,6 +482,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void afterStory(boolean given) {
+        logger.debug("afterStory "+given);
         shouldNestScenarios(false);
         if (given) {
             givenStoryMonitor.exitingGivenStory();
@@ -639,15 +640,18 @@ public class SerenityReporter implements StoryReporter {
 
 
     public void givenStories(GivenStories givenStories) {
+        logger.debug("givenStories "+givenStories);
         givenStoryMonitor.enteringGivenStory();
     }
 
     public void givenStories(List<String> strings) {
+        logger.debug("givenStories "+strings);
     }
 
     int exampleCount = 0;
 
     public void beforeExamples(List<String> steps, ExamplesTable table) {
+        logger.debug("beforeExamples "+steps+" "+table);
         exampleCount = 0;
         StepEventBus.getEventBus().useExamplesFrom(serenityTableFrom(table));
     }
@@ -658,6 +662,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void example(Map<String, String> tableRow) {
+        logger.debug("example "+tableRow);
         if (shouldRestartDriverBeforeEachScenario()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
@@ -692,6 +697,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void afterExamples() {
+        logger.debug("afterExamples:");
         finishExample();
     }
 
@@ -767,14 +773,16 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {
+        logger.debug("failedOutcomes");
     }
 
     public void restarted(String s, Throwable throwable) {
+        logger.debug("restarted");
     }
 
     @Override
     public void restartedStory(Story story, Throwable cause) {
-
+        logger.debug("restartedStory");
     }
 
     public void dryRun() {
@@ -782,6 +790,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void pendingMethods(List<String> strings) {
+        logger.debug("pendingMethods");
     }
 
     private String normalized(String value) {

@@ -1,0 +1,161 @@
+package net.serenitybdd.jbehave.embedders.monitors;
+
+import net.serenitybdd.jbehave.SerenityReporter;
+import org.jbehave.core.embedder.EmbedderControls;
+import org.jbehave.core.embedder.EmbedderMonitor;
+import org.jbehave.core.embedder.MetaFilter;
+import org.jbehave.core.failures.BatchFailures;
+import org.jbehave.core.model.*;
+import org.jbehave.core.reporters.ReportsCount;
+
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+
+/**
+ * User: YamStranger
+ * Date: 3/25/16
+ * Time: 6:35 PM
+ */
+public class ReportingEmbedderMonitor implements EmbedderMonitor {
+
+    public ReportingEmbedderMonitor() {
+    }
+
+    @Override
+    public void runningEmbeddable(String name) {
+    }
+
+    @Override
+    public void embeddableFailed(String name, Throwable cause) {
+    }
+
+    @Override
+    public void embeddableNotConfigurable(String name) {
+    }
+
+    @Override
+    public void embeddablesSkipped(List<String> classNames) {
+    }
+
+    @Override
+    public void metaNotAllowed(Meta meta, MetaFilter filter) {
+    }
+
+    @Override
+    public void runningStory(String path) {
+    }
+
+    @Override
+    public void storyFailed(String path, Throwable cause) {
+    }
+
+    @Override
+    public void storiesSkipped(List<String> storyPaths) {
+    }
+
+    @Override
+    public void storiesNotAllowed(List<Story> notAllowed, MetaFilter filter) {
+    }
+
+    @Override
+    public void storiesNotAllowed(List<Story> notAllowed, MetaFilter filter, boolean verbose) {
+    }
+
+    @Override
+    public void scenarioNotAllowed(Scenario scenario, MetaFilter filter) {
+    }
+
+    @Override
+    public void batchFailed(BatchFailures failures) {
+    }
+
+    @Override
+    public void beforeOrAfterStoriesFailed() {
+    }
+
+    @Override
+    public void generatingReportsView(File outputDirectory, List<String> formats, Properties viewProperties) {
+    }
+
+    @Override
+    public void reportsViewGenerationFailed(File outputDirectory, List<String> formats, Properties viewProperties, Throwable cause) {
+    }
+
+    @Override
+    public void reportsViewGenerated(ReportsCount count) {
+    }
+
+    @Override
+    public void reportsViewFailures(ReportsCount count) {
+    }
+
+    @Override
+    public void reportsViewNotGenerated() {
+    }
+
+    @Override
+    public void runningWithAnnotatedEmbedderRunner(String className) {
+    }
+
+    @Override
+    public void annotatedInstanceNotOfType(Object annotatedInstance, Class<?> type) {
+    }
+
+    @Override
+    public void mappingStory(String storyPath, List<String> metaFilters) {
+    }
+
+    @Override
+    public void generatingMapsView(File outputDirectory, StoryMaps storyMaps, Properties viewProperties) {
+    }
+
+    @Override
+    public void mapsViewGenerationFailed(File outputDirectory, StoryMaps storyMaps, Properties viewProperties, Throwable cause) {
+    }
+
+    @Override
+    public void generatingNavigatorView(File outputDirectory, Properties viewResources) {
+    }
+
+    @Override
+    public void navigatorViewGenerationFailed(File outputDirectory, Properties viewResources, Throwable cause) {
+    }
+
+    @Override
+    public void navigatorViewNotGenerated() {
+    }
+
+    @Override
+    public void processingSystemProperties(Properties properties) {
+    }
+
+    @Override
+    public void systemPropertySet(String name, String value) {
+    }
+
+    @Override
+    public void storyTimeout(Story story, StoryDuration storyDuration) {
+    }
+
+    @Override
+    public void usingThreads(int threads) {
+    }
+
+    @Override
+    public void usingExecutorService(ExecutorService executorService) {
+    }
+
+    @Override
+    public void usingControls(EmbedderControls embedderControls) {
+    }
+
+    @Override
+    public void invalidTimeoutFormat(String path) {
+    }
+
+    @Override
+    public void usingTimeout(String path, long timeout) {
+    }
+}
