@@ -74,8 +74,7 @@ public class SerenityReportingRunner extends Runner {
         this.configurableEmbedder = embedder;
         final ExtendedEmbedder extended = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
         extended.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor());
-        this.configurableEmbedder.useEmbedder(
-                new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder()));
+        this.configurableEmbedder.useEmbedder(extended);
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
     }
