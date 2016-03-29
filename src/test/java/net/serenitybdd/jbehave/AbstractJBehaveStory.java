@@ -67,6 +67,7 @@ public class AbstractJBehaveStory {
         AlertingNotifier notifier = new AlertingNotifier();
         try {
             runner = new SerenityReportingRunner(stories.getClass(), stories);
+            runner.getDescription();
             runner.run(notifier);
         } catch(Throwable e) {
             throw e;

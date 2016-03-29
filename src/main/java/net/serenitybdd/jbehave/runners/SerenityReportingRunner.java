@@ -8,6 +8,8 @@ import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.annotations.Metafilter;
 import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
+import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
+import net.serenitybdd.jbehave.embedders.monitors.ReportingEmbedderMonitor;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
@@ -30,6 +32,7 @@ import org.jbehave.core.steps.StepMonitor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,20 +46,25 @@ import java.util.regex.Pattern;
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
 
 public class SerenityReportingRunner extends Runner {
+    private static final Logger logger = LoggerFactory.getLogger(SerenityReportingRunner.class);
+
 	private List<Description> storyDescriptions;
-	private Embedder configuredEmbedder;
+	private ExtendedEmbedder configuredEmbedder;
 	private List<String> storyPaths;
 	private Configuration configuration;
 	private Description description;
 	List<CandidateSteps> candidateSteps;
+    private final ExtendedEmbedder extendedEmbedder;
 
     private final ConfigurableEmbedder configurableEmbedder;
     private final Class<? extends ConfigurableEmbedder> testClass;
     private final EnvironmentVariables environmentVariables;
 
-//    private final String SKIP_FILTER = " -skip";
+    private final String SKIP_FILTER = " -skip";
     private final String IGNORE_FILTER = " -ignore";
-    private final String DEFAULT_METAFILTER = IGNORE_FILTER; //+ " " + SKIP_FILTER;
+    private final String WIP_FILTER = " -wip";
+
+    private final String DEFAULT_METAFILTER = IGNORE_FILTER+" "+SKIP_FILTER+" "+WIP_FILTER;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
 
@@ -69,9 +77,13 @@ public class SerenityReportingRunner extends Runner {
     public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
                                    ConfigurableEmbedder embedder) throws Throwable {
         this.configurableEmbedder = embedder;
+        this.extendedEmbedder = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
+        this.extendedEmbedder.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor(
+                ((SerenityStories)embedder).getSystemConfiguration(),
+                this.extendedEmbedder));
+        this.configurableEmbedder.useEmbedder(this.extendedEmbedder);
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
-
     }
 
     protected List<Description> getDescriptions() {
@@ -88,9 +100,9 @@ public class SerenityReportingRunner extends Runner {
         return configuration;
     }
 
-    Embedder getConfiguredEmbedder() {
+    ExtendedEmbedder getConfiguredEmbedder() {
         if (configuredEmbedder == null) {
-            configuredEmbedder = configurableEmbedder.configuredEmbedder();
+            configuredEmbedder = (ExtendedEmbedder)configurableEmbedder.configuredEmbedder();
         }
         return configuredEmbedder;
     }
@@ -230,7 +242,7 @@ public class SerenityReportingRunner extends Runner {
 		if (stepsFactory != null) {
 			candidateSteps = stepsFactory.createCandidateSteps();
 		} else {
-			Embedder embedder = configurableEmbedder.configuredEmbedder();
+			Embedder embedder = getConfiguredEmbedder();
 			candidateSteps = embedder.candidateSteps();
 			if (candidateSteps == null || candidateSteps.isEmpty()) {
 				candidateSteps = embedder.stepsFactory().createCandidateSteps();
@@ -272,6 +284,7 @@ public class SerenityReportingRunner extends Runner {
 
         for (String storyPath : getStoryPaths()) {
             Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
+            this.extendedEmbedder.registerStory(storyPath,parseStory);
             Description descr = gen.createDescriptionFrom(parseStory);
             storyDescriptions.add(descr);
 		}
@@ -293,9 +306,12 @@ public class SerenityReportingRunner extends Runner {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
         Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or("")));
+        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(
+                thucAnnotatedMetafilters.or("")));
         if (isGroovy(metafilters)) {
             metafilters = addGroovyMetafilterValuesTo(metafilters);
+        }else{
+            metafilters = addMetafilterValuesTo(metafilters);
         }
         return metafilters;
     }
@@ -326,16 +342,47 @@ public class SerenityReportingRunner extends Runner {
 
 
     private String addGroovyMetafilterValuesTo(String metaFilters) {
-        String skipAndIgnore = "";
+        String filters = "";
         if (!metaFilters.contains("skip")) {
-            skipAndIgnore = skipAndIgnore + " && !skip";
+            filters = filters + " && !skip";
         }
-        if (!skipAndIgnore.isEmpty()) {
-            return "groovy: (" + metaFilters.substring(7).trim() + ") " + skipAndIgnore;
+        if (!metaFilters.contains("ignore")) {
+            filters = filters + " && !ignore";
+        }
+        if (!metaFilters.contains("wip")) {
+            filters = filters + " && !wip";
+        }
+        if (!filters.isEmpty()) {
+            return "groovy: ((" + metaFilters.substring(7).trim() + ")" + filters+")";
         } else {
             return metaFilters;
         }
     }
+
+    private String addMetafilterValuesTo(String metaFilters) {
+        String filters = "";
+        if (!metaFilters.contains("skip")) {
+            filters = filters + SKIP_FILTER;
+        }
+        if (!metaFilters.contains("ignore")) {
+            if (StringUtils.isNotEmpty(filters)) {
+                filters = filters + ",";
+            }
+            filters = filters + IGNORE_FILTER;
+        }
+        if (!metaFilters.contains("wip")) {
+            if (StringUtils.isNotEmpty(filters)) {
+                filters = filters + ",";
+            }
+            filters = filters + WIP_FILTER;
+        }
+        if (!filters.isEmpty()) {
+            return metaFilters + (StringUtils.isNotEmpty(metaFilters) ? "," : "") + filters;
+        } else {
+            return metaFilters;
+        }
+    }
+
     protected boolean getIgnoreFailuresInStories() {
         return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES.getName(),true);
     }
