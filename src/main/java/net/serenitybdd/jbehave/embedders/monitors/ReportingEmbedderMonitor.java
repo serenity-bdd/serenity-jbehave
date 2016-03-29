@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import net.thucydides.core.webdriver.Configuration;
@@ -29,6 +30,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
     private SerenityReporter reporter;
     private ExtendedEmbedder embedder;
     private final Configuration configuration;
+    private final Set<String> processedStories=Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
 
     public ReportingEmbedderMonitor(final ExtendedEmbedder embedder) {
@@ -168,7 +170,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningStory(String path) {
-        logger.debug("story running with path " + path);
+        logger.info(this.hashCode() + "story running with path " + path);
         final Story story = embedder.findStory(path);
         if (story == null) {
             logger.error("can not find any story by path " + path);
@@ -196,7 +198,9 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
 
     private void includeInReportSkippedAndIgnoredAndWip(final Story story) {
         final SerenityReporter reporter = reporter();
-        reporter.processExcludedByFilter(story);
+        this.processedStories.addAll(
+                reporter.processExcludedByFilter(story, this.processedStories)
+        );
     }
 
     public synchronized SerenityReporter reporter() {
