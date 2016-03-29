@@ -109,15 +109,26 @@ configurations.all {
         force "junit:junit:${junitVersion}",
             "org.mockito:mockito-core:${mockitoCoreVersion}",
             "commons-collections:commons-collections:3.2.2",
-            "com.thoughtworks.xstream:xstream:1.4.8"
+            "com.thoughtworks.xstream:xstream:1.4.8",
+            "xml-apis:xml-apis:1.4.01",
+            "commons-codec:commons-codec:1.10"
     }
 }
 
 dependencies {
     compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}")
+
     compile 'commons-logging:commons-logging:1.2'
 
     compile 'com.thoughtworks.paranamer:paranamer:2.7'
+
+    compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
+        exclude group: 'org.freemarker', module: 'freemarker'
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
+        exclude group: 'commons-collections', module: 'commons-collections'
+        exclude group: 'com.thoughtworks.paranamer', module : 'paranamer'
+    }
 
     compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'
