@@ -17,6 +17,8 @@ import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -37,6 +39,8 @@ import static org.jbehave.core.reporters.Format.XML;
  */
 @RunWith(SerenityReportingRunner.class)
 public class SerenityStories extends JUnitStories {
+
+    private static final Logger logger = LoggerFactory.getLogger(SerenityStories.class);
 
     public static final String DEFAULT_STORY_NAME = "**/*.story";
     public static final List<String> DEFAULT_GIVEN_STORY_PREFIX = ImmutableList.of("Given", "Precondition");

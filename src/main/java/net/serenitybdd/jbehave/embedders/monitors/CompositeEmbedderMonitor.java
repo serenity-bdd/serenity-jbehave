@@ -43,7 +43,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningEmbeddable(final String name) {
-        logger.debug("runningEmbeddable"+name);
+        logger.debug("runningEmbeddable" + name);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -58,7 +58,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void embeddableFailed(final String name, final Throwable cause) {
-        logger.debug("embeddableFailed"+name);
+        logger.debug("embeddableFailed" + name);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -73,7 +73,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void embeddableNotConfigurable(final String name) {
-        logger.debug("embeddableNotConfigurable"+name);
+        logger.debug("embeddableNotConfigurable" + name);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -89,7 +89,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void embeddablesSkipped(final List<String> classNames) {
-        logger.debug("embeddablesSkipped"+classNames.size());
+        logger.debug("embeddablesSkipped" + classNames.size());
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -104,7 +104,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void metaNotAllowed(final Meta meta, final MetaFilter filter) {
-        logger.debug("metaNotAllowed"+meta+filter);
+        logger.debug("metaNotAllowed" + meta + filter);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -119,7 +119,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningStory(final String path) {
-        logger.debug("runningStory"+path);
+        logger.debug("runningStory" + path);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -134,7 +134,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storyFailed(final String path, final Throwable cause) {
-        logger.debug("storyFailed"+path);
+        logger.debug("storyFailed" + path);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -149,7 +149,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storiesSkipped(final List<String> storyPaths) {
-        logger.debug("storiesSkipped"+storyPaths);
+        logger.debug("storiesSkipped" + storyPaths);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -165,7 +165,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     @Deprecated
     public void storiesNotAllowed(final List<Story> notAllowed, final MetaFilter filter) {
-        logger.debug("storiesNotAllowed"+notAllowed+filter);
+        logger.debug("storiesNotAllowed" + notAllowed + filter);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -181,7 +181,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     @Deprecated
     public void storiesNotAllowed(final List<Story> notAllowed, final MetaFilter filter, final boolean verbose) {
-        logger.debug("storiesNotAllowed"+notAllowed+filter+verbose);
+        logger.debug("storiesNotAllowed" + notAllowed + filter + verbose);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -196,7 +196,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void scenarioNotAllowed(final Scenario scenario, final MetaFilter filter) {
-        logger.debug("scenarioNotAllowed"+scenario+filter+filter);
+        logger.debug("scenarioNotAllowed" + scenario + filter + filter);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -211,7 +211,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void batchFailed(final BatchFailures failures) {
-        logger.debug("batchFailed"+failures);
+        logger.debug("batchFailed" + failures);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -243,7 +243,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void generatingReportsView(final File outputDirectory, final List<String> formats,
                                       final Properties viewProperties) {
-        logger.debug("generatingReportsView"+outputDirectory+formats+viewProperties);
+        logger.debug("generatingReportsView" + outputDirectory + formats + viewProperties);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -259,7 +259,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void reportsViewGenerationFailed(final File outputDirectory, final List<String> formats,
                                             final Properties viewProperties, final Throwable cause) {
-        logger.debug("reportsViewGenerationFailed"+outputDirectory+formats+viewProperties+cause);
+        logger.debug("reportsViewGenerationFailed" + outputDirectory + formats + viewProperties + cause);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -275,7 +275,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void reportsViewGenerated(final ReportsCount count) {
-        logger.debug("reportsViewGenerated"+count);
+        logger.debug("reportsViewGenerated" + count);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -290,7 +290,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void reportsViewFailures(final ReportsCount count) {
-        logger.debug("reportsViewFailures"+count);
+        logger.debug("reportsViewFailures" + count);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -320,7 +320,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningWithAnnotatedEmbedderRunner(final String className) {
-        logger.debug("runningWithAnnotatedEmbedderRunner"+className);
+        logger.debug("runningWithAnnotatedEmbedderRunner" + className);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -336,7 +336,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void annotatedInstanceNotOfType(final Object annotatedInstance, final Class<?> type) {
-        logger.debug("annotatedInstanceNotOfType"+annotatedInstance+type);
+        logger.debug("annotatedInstanceNotOfType" + annotatedInstance + type);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -352,7 +352,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void mappingStory(final String storyPath, final List<String> metaFilters) {
-        logger.debug("mappingStory"+storyPath+metaFilters);
+        logger.debug("mappingStory" + storyPath + metaFilters);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -368,7 +368,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void generatingMapsView(final File outputDirectory, final StoryMaps storyMaps,
                                    final Properties viewProperties) {
-        logger.debug("generatingMapsView"+outputDirectory+storyMaps);
+        logger.debug("generatingMapsView" + outputDirectory + storyMaps);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -384,7 +384,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void mapsViewGenerationFailed(final File outputDirectory, final StoryMaps storyMaps,
                                          final Properties viewProperties, final Throwable cause) {
-        logger.debug("mapsViewGenerationFailed"+outputDirectory+storyMaps+viewProperties+cause);
+        logger.debug("mapsViewGenerationFailed" + outputDirectory + storyMaps + viewProperties + cause);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -400,7 +400,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void generatingNavigatorView(final File outputDirectory, final Properties viewResources) {
-        logger.debug("generatingNavigatorView"+outputDirectory+viewResources);
+        logger.debug("generatingNavigatorView" + outputDirectory + viewResources);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -416,7 +416,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void navigatorViewGenerationFailed(final File outputDirectory, final Properties viewResources,
                                               final Throwable cause) {
-        logger.debug("navigatorViewGenerationFailed"+outputDirectory+viewResources+cause);
+        logger.debug("navigatorViewGenerationFailed" + outputDirectory + viewResources + cause);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -448,7 +448,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void processingSystemProperties(final Properties properties) {
-        logger.debug("processingSystemProperties"+properties);
+        logger.debug("processingSystemProperties" + properties);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -464,7 +464,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void systemPropertySet(final String name, final String value) {
-        logger.debug("systemPropertySet"+name+value);
+        logger.debug("systemPropertySet" + name + value);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -479,7 +479,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storyTimeout(final Story story, final StoryDuration storyDuration) {
-        logger.debug("storyTimeout"+story+storyDuration);
+        logger.debug("storyTimeout" + story + storyDuration);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -494,7 +494,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingThreads(final int threads) {
-        logger.debug("usingThreads"+threads);
+        logger.debug("usingThreads" + threads);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -509,7 +509,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingExecutorService(final ExecutorService executorService) {
-        logger.debug("usingExecutorService"+executorService);
+        logger.debug("usingExecutorService" + executorService);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -524,7 +524,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingControls(final EmbedderControls embedderControls) {
-        logger.debug("usingControls"+embedderControls);
+        logger.debug("usingControls" + embedderControls);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -539,7 +539,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void invalidTimeoutFormat(final String path) {
-        logger.debug("invalidTimeoutFormat"+path);
+        logger.debug("invalidTimeoutFormat" + path);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
@@ -554,7 +554,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingTimeout(final String path, final long timeout) {
-        logger.debug("usingTimeout"+path+timeout);
+        logger.debug("usingTimeout" + path + timeout);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {

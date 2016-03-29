@@ -3,6 +3,7 @@ package net.serenitybdd.jbehave.embedders;
 import net.serenitybdd.jbehave.embedders.monitors.CompositeEmbedderMonitor;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.*;
+import org.jbehave.core.model.Story;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.InjectableStepsFactory;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -19,6 +21,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class ExtendedEmbedder extends Embedder {
     final Embedder embedder;
+    final Map<String, Story> stories = new ConcurrentHashMap<>();
 
     public ExtendedEmbedder(Embedder embedder) {
         this.embedder = embedder;
@@ -27,6 +30,14 @@ public class ExtendedEmbedder extends Embedder {
 
     public CompositeEmbedderMonitor getEmbedderMonitor() {
         return (CompositeEmbedderMonitor) this.embedder.embedderMonitor();
+    }
+
+    public void registerStory(final String path, final Story story) {
+        this.stories.put(path, story);
+    }
+
+    public Story findStory(final String path){
+        return this.stories.get(path);
     }
 
     @Override

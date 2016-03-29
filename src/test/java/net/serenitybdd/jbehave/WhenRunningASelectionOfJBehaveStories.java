@@ -4,14 +4,21 @@ import net.serenitybdd.jbehave.samples.levels.first.SerenityStorySampleForFistLe
 import net.serenitybdd.jbehave.samples.levels.second.SerenityStorySampleForSecondLevel;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
+import net.thucydides.core.reports.TestOutcomes;
 import net.thucydides.core.util.EnvironmentVariables;
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.withResult;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static ch.lambdaj.Lambda.*;
 
 public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory {
 
@@ -108,7 +115,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(4));
+        assertThat(excludeSkippedAndIgnored(outcomes).size(), is(4));
     }
 
     @Test
@@ -124,7 +131,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(2));
+        assertThat(excludeSkippedAndIgnored(outcomes).size(), is(2));
     }
 
     @Test
@@ -141,7 +148,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(4));
+        assertThat(excludeSkippedAndIgnored(outcomes).size(), is(4));
     }
 
     @Test
@@ -149,7 +156,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("webdriver.driver", "htmlunit");
-        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "groovy:true==false");
+        systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "groovy:('a'=='b')");
         SerenityStories allStories = new SerenityStories(systemConfiguration);
         allStories.setSystemConfiguration(systemConfiguration);
         allStories.setEnvironmentVariables(environmentVariables);
@@ -159,7 +166,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(0));
+        assertThat(excludeSkippedAndIgnored(outcomes).size(), is(0));
     }
 
     @Test
@@ -198,6 +205,13 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(3));
+    }
+
+    private List<? extends TestOutcome> excludeSkippedAndIgnored(final List<TestOutcome> source){
+        return TestOutcomes.of(filter(
+                having(on(TestOutcome.class).getResult(),
+                        not(isIn(Arrays.asList(TestResult.SKIPPED,TestResult.IGNORED)))
+                ),source)).getOutcomes();
     }
 
 }

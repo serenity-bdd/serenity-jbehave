@@ -18,7 +18,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.Keywords;
-import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
@@ -33,6 +32,7 @@ import org.jbehave.core.steps.StepMonitor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,12 +46,15 @@ import java.util.regex.Pattern;
 import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
 
 public class SerenityReportingRunner extends Runner {
+    private static final Logger logger = LoggerFactory.getLogger(SerenityReportingRunner.class);
+
 	private List<Description> storyDescriptions;
 	private ExtendedEmbedder configuredEmbedder;
 	private List<String> storyPaths;
 	private Configuration configuration;
 	private Description description;
 	List<CandidateSteps> candidateSteps;
+    private final ExtendedEmbedder extendedEmbedder;
 
     private final ConfigurableEmbedder configurableEmbedder;
     private final Class<? extends ConfigurableEmbedder> testClass;
@@ -59,7 +62,9 @@ public class SerenityReportingRunner extends Runner {
 
     private final String SKIP_FILTER = " -skip";
     private final String IGNORE_FILTER = " -ignore";
-    private final String DEFAULT_METAFILTER = IGNORE_FILTER; //+ " " + SKIP_FILTER;
+    private final String WIP_FILTER = " -wip";
+
+    private final String DEFAULT_METAFILTER = IGNORE_FILTER+" "+SKIP_FILTER+" "+WIP_FILTER;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
 
@@ -72,9 +77,11 @@ public class SerenityReportingRunner extends Runner {
     public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
                                    ConfigurableEmbedder embedder) throws Throwable {
         this.configurableEmbedder = embedder;
-        final ExtendedEmbedder extended = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
-        extended.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor());
-        this.configurableEmbedder.useEmbedder(extended);
+        this.extendedEmbedder = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
+        this.extendedEmbedder.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor(
+                ((SerenityStories)embedder).getSystemConfiguration(),
+                this.extendedEmbedder));
+        this.configurableEmbedder.useEmbedder(this.extendedEmbedder);
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
     }
@@ -277,6 +284,7 @@ public class SerenityReportingRunner extends Runner {
 
         for (String storyPath : getStoryPaths()) {
             Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
+            this.extendedEmbedder.registerStory(storyPath,parseStory);
             Description descr = gen.createDescriptionFrom(parseStory);
             storyDescriptions.add(descr);
 		}
@@ -298,9 +306,12 @@ public class SerenityReportingRunner extends Runner {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
         Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(thucAnnotatedMetafilters.or(SKIP_FILTER+" "+IGNORE_FILTER)));
+        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(
+                thucAnnotatedMetafilters.or("")));
         if (isGroovy(metafilters)) {
             metafilters = addGroovyMetafilterValuesTo(metafilters);
+        }else{
+            metafilters = addMetafilterValuesTo(metafilters);
         }
         return metafilters;
     }
@@ -331,16 +342,47 @@ public class SerenityReportingRunner extends Runner {
 
 
     private String addGroovyMetafilterValuesTo(String metaFilters) {
-        String skipAndIgnore = "";
+        String filters = "";
         if (!metaFilters.contains("skip")) {
-            skipAndIgnore = skipAndIgnore + " && !skip";
+            filters = filters + " && !skip";
         }
-        if (!skipAndIgnore.isEmpty()) {
-            return "groovy: (" + metaFilters.substring(7).trim() + ") " + skipAndIgnore;
+        if (!metaFilters.contains("ignore")) {
+            filters = filters + " && !ignore";
+        }
+        if (!metaFilters.contains("wip")) {
+            filters = filters + " && !wip";
+        }
+        if (!filters.isEmpty()) {
+            return "groovy: ((" + metaFilters.substring(7).trim() + ")" + filters+")";
         } else {
             return metaFilters;
         }
     }
+
+    private String addMetafilterValuesTo(String metaFilters) {
+        String filters = "";
+        if (!metaFilters.contains("skip")) {
+            filters = filters + SKIP_FILTER;
+        }
+        if (!metaFilters.contains("ignore")) {
+            if (StringUtils.isNotEmpty(filters)) {
+                filters = filters + ",";
+            }
+            filters = filters + IGNORE_FILTER;
+        }
+        if (!metaFilters.contains("wip")) {
+            if (StringUtils.isNotEmpty(filters)) {
+                filters = filters + ",";
+            }
+            filters = filters + WIP_FILTER;
+        }
+        if (!filters.isEmpty()) {
+            return metaFilters + (StringUtils.isNotEmpty(metaFilters) ? "," : "") + filters;
+        } else {
+            return metaFilters;
+        }
+    }
+
     protected boolean getIgnoreFailuresInStories() {
         return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES.getName(),true);
     }

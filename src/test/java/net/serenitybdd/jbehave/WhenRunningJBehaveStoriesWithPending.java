@@ -4,14 +4,18 @@ import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
+import net.thucydides.core.reports.TestOutcomes;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Test;
 
 import java.util.List;
 
+import static ch.lambdaj.Lambda.filter;
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.*;
+import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.withResult;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 
 public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
@@ -117,17 +121,22 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
         // When
         run(passingStory);
 
+
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(5));
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
-        assertThat(outcomes.get(1).getResult(), is(TestResult.PENDING));
-        assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(3).getResult(), is(TestResult.SKIPPED));
-        assertThat("last scenario not IGNORED", outcomes.get(4).getResult(), is(TestResult.IGNORED));
+        List<? extends TestOutcome> success = TestOutcomes.of(filter(withResult(TestResult.SUCCESS), outcomes)).getTests();
+        assertThat(success.size(), is(1));
+
+        List<? extends TestOutcome> pending = TestOutcomes.of(filter(withResult(TestResult.PENDING), outcomes)).getTests();
+        assertThat(pending.size(), is(1));
+
+        List<? extends TestOutcome> skipped = TestOutcomes.of(filter(withResult(TestResult.SKIPPED), outcomes)).getTests();
+        assertThat(skipped.size(), is(2));
+
+        List<? extends TestOutcome> ignored = TestOutcomes.of(filter(withResult(TestResult.IGNORED), outcomes)).getTests();
+        assertThat(ignored.size(), is(1));
 
         // And
-
         assertThat(outcomes.get(1).getStepCount(), is(4));
         assertThat(outcomes.get(2).getStepCount(), is(4));
         assertThat(outcomes.get(3).getStepCount(), is(4));

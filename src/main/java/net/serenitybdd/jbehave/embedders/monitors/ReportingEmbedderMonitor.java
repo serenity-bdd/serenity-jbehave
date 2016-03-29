@@ -1,34 +1,23 @@
 package net.serenitybdd.jbehave.embedders.monitors;
 
-import net.serenitybdd.jbehave.SerenityJBehave;
 import net.serenitybdd.jbehave.SerenityReporter;
+import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
-import org.jbehave.core.configuration.Configuration;
-import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.embedder.EmbedderControls;
 import org.jbehave.core.embedder.EmbedderMonitor;
 import org.jbehave.core.embedder.MetaFilter;
 import org.jbehave.core.failures.BatchFailures;
-import org.jbehave.core.i18n.LocalizedKeywords;
 import org.jbehave.core.model.*;
-import org.jbehave.core.parsers.RegexStoryParser;
-import org.jbehave.core.parsers.StoryParser;
 import org.jbehave.core.reporters.ReportsCount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
+
+import net.thucydides.core.webdriver.Configuration;
 
 /**
  * User: YamStranger
@@ -38,9 +27,20 @@ import java.util.concurrent.ExecutorService;
 public class ReportingEmbedderMonitor implements EmbedderMonitor {
     private static final Logger logger = LoggerFactory.getLogger(ReportingEmbedderMonitor.class);
     private SerenityReporter reporter;
+    private ExtendedEmbedder embedder;
+    private final Configuration configuration;
 
-    public ReportingEmbedderMonitor() {
+
+    public ReportingEmbedderMonitor(final ExtendedEmbedder embedder) {
+        this(configuration(), embedder);
     }
+
+    public ReportingEmbedderMonitor(final net.thucydides.core.webdriver.Configuration configuration,
+                                    final ExtendedEmbedder embedder) {
+        this.configuration = configuration;
+        this.embedder = embedder;
+    }
+
 
     @Override
     public void runningEmbeddable(String name) {
@@ -169,7 +169,12 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void runningStory(String path) {
         logger.debug("story running with path " + path);
-        includeInReportSkippedAndIgnored(parseStory(path));
+        final Story story = embedder.findStory(path);
+        if (story == null) {
+            logger.error("can not find any story by path " + path);
+        } else {
+            includeInReportSkippedAndIgnoredAndWip(story);
+        }
     }
 
 
@@ -177,7 +182,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
     public void storiesNotAllowed(List<Story> notAllowed, MetaFilter filter) {
         logger.debug("processing stories Not Allowed " + notAllowed);
         for (final Story story : notAllowed) {
-            includeInReportSkippedAndIgnored(story);
+            includeInReportSkippedAndIgnoredAndWip(story);
         }
     }
 
@@ -185,47 +190,31 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
     public void storiesNotAllowed(List<Story> notAllowed, MetaFilter filter, boolean verbose) {
         logger.debug("processing stories Not Allowed " + notAllowed);
         for (final Story story : notAllowed) {
-            includeInReportSkippedAndIgnored(story);
+            includeInReportSkippedAndIgnoredAndWip(story);
         }
     }
 
-    private Story parseStory(final String path) {
-        final Keywords keywords = new LocalizedKeywords();
-        final StoryParser parser = new RegexStoryParser(keywords);
-        try {
-            final Path story = Paths.get(path);
-            final StringBuilder builder = new StringBuilder();
-            try (final BufferedReader reader = Files.newBufferedReader(story, StandardCharsets.UTF_8)) {
-                for (; ; ) {
-                    String line = reader.readLine();
-                    if (line == null)
-                        break;
-                    builder.append(line).append("\\n");
-                }
-            }
-            return parser.parseStory(builder.toString(), path);
-        } catch (IOException e) {
-            logger.error("can not read story", e);
-        }
-        return new Story();
-    }
-
-    private void includeInReportSkippedAndIgnored(final Story story) {
+    private void includeInReportSkippedAndIgnoredAndWip(final Story story) {
         final SerenityReporter reporter = reporter();
         reporter.processExcludedByFilter(story);
     }
 
     public synchronized SerenityReporter reporter() {
         if (this.reporter == null) {
-            net.thucydides.core.webdriver.Configuration configuration =
-                    Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
-            EnvironmentVariables variables =
-                    Injectors.getInjector().getProvider(EnvironmentVariables.class).get().copy();
-            if (variables != null) {
-                configuration = configuration.withEnvironmentVariables(variables);
-            }
-            this.reporter = new SerenityReporter(configuration);
+            this.reporter = new SerenityReporter(this.configuration);
         }
         return reporter;
+    }
+
+
+    private static Configuration configuration() {
+        Configuration configuration =
+                Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
+        EnvironmentVariables variables =
+                Injectors.getInjector().getProvider(EnvironmentVariables.class).get().copy();
+        if (variables != null) {
+            configuration = configuration.withEnvironmentVariables(variables);
+        }
+        return configuration;
     }
 }

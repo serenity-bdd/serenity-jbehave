@@ -453,6 +453,8 @@ public class SerenityReporter implements StoryReporter {
             return Optional.of(TestResult.PENDING);
         } else if (isSkipped(currentStory().getMeta())) {
             return Optional.of(TestResult.SKIPPED);
+        }  else if (isIgnored(currentStory().getMeta())) {
+            return Optional.of(TestResult.IGNORED);
         } else {
             return Optional.absent();
         }
