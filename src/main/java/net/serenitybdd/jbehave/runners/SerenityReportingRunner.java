@@ -248,7 +248,7 @@ public class SerenityReportingRunner extends Runner {
 
 	private List<Description> buildDescriptionFromStories() {
 		JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
-		StoryRunner storyRunner = new StoryRunner();
+        StoryRunner storyRunner = new StoryRunner();
 		List<Description> storyDescriptions = new ArrayList<>();
 
 		addSuite(storyDescriptions, "BeforeStories");
