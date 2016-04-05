@@ -1,14 +1,24 @@
 ## Serenity BDD JBehave change Log
 
-### upcoming (2016/03/25 12:02 +00:00)
+### v1.9.0 (2016/03/29 20:33 +00:00)
  
 **Pull requests:**
  
+- [#66](https://github.com/serenity-bdd/serenity-jbehave/pull/66) Implemented filtering using jbehave metafilters. Scenarios and Stories should be processed after filtering skip and ignore stories ([@YamStranger](https://github.com/YamStranger))
+- [#67](https://github.com/serenity-bdd/serenity-jbehave/pull/67) Resolved version conflicts for xml-apis and commons-codec to use latest serenity core ([@YamStranger](https://github.com/YamStranger))
 - [#64](https://github.com/serenity-bdd/serenity-jbehave/pull/64) Updated resetting If browser died it should be restarted even if not shouldRestartDriverBeforeEachScenario ([@YamStranger](https://github.com/YamStranger))
  
 **Commits:**
  
+- [14f6fc3](https://github.com/serenity-bdd/serenity-jbehave/commit/14f6fc3f1d961edef70145b8050883a9e926d486) feat: implemented filtering by ignore, skip, wip annotations. Updated tests to check Skipped and Ignored scenarios. ([@YamStranger](https://github.com/YamStranger))
+ 
+ > Now it is possible mark story, scenario, scenarios with examples with skip or ignore or wip annotation and
+ > they will included in report, but not executed.
+- [37a9620](https://github.com/serenity-bdd/serenity-jbehave/commit/37a9620458abd95d71d0daaedb7066ec35025390) fix: implemented filtering using jbehave metafilters. Scenarios and Stories should be processed after filtering skip and ignore stories ([@YamStranger](https://github.com/YamStranger))
+- [55e4bed](https://github.com/serenity-bdd/serenity-jbehave/commit/55e4bed44901adc43a24d59ede1e06111901366b) fix: updated jbehave to use priorities for assign scenario status based on story status (ignored, skipped) ([@YamStranger](https://github.com/YamStranger))
+- [b7e656d](https://github.com/serenity-bdd/serenity-jbehave/commit/b7e656de0196e56936f8c09f7995b277ed539ef6) fix: added ignored and skipped scenarios with examples in report ([@YamStranger](https://github.com/YamStranger))
 - [d0c6745](https://github.com/serenity-bdd/serenity-jbehave/commit/d0c6745d3183f9da47354cf3407ea74ef57df724) fix: if browser died it should be resetted ([@YamStranger](https://github.com/YamStranger))
+- [f00d190](https://github.com/serenity-bdd/serenity-jbehave/commit/f00d190d7183332814bc2746c882cbaa4a83c10d) fix: resolved version conflicts for xml-apis and commons-codec to use latest serenty core ([@YamStranger](https://github.com/YamStranger))
  
 ### v1.8.0 (2016/03/11 07:18 +00:00)
  
