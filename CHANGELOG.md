@@ -1,5 +1,20 @@
 ## Serenity BDD JBehave change Log
 
+### v1.10.0 (2016/04/20 05:49 +00:00)
+ 
+**Pull requests:**
+ 
+- [#74](https://github.com/serenity-bdd/serenity-jbehave/pull/74) Core updated tp 1.1.29 ([@YamStranger](https://github.com/YamStranger))
+- [#73](https://github.com/serenity-bdd/serenity-jbehave/pull/73) Fixed issue with browser when rest is used ([@YamStranger](https://github.com/YamStranger))
+ 
+**Commits:**
+ 
+- [65abdec](https://github.com/serenity-bdd/serenity-jbehave/commit/65abdec54c7002f969c312503c4f1ef3d656154e) feat: fixed issue with browser when rest is used ([@YamStranger](https://github.com/YamStranger))
+ 
+ > Fixed bug for JBehave when non web test executed browsers opens because of check if
+ > it is alive
+- [cc27ba0](https://github.com/serenity-bdd/serenity-jbehave/commit/cc27ba0989fca5ba0888d2d01e815294250e0389) chore: core updated ([@YamStranger](https://github.com/YamStranger))
+ 
 ### v1.9.0 (2016/03/29 20:33 +00:00)
  
 **Pull requests:**
@@ -977,19 +992,13 @@
  
 **Commits:**
  
+- [13eb79c](https://github.com/serenity-bdd/serenity-jbehave/commit/13eb79c95a2f8f78c0613990948666919d657f21) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC1 ([@wakaleo](https://github.com/wakaleo))
+- [369fe28](https://github.com/serenity-bdd/serenity-jbehave/commit/369fe28f3ee6b905e6db70b0395be5c4600c2356) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
+- [39468fa](https://github.com/serenity-bdd/serenity-jbehave/commit/39468fa548f5cede2bae37cde9f44e8e0326ce91) Updated versions ([@wakaleo](https://github.com/wakaleo))
 - [5227ad8](https://github.com/serenity-bdd/serenity-jbehave/commit/5227ad86692cea92393f11150bfd7825e920f9dc) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
 - [671dda7](https://github.com/serenity-bdd/serenity-jbehave/commit/671dda755daa3194c5b7ef5ebac90120fa4dca18) Fixed an issue with taking screenshots in nested steps ([@wakaleo](https://github.com/wakaleo))
 - [affeaa2](https://github.com/serenity-bdd/serenity-jbehave/commit/affeaa2bdfccd2ddda81ea5f757fc540bd84fb77) Preparing release ([@wakaleo](https://github.com/wakaleo))
 - [cf6168b](https://github.com/serenity-bdd/serenity-jbehave/commit/cf6168b7abfcc2cc3d8e25404478ee3df0bc0c98) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC2 ([@wakaleo](https://github.com/wakaleo))
- 
-### thucydides-jbehave-plugin-0.9.0-RC1 (2012/07/10 11:39 +00:00)
- 
- 
-**Commits:**
- 
-- [13eb79c](https://github.com/serenity-bdd/serenity-jbehave/commit/13eb79c95a2f8f78c0613990948666919d657f21) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC1 ([@wakaleo](https://github.com/wakaleo))
-- [369fe28](https://github.com/serenity-bdd/serenity-jbehave/commit/369fe28f3ee6b905e6db70b0395be5c4600c2356) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
-- [39468fa](https://github.com/serenity-bdd/serenity-jbehave/commit/39468fa548f5cede2bae37cde9f44e8e0326ce91) Updated versions ([@wakaleo](https://github.com/wakaleo))
  
 ### thucydides-jbehave-plugin-0.9.0-beta-6 (2012/07/10 10:42 +00:00)
  
