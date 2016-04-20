@@ -22,6 +22,7 @@ import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
+import net.thucydides.core.webdriver.WebDriverFacade;
 import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Keywords;
@@ -211,10 +212,12 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean managedDriverIsNotAlive() {
-        try {
-            ThucydidesWebDriverSupport.getDriver().getTitle();
-        } catch (Exception e) {
-            return true;
+        if(((WebDriverFacade)ThucydidesWebDriverSupport.getDriver()).isInstantiated()) {
+            try {
+                ThucydidesWebDriverSupport.getDriver().getTitle();
+            } catch (Exception e) {
+                return true;
+            }
         }
         return false;
     }
