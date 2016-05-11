@@ -161,7 +161,8 @@ public class SerenityReportingRunner extends Runner {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
 
-        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(), new Keywords());
+        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(),
+                getConfiguredEmbedder().configuration().keywords());
 		// tell the reporter how to handle pending steps
 		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 
