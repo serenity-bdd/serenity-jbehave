@@ -109,7 +109,7 @@ configurations.all {
         force "junit:junit:${junitVersion}",
             "org.mockito:mockito-core:${mockitoCoreVersion}",
             "commons-collections:commons-collections:3.2.2",
-            "com.thoughtworks.xstream:xstream:1.4.8",
+            "com.thoughtworks.xstream:xstream:1.4.9",
             "xml-apis:xml-apis:1.4.01",
             "commons-codec:commons-codec:1.10"
     }
@@ -120,7 +120,7 @@ dependencies {
 
     compile 'commons-logging:commons-logging:1.2'
 
-    compile 'com.thoughtworks.paranamer:paranamer:2.7'
+    compile 'com.thoughtworks.paranamer:paranamer:2.8'
 
     compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'
