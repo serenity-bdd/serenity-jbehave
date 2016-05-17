@@ -5,9 +5,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
+import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.annotations.Metafilter;
-import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
 import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
 import net.serenitybdd.jbehave.embedders.monitors.ReportingEmbedderMonitor;
 import net.thucydides.core.guice.Injectors;
@@ -17,7 +17,6 @@ import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
-import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.StoryPathResolver;
@@ -385,7 +384,7 @@ public class SerenityReportingRunner extends Runner {
     }
 
     protected boolean getIgnoreFailuresInStories() {
-        return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES.getName(),true);
+        return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES.getName(),false);
     }
 
     protected int getStoryTimeoutInSecs() {

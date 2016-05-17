@@ -31,9 +31,10 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
         // Given
         SerenityStories failingStory = newStory("aFailingBehavior.story");
 
-        // When
-        run(failingStory);
-
+        try {
+            // When
+            run(failingStory);
+        } catch(RuntimeException e) {}
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(1));
@@ -47,8 +48,10 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithSeveralScenarios.story");
 
-        // When
-        run(passingStory);
+        try {
+            // When
+            run(passingStory);
+        } catch(RuntimeException e) {}
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
@@ -63,8 +66,10 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
         // Given
         SerenityStories sharedVariablesStory = newStory("aBehaviorWithSharedVariables.story");
 
-        // When
-        run(sharedVariablesStory);
+        try {
+            // When
+            run(sharedVariablesStory);
+        } catch(RuntimeException e) {}
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();

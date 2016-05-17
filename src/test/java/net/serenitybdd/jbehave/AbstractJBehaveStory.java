@@ -4,7 +4,6 @@ import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestStep;
 import net.thucydides.core.reports.TestOutcomeLoader;
-import net.thucydides.core.reports.xml.XMLTestOutcomeReporter;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
@@ -17,8 +16,6 @@ import org.junit.runner.notification.RunNotifier;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AbstractJBehaveStory {
@@ -70,7 +67,7 @@ public class AbstractJBehaveStory {
             runner.getDescription();
             runner.run(notifier);
         } catch(Throwable e) {
-            throw e;
+         //   throw e;
         } finally {
             if (notifier.getExceptionThrown() != null) {
                 raisedErrors.add(notifier.getExceptionThrown());

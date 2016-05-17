@@ -17,8 +17,6 @@ import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,9 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.jbehave.core.reporters.Format.CONSOLE;
-import static org.jbehave.core.reporters.Format.HTML;
-import static org.jbehave.core.reporters.Format.XML;
+import static org.jbehave.core.reporters.Format.*;
 
 /**
  * A JUnit-runnable test case designed to run a set of SerenityWebdriverIntegration-enabled JBehave stories in a given package.
@@ -39,8 +35,6 @@ import static org.jbehave.core.reporters.Format.XML;
  */
 @RunWith(SerenityReportingRunner.class)
 public class SerenityStories extends JUnitStories {
-
-    private static final Logger logger = LoggerFactory.getLogger(SerenityStories.class);
 
     public static final String DEFAULT_STORY_NAME = "**/*.story";
     public static final List<String> DEFAULT_GIVEN_STORY_PREFIX = ImmutableList.of("Given", "Precondition");

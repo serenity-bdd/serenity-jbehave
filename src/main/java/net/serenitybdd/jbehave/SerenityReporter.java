@@ -198,7 +198,7 @@ public class SerenityReporter implements StoryReporter {
             SerenityStepFactory.resetContext();
         }
 
-        if(isCurrentScenario(scenarioTitle)) {
+        if (isCurrentScenario(scenarioTitle)) {
             return;
         }
 
@@ -212,7 +212,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean managedDriverIsNotAlive() {
-        if(((WebDriverFacade)ThucydidesWebDriverSupport.getDriver()).isInstantiated()) {
+        if (((WebDriverFacade) ThucydidesWebDriverSupport.getDriver()).isInstantiated()) {
             try {
                 ThucydidesWebDriverSupport.getDriver().getTitle();
             } catch (Exception e) {
@@ -448,7 +448,7 @@ public class SerenityReporter implements StoryReporter {
             StepEventBus.getEventBus().suspendTest();
         } else if (isSkipped(metaData)) {
             StepEventBus.getEventBus().suspendTest();
-        }else if (isIgnored(metaData)) {
+        } else if (isIgnored(metaData)) {
             StepEventBus.getEventBus().suspendTest();
         }
     }
@@ -458,7 +458,7 @@ public class SerenityReporter implements StoryReporter {
             return Optional.of(TestResult.PENDING);
         } else if (isSkipped(currentStory().getMeta())) {
             return Optional.of(TestResult.SKIPPED);
-        }  else if (isIgnored(currentStory().getMeta())) {
+        } else if (isIgnored(currentStory().getMeta())) {
             return Optional.of(TestResult.IGNORED);
         } else {
             return Optional.absent();
@@ -560,16 +560,16 @@ public class SerenityReporter implements StoryReporter {
     public void scenarioMeta(Meta meta) {
         final String title = activeScenarios.peek();
         logger.debug("scenario:\"" + (StringUtils.isEmpty(title) ? " don't know name " : title) + "\" registering metadata for" + meta);
-            registerIssues(meta);
-            registerFeaturesAndEpics(meta);
-            registerTags(meta);
-            registerMetadata(meta);
-            registerScenarioMeta(meta);
-            if (isPendingScenario()) {
-                StepEventBus.getEventBus().testPending();
-            } else if (isSkippedScenario()) {
-                StepEventBus.getEventBus().testSkipped();
-            }
+        registerIssues(meta);
+        registerFeaturesAndEpics(meta);
+        registerTags(meta);
+        registerMetadata(meta);
+        registerScenarioMeta(meta);
+        if (isPendingScenario()) {
+            StepEventBus.getEventBus().testPending();
+        } else if (isSkippedScenario()) {
+            StepEventBus.getEventBus().testSkipped();
+        }
     }
 
     private boolean isPending(Meta metaData) {
@@ -599,8 +599,8 @@ public class SerenityReporter implements StoryReporter {
     public void afterScenario() {
         final String scenarioTitle = activeScenarios.peek();
         logger.debug("afterScenario : " + activeScenarios.peek());
-            scenarioMeta(scenarioMeta.get(scenarioTitle));
-            scenarioMetaProcessed.add(scenarioTitle);
+        scenarioMeta(scenarioMeta.get(scenarioTitle));
+        scenarioMetaProcessed.add(scenarioTitle);
 
 
         if (givenStoryMonitor.isInGivenStory() || shouldNestScenarios()) {
@@ -615,7 +615,7 @@ public class SerenityReporter implements StoryReporter {
             } else if (isIgnoredScenario()) {
                 StepEventBus.getEventBus().testIgnored();
                 StepEventBus.getEventBus().setAllStepsTo(TestResult.IGNORED);
-            } else{
+            } else {
                 StepEventBus.getEventBus().testFinished();
             }
             activeScenarios.pop();
@@ -718,7 +718,7 @@ public class SerenityReporter implements StoryReporter {
         logger.debug("successfull : ".concat(title));
         if (annotatedResultTakesPriority()) {
             processAnnotatedResult();
-        } else{
+        } else {
             StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
             StepEventBus.getEventBus().stepFinished();
         }
@@ -842,7 +842,7 @@ public class SerenityReporter implements StoryReporter {
         return processed;
     }
 
-    private String scenarioKey(final Story story, final Scenario scenario){
+    private String scenarioKey(final Story story, final Scenario scenario) {
         return story.getPath().concat(scenario.getTitle());
     }
 
