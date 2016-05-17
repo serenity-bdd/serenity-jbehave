@@ -99,7 +99,7 @@ public class SerenityReportingRunner extends Runner {
         return configuration;
     }
 
-    ExtendedEmbedder getConfiguredEmbedder() {
+    public ExtendedEmbedder getConfiguredEmbedder() {
         if (configuredEmbedder == null) {
             configuredEmbedder = (ExtendedEmbedder)configurableEmbedder.configuredEmbedder();
         }
@@ -153,9 +153,13 @@ public class SerenityReportingRunner extends Runner {
 
 	@Override
 	public void run(RunNotifier notifier) {
+
+        beforeStoriesRun(getConfiguredEmbedder());
+
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInView(getIgnoreFailuresInView());
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
         getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
+        getConfiguredEmbedder().embedderControls().useStoryTimeouts(getStoryTimeout());
         if (metaFiltersAreDefined()) {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
@@ -179,6 +183,12 @@ public class SerenityReportingRunner extends Runner {
 		}
         shutdownTestSuite();
     }
+
+    /**
+     * Override this method to add custom configuration to the JBehave embedder object.
+     * @param configuredEmbedder
+     */
+    public void beforeStoriesRun(ExtendedEmbedder configuredEmbedder) {}
 
     private void shutdownTestSuite() {
         StepEventBus.getEventBus().testSuiteFinished();
@@ -390,6 +400,12 @@ public class SerenityReportingRunner extends Runner {
     protected int getStoryTimeoutInSecs() {
         return environmentVariables.getPropertyAsInteger(SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS.getName(),
                                                          (int) getConfiguredEmbedder().embedderControls().storyTimeoutInSecs());
+    }
+
+    protected String getStoryTimeout() {
+        return environmentVariables.getProperty(
+                SerenityJBehaveSystemProperties.STORY_TIMEOUT.getName(),
+                getConfiguredEmbedder().embedderControls().storyTimeouts());
     }
 
     protected List<String> getMetaFilters() {

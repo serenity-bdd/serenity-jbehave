@@ -17,6 +17,8 @@ public enum SerenityJBehaveSystemProperties {
      */
     STORY_TIMEOUT_IN_SECS,
 
+    STORY_TIMEOUT,
+
     /**
      * JBehave meta filters expressions, separated by commas.
      * These use the meta annotations in the JBehave stories to decide what stories to
