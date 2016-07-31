@@ -4,9 +4,12 @@ import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
+import net.thucydides.core.model.TestTag;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Test;
+
 import java.util.List;
+
 import static net.thucydides.core.model.TestResult.SUCCESS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -43,6 +46,34 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(1));
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
+    }
+
+    @Test
+    public void test_outcomes_should_record_a_feature_tag_describing_the_jbehave_story() throws Throwable {
+
+        // Given
+        SerenityStories passingStory = newStory("aPassingBehavior.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getFeatureTag().get(), is(TestTag.withName("A passing behavior").andType("story")));
+    }
+
+    @Test
+    public void test_outcomes_should_record_a_feature_tag_describing_the_jbehave_story_when_different_to_the_story_file_name() throws Throwable {
+
+        // Given
+        SerenityStories passingStory = newStory("aPassingBehaviorWithALongName.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getFeatureTag().get(), is(TestTag.withName("An example of a passing behavior with a long name").andType("story")));
     }
 
     @Test
@@ -193,8 +224,10 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(3));
-        assertThat(outcomes.get(0).getUserStory().getName(), is("Some other behavior"));
-        assertThat(outcomes.get(1).getUserStory().getName(), is("Some behavior"));
+        TestOutcome someBehaviorOutcome = TestOutcomeFinder.theScenarioCalled("some scenario with givens").in(outcomes);
+        TestOutcome someOtherBehaviorOutcome = TestOutcomeFinder.theScenarioCalled("some other scenario").in(outcomes);
+        assertThat(someBehaviorOutcome.getUserStory().getName(), is("Some Behavior"));
+        assertThat(someOtherBehaviorOutcome.getUserStory().getName(), is("Some Other Behavior"));
     }
 
     @Test

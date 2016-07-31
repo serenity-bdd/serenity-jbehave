@@ -1,14 +1,13 @@
 package net.serenitybdd.jbehave;
 
-import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
-import net.thucydides.core.model.TestStep;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Test;
 
 import java.util.List;
 
+import static net.serenitybdd.jbehave.TestOutcomeFinder.theScenarioCalled;
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,7 +44,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_tagged_skipped_outcome_should_have_skipped_steps() throws Throwable {
+    public void a_tagged_wip_outcome_should_be_skipped() throws Throwable {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -55,12 +54,33 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.get(2).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(2).countTestSteps(), is(4));
-        assertThat(outcomes.get(2).getTestSteps().get(0).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(2).getTestSteps().get(1).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(2).getTestSteps().get(2).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(2).getTestSteps().get(3).getResult(), is(TestResult.SKIPPED));
+        TestOutcome pendingOutcome = theScenarioCalled("A scenario that is work-in-progress").in(outcomes);
+        assertThat(pendingOutcome.getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.countTestSteps(), is(4));
+        assertThat(pendingOutcome.getTestSteps().get(0).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.SKIPPED));
+    }
+
+    @Test
+    public void a_tagged_skipped_outcome_should_be_skipped() throws Throwable {
+
+        // Given
+        SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        TestOutcome pendingOutcome = theScenarioCalled("scenario that is work-in-progress").in(outcomes);
+        assertThat(pendingOutcome.getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.countTestSteps(), is(4));
+        assertThat(pendingOutcome.getTestSteps().get(0).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.SKIPPED));
     }
 
     @Test

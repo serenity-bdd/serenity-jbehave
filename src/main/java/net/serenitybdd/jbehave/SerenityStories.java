@@ -105,9 +105,29 @@ public class SerenityStories extends JUnitStories {
             for (URL classpathRootUrl : allClasspathRoots()) {
                 storyPaths.addAll(storyFinder.findPaths(classpathRootUrl, pathExpression, ""));
             }
+            storyPaths = removeDuplicatesFrom(storyPaths);
             storyPaths = pruneGivenStoriesFrom(storyPaths);
         }
         return Lists.newArrayList(storyPaths);
+    }
+
+    private Set<String> removeDuplicatesFrom(Set<String> storyPaths) {
+        Set<String> trimmedPaths = Sets.newHashSet();
+        for(String storyPath : storyPaths) {
+            if (!thereExistsALongerVersionOf(storyPath, storyPaths)) {
+                trimmedPaths.add(storyPath);
+            }
+        }
+        return trimmedPaths;
+    }
+
+    private boolean thereExistsALongerVersionOf(String storyPath, Set<String> storyPaths) {
+        for(String existingPath : storyPaths) {
+            if ((existingPath.endsWith("/" + storyPath)) || (existingPath.endsWith("\\" + storyPath))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Set<String> pruneGivenStoriesFrom(Set<String> storyPaths) {
@@ -164,19 +184,19 @@ public class SerenityStories extends JUnitStories {
         return (!pathExpression.contains("*"));
     }
 
-    private List<URL> allClasspathRoots() {
+    private Set<URL> allClasspathRoots() {
         try {
-            List<URL> baseRoots = Collections.list(getClassLoader().getResources("."));
+            Set<URL> baseRoots = Sets.newHashSet(Collections.list(getClassLoader().getResources(".")));
             return addGradleResourceRootsTo(baseRoots);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not load the classpath roots when looking for story files", e);
         }
     }
 
-    private List<URL> addGradleResourceRootsTo(List<URL> baseRoots) throws MalformedURLException {
-        List<URL> rootsWithGradleResources = Lists.newArrayList(baseRoots);
+    private Set<URL> addGradleResourceRootsTo(Set<URL> baseRoots) throws MalformedURLException {
+        Set<URL> rootsWithGradleResources = Sets.newHashSet(baseRoots);
         for (URL baseUrl : baseRoots) {
-            String gradleResourceUrl = baseUrl.toString().replace("/build/classes/", "build/resources/");
+            String gradleResourceUrl = baseUrl.toString().replace("/build/classes/", "/build/resources/");
             rootsWithGradleResources.add(new URL(gradleResourceUrl));
         }
         return rootsWithGradleResources;

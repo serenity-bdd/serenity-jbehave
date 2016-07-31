@@ -38,6 +38,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static ch.lambdaj.Lambda.*;
+import static net.thucydides.core.ThucydidesSystemProperty.WEBDRIVER_DRIVER;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class SerenityReporter implements StoryReporter {
 
@@ -240,7 +242,7 @@ public class SerenityReporter implements StoryReporter {
 
     private void startTestSuiteForStory(Story story) {
         String storyName = removeSuffixFrom(story.getName());
-        String storyTitle = NameConverter.humanize(storyName);
+        String storyTitle = (isNotEmpty(story.getDescription().asString())) ? story.getDescription().asString() : NameConverter.humanize(storyName);
 
         net.thucydides.core.model.Story userStory
                 = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
@@ -283,12 +285,16 @@ public class SerenityReporter implements StoryReporter {
     private void configureDriver(Story story) {
         StepEventBus.getEventBus().setUniqueSession(systemConfiguration.shouldUseAUniqueBrowser());
         String requestedDriver = getRequestedDriver(story.getMeta());
-        if (StringUtils.isNotEmpty(requestedDriver)) {
+        if (StringUtils.isNotEmpty(requestedDriver) && (!driverIsProvidedInTheEnvironmentVariables())) {
             ThucydidesWebDriverSupport.initialize(requestedDriver);
             drivers.put(story, ThucydidesWebDriverSupport.getDriver());
         } else {
             ThucydidesWebDriverSupport.initialize();
         }
+    }
+
+    private boolean driverIsProvidedInTheEnvironmentVariables() {
+        return (isNotEmpty(systemConfiguration.getEnvironmentVariables().getProperty(WEBDRIVER_DRIVER)));
     }
 
     private void registerTags(Story story) {

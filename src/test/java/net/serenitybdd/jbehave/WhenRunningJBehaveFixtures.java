@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static net.serenitybdd.jbehave.TestOutcomeFinder.theScenarioCalled;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -94,7 +95,9 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(3));
 
-        TestOutcome scenarioWithGivens = outcomes.get(2);
+        TestOutcome scenarioWithGivens = theScenarioCalled("some scenario with givens").in(outcomes);
+
+//        TestOutcome scenarioWithGivens = outcomes.get(2);
         assertThat(scenarioWithGivens.getTestSteps().size(), is(5));
 
         TestStep firstStep = scenarioWithGivens.getTestSteps().get(0);
