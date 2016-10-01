@@ -50,6 +50,7 @@ ext {
     reflectionsVersion = '0.9.10'
     mockitoCoreVersion = '1.10.19'
     jbehaveCoreVersion = '4.0.5'
+    guavaVersion = '19.0'
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -57,7 +58,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.1.37-SNAPSHOT'
+    serenityCoreVersion = '1.1.42'
 
 }
 
@@ -118,6 +119,8 @@ dependencies {
     compile 'commons-logging:commons-logging:1.2'
 
     compile 'com.thoughtworks.paranamer:paranamer:2.8'
+
+    compile "com.google.guava:guava:${guavaVersion}"
 
     compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'

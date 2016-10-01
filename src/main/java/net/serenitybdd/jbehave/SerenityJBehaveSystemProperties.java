@@ -33,6 +33,11 @@ public enum SerenityJBehaveSystemProperties {
     RESTART_BROWSER_EACH_SCENARIO,
 
     /**
+     * If you don't restart a browser between scenarios, do you clear the session cookies? (defaults to true)
+     */
+    RESET_COOKIES_EACH_SCENARIO,
+
+    /**
      * Reset step libraries in JBehave step definitions for each scenario.
      * If this property is set to true (the default), any @Step-annotated member variables in JBehave step definitions
      * will be reinitialized before each scenario.

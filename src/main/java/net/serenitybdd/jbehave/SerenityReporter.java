@@ -188,11 +188,10 @@ public class SerenityReporter implements StoryReporter {
         clearScenarioResult();
 
         if (isCandidateToBeExecuted(currentStory())) {
-            if (managedDriverIsNotAlive()) {
-                WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
-            } else if (shouldRestartDriverBeforeEachScenario()
-                    && !shouldNestScenarios()) {
-                WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+            if (managedDriverIsNotAlive() || (shouldRestartDriverBeforeEachScenario()  && !shouldNestScenarios())) {
+                ThucydidesWebDriverSupport.reset();
+            } else if (shouldClearCookiesBeforeEachScenario()) {
+                ThucydidesWebDriverSupport.clearSession();
             }
         }
 
@@ -555,8 +554,14 @@ public class SerenityReporter implements StoryReporter {
 
     private boolean shouldRestartDriverBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                SerenityJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), false);
+                SerenityJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), true);
     }
+
+    private boolean shouldClearCookiesBeforeEachScenario() {
+        return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
+                SerenityJBehaveSystemProperties.RESET_COOKIES_EACH_SCENARIO.getName(), true);
+    }
+
 
     private boolean shouldResetStepsBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
@@ -676,8 +681,7 @@ public class SerenityReporter implements StoryReporter {
 
     public void example(Map<String, String> tableRow) {
         logger.debug("example " + tableRow);
-        if (isCandidateToBeExecuted(currentStory())
-                && shouldRestartDriverBeforeEachScenario()) {
+        if (isCandidateToBeExecuted(currentStory())  && shouldRestartDriverBeforeEachScenario()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
 
