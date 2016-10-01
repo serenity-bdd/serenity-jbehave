@@ -1,7 +1,7 @@
 package net.serenitybdd.jbehave.service;
 
 
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.requirements.FileSystemRequirementsTagProvider;

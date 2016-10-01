@@ -548,6 +548,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private void startScenarioCalled(String scenarioTitle) {
+        StepEventBus.getEventBus().setTestSource(StepEventBus.TEST_SOURCE_JBEHAVE);
         StepEventBus.getEventBus().testStarted(scenarioTitle);
         activeScenarios.add(scenarioTitle);
     }
