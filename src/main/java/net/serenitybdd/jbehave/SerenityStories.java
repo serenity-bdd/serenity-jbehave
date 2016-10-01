@@ -108,7 +108,13 @@ public class SerenityStories extends JUnitStories {
             storyPaths = removeDuplicatesFrom(storyPaths);
             storyPaths = pruneGivenStoriesFrom(storyPaths);
         }
-        return Lists.newArrayList(storyPaths);
+        return sorted(storyPaths);
+    }
+
+    private List<String> sorted(Set<String> storyPaths) {
+        List<String> sortedStories = Lists.newArrayList(storyPaths);
+        Collections.sort(sortedStories);
+        return sortedStories;
     }
 
     private Set<String> removeDuplicatesFrom(Set<String> storyPaths) {
