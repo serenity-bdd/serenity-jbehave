@@ -64,6 +64,7 @@ public class SerenityReporter implements StoryReporter {
     private static Optional<TestResult> forcedScenarioResult;
 
     private GivenStoryMonitor givenStoryMonitor;
+    private boolean isRunningFirstScenario;
 
     public SerenityReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
@@ -160,6 +161,9 @@ public class SerenityReporter implements StoryReporter {
                     startTestForFirstScenarioIn(story);
                 }
             }
+
+            isRunningFirstScenario = true;
+
         } else if (givenStory) {
             shouldNestScenarios(true);
         }
@@ -187,15 +191,9 @@ public class SerenityReporter implements StoryReporter {
         logger.debug("before scenario started ".concat(scenarioTitle));
         clearScenarioResult();
 
-        if (isCandidateToBeExecuted(currentStory())) {
-            if (managedDriverIsNotAlive() || (shouldRestartDriverBeforeEachScenario()  && !shouldNestScenarios())) {
-                ThucydidesWebDriverSupport.reset();
-            } else if (shouldClearCookiesBeforeEachScenario()) {
-                ThucydidesWebDriverSupport.clearSession();
-            }
-        }
+        restartBrowserIfNecessary();
 
-        if (shouldResetStepsBeforeEachScenario()) {
+        if (shouldResetStepsBeforeEachScenario() && !runningFirstScenario()) {
             SerenityStepFactory.resetContext();
         }
 
@@ -210,6 +208,36 @@ public class SerenityReporter implements StoryReporter {
             scenarioMeta(scenarioMeta.get(scenarioTitle));
             scenarioMetaProcessed.add(scenarioTitle);
         }
+    }
+
+    private void restartBrowserIfNecessary() {
+
+        if (!isCandidateToBeExecuted(currentStory())) {
+            return;
+        }
+
+        if (managedDriverIsNotAlive()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+            return;
+        }
+
+        if (shouldRestartDriverBeforeEachScenario()
+                && !shouldNestScenarios()
+                && !isAStoryLevelGiven(currentStory())
+                && !runningFirstScenario()) {
+            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
+            return;
+        }
+
+        if (shouldClearCookiesBeforeEachScenario()
+                && !isAStoryLevelGiven(currentStory())
+                && !runningFirstScenario()) {
+            ThucydidesWebDriverSupport.clearSession();
+        }
+    }
+
+    private boolean runningFirstScenario() {
+        return isRunningFirstScenario;
     }
 
     private boolean managedDriverIsNotAlive() {
@@ -630,6 +658,7 @@ public class SerenityReporter implements StoryReporter {
             } else {
                 StepEventBus.getEventBus().testFinished();
             }
+            isRunningFirstScenario = false;
             activeScenarios.pop();
         }
     }
@@ -682,7 +711,7 @@ public class SerenityReporter implements StoryReporter {
 
     public void example(Map<String, String> tableRow) {
         logger.debug("example " + tableRow);
-        if (isCandidateToBeExecuted(currentStory())  && shouldRestartDriverBeforeEachScenario()) {
+        if (isCandidateToBeExecuted(currentStory()) && shouldRestartDriverBeforeEachScenario() && !runningFirstScenario()) {
             WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
         }
 

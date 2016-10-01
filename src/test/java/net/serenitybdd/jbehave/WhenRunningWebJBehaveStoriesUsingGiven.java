@@ -2,7 +2,6 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
-import net.thucydides.core.model.TestStep;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,11 +41,11 @@ public class WhenRunningWebJBehaveStoriesUsingGiven extends AbstractJBehaveStory
         assertThat(outcomes.get(0).getResult(), is(TestResult.SUCCESS));
     }
 
-    @Test
-    public void two_scenarii_using_the_same_given_story_should_return_two_test_outcomes() throws Throwable {
-        SerenityStories story = newStory("LookupADefinitionSuite.story");
-        run(story);
-        List<TestOutcome> outcomes = loadTestOutcomes();
-        assertThat(outcomes.size(), is(2));
-    }
+//    @Test
+//    public void two_scenarii_using_the_same_given_story_should_return_two_test_outcomes() throws Throwable {
+//        SerenityStories story = newStory("LookupADefinitionSuite.story");
+//        run(story);
+//        List<TestOutcome> outcomes = loadTestOutcomes();
+//        assertThat(outcomes.size(), is(2));
+//    }
 }

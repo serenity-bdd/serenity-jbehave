@@ -1,5 +1,5 @@
 Meta:
-@driver htmlunit
+@driver chrome
 
 Scenario: A scenario that uses selenium
 
