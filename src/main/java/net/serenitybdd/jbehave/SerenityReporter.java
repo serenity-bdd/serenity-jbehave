@@ -213,7 +213,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean managedDriverIsNotAlive() {
-        if (((WebDriverFacade) ThucydidesWebDriverSupport.getDriver()).isInstantiated()) {
+        if ((ThucydidesWebDriverSupport.getDriver() != null) && ((WebDriverFacade) ThucydidesWebDriverSupport.getDriver()).isInstantiated()) {
             try {
                 ThucydidesWebDriverSupport.getDriver().getTitle();
             } catch (Exception e) {
