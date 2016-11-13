@@ -44,6 +44,7 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
     @Test
     public void should_not_reset_steps_for_each_scenario_if_configured() throws Throwable {
 
+//        environmentVariables.setProperty("reset.steps.each.scenario", "false");
         environmentVariables.setProperty("reset.steps.each.scenario", "false");
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithSeveralScenarios.story");

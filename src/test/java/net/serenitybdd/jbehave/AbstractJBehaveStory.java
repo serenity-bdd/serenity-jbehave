@@ -39,7 +39,6 @@ public class AbstractJBehaveStory {
         environmentVariables.setProperty("webdriver.driver", "phantomjs");
         systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
         raisedErrors.clear();
-        System.out.println("Report directory:" + this.outputDirectory);
     }
 
     final class AlertingNotifier extends RunNotifier {
@@ -77,13 +76,10 @@ public class AbstractJBehaveStory {
 
     protected List<TestOutcome> loadTestOutcomes() throws IOException {
         TestOutcomeLoader loader = new TestOutcomeLoader();
-        System.out.println("Loading test outcomes from " + outputDirectory);
         return loader.loadFrom(outputDirectory);
     }
-
 
     protected SerenityStories newStory(String storyPattern) {
         return new AStorySample(storyPattern, systemConfiguration, environmentVariables);
     }
-
 }

@@ -22,14 +22,11 @@ import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
 import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import net.thucydides.core.webdriver.WebDriverFacade;
-import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.junit.internal.AssumptionViolatedException;
-import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +188,7 @@ public class SerenityReporter implements StoryReporter {
         logger.debug("before scenario started ".concat(scenarioTitle));
         clearScenarioResult();
 
-        restartBrowserIfNecessary();
+//        restartBrowserIfNecessary();
 
         if (shouldResetStepsBeforeEachScenario() && !runningFirstScenario()) {
             SerenityStepFactory.resetContext();
@@ -210,45 +207,8 @@ public class SerenityReporter implements StoryReporter {
         }
     }
 
-    private void restartBrowserIfNecessary() {
-
-        if (!isCandidateToBeExecuted(currentStory())) {
-            return;
-        }
-
-        if (managedDriverIsNotAlive()) {
-            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
-            return;
-        }
-
-        if (shouldRestartDriverBeforeEachScenario()
-                && !shouldNestScenarios()
-                && !isAStoryLevelGiven(currentStory())
-                && !runningFirstScenario()) {
-            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
-            return;
-        }
-
-        if (shouldClearCookiesBeforeEachScenario()
-                && !isAStoryLevelGiven(currentStory())
-                && !runningFirstScenario()) {
-            ThucydidesWebDriverSupport.clearSession();
-        }
-    }
-
     private boolean runningFirstScenario() {
         return isRunningFirstScenario;
-    }
-
-    private boolean managedDriverIsNotAlive() {
-        if ((ThucydidesWebDriverSupport.getDriver() != null) && ((WebDriverFacade) ThucydidesWebDriverSupport.getDriver()).isInstantiated()) {
-            try {
-                ThucydidesWebDriverSupport.getDriver().getTitle();
-            } catch (Exception e) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean isCurrentScenario(String scenarioTitle) {
@@ -307,16 +267,13 @@ public class SerenityReporter implements StoryReporter {
         return story.getName().equalsIgnoreCase(givenStoryName);
     }
 
-    Map<Story, WebDriver> drivers = Maps.newConcurrentMap();
+//    Map<Story, WebDriver> drivers = Maps.newConcurrentMap();
 
     private void configureDriver(Story story) {
         StepEventBus.getEventBus().setUniqueSession(systemConfiguration.shouldUseAUniqueBrowser());
         String requestedDriver = getRequestedDriver(story.getMeta());
         if (StringUtils.isNotEmpty(requestedDriver) && (!driverIsProvidedInTheEnvironmentVariables())) {
-            ThucydidesWebDriverSupport.initialize(requestedDriver);
-            drivers.put(story, ThucydidesWebDriverSupport.getDriver());
-        } else {
-            ThucydidesWebDriverSupport.initialize();
+            ThucydidesWebDriverSupport.useDefaultDriver(requestedDriver);
         }
     }
 
@@ -530,7 +487,6 @@ public class SerenityReporter implements StoryReporter {
             givenStoryMonitor.exitingGivenStory();
             givenStoryDone(currentStory());
         } else {
-            closeBrowsersForThisStory();
             if (isAfterStory(currentStory())) {
                 generateReports();
             } else if (!isFixture(currentStory()) && (!isAStoryLevelGiven(currentStory()))) {
@@ -540,14 +496,6 @@ public class SerenityReporter implements StoryReporter {
         }
 
         storyStack.pop();
-    }
-
-    private void closeBrowsersForThisStory() {
-        if (drivers.containsKey(currentStory())) {
-            drivers.get(currentStory()).close();
-            drivers.get(currentStory()).quit();
-            drivers.remove(currentStory());
-        }
     }
 
     private boolean isAfterStory(Story currentStory) {
@@ -581,20 +529,9 @@ public class SerenityReporter implements StoryReporter {
         activeScenarios.add(scenarioTitle);
     }
 
-    private boolean shouldRestartDriverBeforeEachScenario() {
-        return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                SerenityJBehaveSystemProperties.RESTART_BROWSER_EACH_SCENARIO.getName(), true);
-    }
-
-    private boolean shouldClearCookiesBeforeEachScenario() {
-        return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                SerenityJBehaveSystemProperties.RESET_COOKIES_EACH_SCENARIO.getName(), true);
-    }
-
-
     private boolean shouldResetStepsBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                SerenityJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
+                         SerenityJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
     }
 
     public void scenarioMeta(Meta meta) {
@@ -710,16 +647,11 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void example(Map<String, String> tableRow) {
-        logger.debug("example " + tableRow);
-        if (isCandidateToBeExecuted(currentStory()) && shouldRestartDriverBeforeEachScenario() && !runningFirstScenario()) {
-            WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
-        }
-
         StepEventBus.getEventBus().clearStepFailures();
         if (executingExamples()) {
             finishExample();
         }
-        restartPeriodically();
+        exampleCount++;
         startExample(tableRow);
     }
 
@@ -735,27 +667,15 @@ public class SerenityReporter implements StoryReporter {
         return (exampleCount > 0);
     }
 
-    private void restartPeriodically() {
-        exampleCount++;
-        if (systemConfiguration.getRestartFrequency() > 0) {
-            if (exampleCount % systemConfiguration.getRestartFrequency() == 0) {
-                WebdriverProxyFactory.resetDriver(ThucydidesWebDriverSupport.getDriver());
-            }
-        }
-    }
-
     public void afterExamples() {
-        logger.debug("afterExamples:");
         finishExample();
     }
 
     public void beforeStep(String stepTitle) {
-        logger.debug("before step: ".concat(stepTitle));
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(stepTitle));
     }
 
     public void successful(String title) {
-        logger.debug("successfull : ".concat(title));
         if (annotatedResultTakesPriority()) {
             processAnnotatedResult();
         } else {
@@ -787,26 +707,22 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void ignorable(String title) {
-        logger.debug("ignorable: ".concat(title));
         StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
         StepEventBus.getEventBus().stepIgnored();
     }
 
     public void pending(String stepTitle) {
-        logger.debug("pending: ".concat(stepTitle));
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepPending();
 
     }
 
     public void notPerformed(String stepTitle) {
-        logger.debug("stepTitle: ".concat(stepTitle));
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepIgnored();
     }
 
     public void failed(String stepTitle, Throwable cause) {
-        logger.debug("failed : ".concat(stepTitle));
         Throwable rootCause = cause.getCause() != null ? cause.getCause() : cause;
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
         if (isAssumptionFailure(rootCause)) {

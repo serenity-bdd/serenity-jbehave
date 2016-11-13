@@ -63,8 +63,11 @@ public class ClassFinder {
     private List<Class<?>> allClassesInPackage(String packageName) {
         try {
             String path = packageName.replace('.', '/');
+            if (packageName.isEmpty()) {
+                packageName = "/";
+            }
             Enumeration<URL> resources = classResourcesOn(path);
-            List<URI> dirs = new ArrayList<URI>();
+            List<URI> dirs = new ArrayList<>();
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 dirs.add(resource.toURI());

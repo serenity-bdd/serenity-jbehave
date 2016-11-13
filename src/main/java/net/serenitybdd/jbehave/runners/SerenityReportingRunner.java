@@ -13,7 +13,6 @@ import net.serenitybdd.jbehave.embedders.monitors.ReportingEmbedderMonitor;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
@@ -176,9 +175,6 @@ public class SerenityReportingRunner extends Runner {
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		} finally {
-            if (usingUniqueBrowser()) {
-                ThucydidesWebDriverSupport.closeAllDrivers();
-            }
             getConfiguredEmbedder().generateCrossReference();
 		}
         shutdownTestSuite();

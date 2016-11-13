@@ -1,14 +1,12 @@
 package net.serenitybdd.jbehave.steps;
 
 import net.serenitybdd.jbehave.pages.StaticSitePage;
-import net.thucydides.core.annotations.Managed;
 import net.thucydides.core.annotations.Step;
-import org.openqa.selenium.WebDriver;
 
 public class SomeNestedSeleniumSteps {
 
-    @Managed
-    public WebDriver webDriver;
+//    @Managed
+//    public WebDriver webDriver;
 
     StaticSitePage staticSitePage;
 

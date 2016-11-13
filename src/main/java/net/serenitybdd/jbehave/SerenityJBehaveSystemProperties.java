@@ -28,11 +28,6 @@ public enum SerenityJBehaveSystemProperties {
     METAFILTER,
 
     /**
-     * Force Serenity to restart the browser before each scenario.
-     */
-    RESTART_BROWSER_EACH_SCENARIO,
-
-    /**
      * If you don't restart a browser between scenarios, do you clear the session cookies? (defaults to true)
      */
     RESET_COOKIES_EACH_SCENARIO,
