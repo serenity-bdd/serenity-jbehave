@@ -58,7 +58,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.2.1-rc.1'
+    serenityCoreVersion = '1.2.1-rc.5'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
