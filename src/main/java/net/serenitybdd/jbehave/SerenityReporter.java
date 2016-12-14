@@ -138,6 +138,8 @@ public class SerenityReporter implements StoryReporter {
 
     public void beforeStory(Story story, boolean givenStory) {
         logger.debug("before story ".concat(story.getName()));
+        prepareSerenityListeners();
+
         currentStoryIs(story);
         noteAnyGivenStoriesFor(story);
         storyMetadata = getMetadataFrom(story.getMeta());
@@ -150,7 +152,7 @@ public class SerenityReporter implements StoryReporter {
 
             SerenityStepFactory.resetContext();
 
-            getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
+            //getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
 
             if (!isAStoryLevelGiven(story)) {
                 startTestSuiteForStory(story);
@@ -165,6 +167,10 @@ public class SerenityReporter implements StoryReporter {
             shouldNestScenarios(true);
         }
         registerStoryMeta(story.getMeta());
+    }
+
+    private void prepareSerenityListeners() {
+        getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
     }
 
     private boolean nestScenarios = false;
@@ -724,12 +730,21 @@ public class SerenityReporter implements StoryReporter {
 
     public void failed(String stepTitle, Throwable cause) {
         Throwable rootCause = cause.getCause() != null ? cause.getCause() : cause;
+        if (!StepEventBus.getEventBus().testSuiteHasStarted()) {
+            declareOutOfSuiteFailure();
+        }
+
         StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
         if (isAssumptionFailure(rootCause)) {
             StepEventBus.getEventBus().assumptionViolated(rootCause.getMessage());
         } else {
             StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), rootCause));
         }
+    }
+
+    private void declareOutOfSuiteFailure() {
+        String storyName = !storyStack.isEmpty() ? storyStack.peek().getName() : "Before or After Story";
+        StepEventBus.getEventBus().testStarted(storyName);
     }
 
     private boolean isAssumptionFailure(Throwable rootCause) {

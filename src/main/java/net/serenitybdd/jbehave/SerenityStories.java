@@ -37,7 +37,8 @@ import static org.jbehave.core.reporters.Format.*;
 public class SerenityStories extends JUnitStories {
 
     public static final String DEFAULT_STORY_NAME = "**/*.story";
-    public static final List<String> DEFAULT_GIVEN_STORY_PREFIX = ImmutableList.of("Given", "Precondition");
+    public static final List<String> DEFAULT_GIVEN_STORY_PREFIX
+            = ImmutableList.of("Given", "Precondition", "preconditions");
 
     private net.thucydides.core.webdriver.Configuration systemConfiguration;
     private EnvironmentVariables environmentVariables;
