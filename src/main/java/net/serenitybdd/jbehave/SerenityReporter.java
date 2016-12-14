@@ -299,6 +299,9 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private String getRequestedDriver(Meta metaData) {
+
+        if (metaData == null) { return null; }
+
         if (StringUtils.isNotEmpty(metaData.getProperty("driver"))) {
             return metaData.getProperty("driver");
         }
@@ -357,6 +360,8 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private List<String> getTagPropertyValues(Meta metaData, String tagType) {
+        if (metaData == null) { return new ArrayList<>(); }
+
         String singularTag = metaData.getProperty(tagType);
         String pluralTagType = Inflector.getInstance().pluralize(tagType);
 
@@ -414,11 +419,13 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Map<String, String> getMetadataFrom(Meta metaData) {
-        Map<String, String> metadata = Maps.newHashMap();
+        Map<String, String> metadataValues = Maps.newHashMap();
+        if (metaData == null) { return metadataValues; }
+
         for (String propertyName : metaData.getPropertyNames()) {
-            metadata.put(propertyName, metaData.getProperty(propertyName));
+            metadataValues.put(propertyName, metaData.getProperty(propertyName));
         }
-        return metadata;
+        return metadataValues;
     }
 
     private void registerMetadata(Meta metaData) {
@@ -556,14 +563,20 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isPending(Meta metaData) {
+        if (metaData == null) return false;
+
         return (metaData.hasProperty(PENDING));
     }
 
     private boolean isManual(Meta metaData) {
+        if (metaData == null) return false;
+
         return (metaData.hasProperty(MANUAL));
     }
 
     private boolean isSkipped(Meta metaData) {
+        if (metaData == null) return false;
+
         return (metaData.hasProperty(WIP) || metaData.hasProperty(SKIP));
     }
 
@@ -576,6 +589,8 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isIgnored(Meta metaData) {
+        if (metaData == null) return false;
+
         return (metaData.hasProperty(IGNORE));
     }
 
@@ -588,6 +603,7 @@ public class SerenityReporter implements StoryReporter {
 
         if (givenStoryMonitor.isInGivenStory() || shouldNestScenarios()) {
             StepEventBus.getEventBus().stepFinished();
+//            unnestScenarios();
         } else {
             if (isPendingScenario() || isPendingStory()) {
                 StepEventBus.getEventBus().setAllStepsTo(TestResult.PENDING);
