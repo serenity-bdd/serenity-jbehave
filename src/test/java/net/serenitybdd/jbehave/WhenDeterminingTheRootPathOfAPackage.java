@@ -20,6 +20,6 @@ public class WhenDeterminingTheRootPathOfAPackage {
     public void should_find_the_parent_package_of_a_class_when_there_is_only_one_package() {
         Package somePackage = ClassWithOnePackage.class.getPackage();
 
-        assertThat(RootPackage.forPackage(somePackage)).isEqualTo("");
+        assertThat(RootPackage.forPackage(somePackage)).isEqualTo("com");
     }
 }
