@@ -6,9 +6,10 @@ public class RootPackage {
 
     public static String forPackage(Package testPackage) {
         String[] elements = testPackage.getName().split("\\.");
-        if (elements.length >= 1) {
-            elements = Arrays.copyOfRange(elements, 0, elements.length - 1);
-        }
+        if (elements.length == 1) { return elements[0]; }
+
+        elements = Arrays.copyOfRange(elements, 0, elements.length - 1);
+
         return concatElements(elements);
     }
 

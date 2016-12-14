@@ -13,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 
 public class WhenLoadingClassesFromAPackage {
 
@@ -21,6 +22,12 @@ public class WhenLoadingClassesFromAPackage {
         List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net.serenitybdd.jbehave.pages");
         assertThat(classes.size(), is(1));
         assertThat(classes.get(0).getName(), is("net.serenitybdd.jbehave.pages.StaticSitePage"));
+    }
+
+    @Test
+    public void shouldNotCrashForARootPackage() throws IOException, ClassNotFoundException {
+        List<Class<?>> classes = ClassFinder.loadClasses().fromPackage("net");
+        assertThat(classes.size(), not(0));
     }
 
     @Test

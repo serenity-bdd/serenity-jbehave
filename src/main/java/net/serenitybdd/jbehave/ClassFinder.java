@@ -2,6 +2,7 @@ package net.serenitybdd.jbehave;
 
 
 import ch.lambdaj.function.convert.Converter;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -17,11 +18,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -169,7 +166,7 @@ public class ClassFinder {
                 if (entry.getName().endsWith(".class")) {
                     String className = classNameFor(entry);
                     if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
-                        classes.add(loadClassWithName(className));
+                        classes.addAll(loadClassWithName(className).asSet());
                     }
                 }
             }
@@ -192,7 +189,7 @@ public class ClassFinder {
                 if (file.isDirectory()) {
                     classes.addAll(findClasses(file.toURI(), packageName + "." + file.getName()));
                 } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
-                    classes.add(correspondingClass(packageName, file));
+                    classes.addAll(correspondingClass(packageName, file).asSet());
                 }
             }
         }
@@ -204,17 +201,24 @@ public class ClassFinder {
         return entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
     }
 
-    private Class<?> loadClassWithName(String className){
+    private Optional<? extends Class<?>> loadClassWithName(String className){
         try {
-            return getClassLoader().loadClass(className);
+            return Optional.of(getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Could not find or access class for " + className, e);
+//            throw new IllegalArgumentException("Could not find or access class for " + className, e);
+            return Optional.absent();
+        } catch (NoClassDefFoundError noClassDefFoundError) {
+            return Optional.absent();
         }
      }
 
-    private Class<?> correspondingClass(String packageName, File file) {
-        String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);
+    private Optional<? extends Class<?>> correspondingClass(String packageName, File file) {
+        String fullyQualifiedClassName = packagePrefixFor(packageName) + simpleClassNameOf(file);
         return loadClassWithName(fullyQualifiedClassName);
+    }
+
+    private String packagePrefixFor(String packageName) {
+        return (packageName.isEmpty() || packageName.equals("/")) ? "" : packageName + '.';
     }
 
     private static ClassLoader getDefaultClassLoader() {
