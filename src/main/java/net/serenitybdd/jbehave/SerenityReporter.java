@@ -223,9 +223,10 @@ public class SerenityReporter implements StoryReporter {
 
     private void startNewStep(String scenarioTitle) {
         if (givenStoryMonitor.isInGivenStory() && StepEventBus.getEventBus().areStepsRunning()) {
-            StepEventBus.getEventBus().updateCurrentStepTitle(scenarioTitle);
+            StepEventBus.getEventBus().updateCurrentStepTitleAsPrecondition(scenarioTitle);
         } else {
-            StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(scenarioTitle));
+            StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(scenarioTitle),
+                                                   givenStoryMonitor.isInGivenStory());
         }
     }
 
@@ -659,6 +660,8 @@ public class SerenityReporter implements StoryReporter {
 
     public void beforeExamples(List<String> steps, ExamplesTable table) {
         logger.debug("beforeExamples " + steps + " " + table);
+        if (givenStoryMonitor.isInGivenStory()) { return; }
+
         exampleCount = 0;
         StepEventBus.getEventBus().useExamplesFrom(serenityTableFrom(table));
     }
@@ -670,6 +673,9 @@ public class SerenityReporter implements StoryReporter {
 
     public void example(Map<String, String> tableRow) {
         StepEventBus.getEventBus().clearStepFailures();
+
+        if (givenStoryMonitor.isInGivenStory()) { return; }
+
         if (executingExamples()) {
             finishExample();
         }
@@ -690,6 +696,8 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void afterExamples() {
+        if (givenStoryMonitor.isInGivenStory()) { return; }
+
         finishExample();
     }
 
