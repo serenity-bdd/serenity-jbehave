@@ -185,7 +185,7 @@ public class SerenityReporter implements StoryReporter {
 
     private void startTestForFirstScenarioIn(Story story) {
         Scenario firstScenario = story.getScenarios().get(0);
-        startScenarioCalled(firstScenario.getTitle());
+        startScenarioCalled(firstScenario.getTitle(), story.getPath() + ";" + firstScenario.getTitle());
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle("Preconditions"));
         shouldNestScenarios(true);
     }
@@ -207,7 +207,7 @@ public class SerenityReporter implements StoryReporter {
         if (shouldNestScenarios()) {
             startNewStep(scenarioTitle);
         } else {
-            startScenarioCalled(scenarioTitle);
+            startScenarioCalled(scenarioTitle, this.currentStory().getPath() + ";" + scenarioTitle);
             scenarioMeta(scenarioMeta.get(scenarioTitle));
             scenarioMetaProcessed.add(scenarioTitle);
         }
@@ -538,9 +538,17 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private void startScenarioCalled(String scenarioTitle) {
+        startScenarioCalled(scenarioTitle, scenarioIdFrom(scenarioTitle));
+    }
+
+    private void startScenarioCalled(String scenarioTitle, String scenarioId) {
         StepEventBus.getEventBus().setTestSource(StepEventBus.TEST_SOURCE_JBEHAVE);
-        StepEventBus.getEventBus().testStarted(scenarioTitle);
+        StepEventBus.getEventBus().testStarted(scenarioTitle, scenarioId);
         activeScenarios.add(scenarioTitle);
+    }
+
+    private String scenarioIdFrom(String title) {
+        return currentStory().getPath() + ";" + title;
     }
 
     private boolean shouldResetStepsBeforeEachScenario() {
@@ -768,7 +776,8 @@ public class SerenityReporter implements StoryReporter {
 
     private void declareOutOfSuiteFailure() {
         String storyName = !storyStack.isEmpty() ? storyStack.peek().getName() : "Before or After Story";
-        StepEventBus.getEventBus().testStarted(storyName);
+        String storyId = !storyStack.isEmpty() ? storyStack.peek().getPath() : null;
+        StepEventBus.getEventBus().testStarted(storyName, storyId);
     }
 
     private boolean isAssumptionFailure(Throwable rootCause) {
