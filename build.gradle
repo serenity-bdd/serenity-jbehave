@@ -48,7 +48,7 @@ ext {
     groovyVersion = '2.4.4'
     junitVersion = '4.12'
     reflectionsVersion = '0.9.10'
-    mockitoCoreVersion = '2.5.0'
+    mockitoCoreVersion = '1.10.19'
     jbehaveCoreVersion = '4.1'
     guavaVersion = '19.0'
 
@@ -58,7 +58,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.2.2-SNAPSHOT'
+    serenityCoreVersion = '1.2.2-rc.6'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
