@@ -11,6 +11,7 @@ import org.jbehave.core.steps.Step;
 import org.jbehave.core.steps.StepCandidate;
 import org.jbehave.core.steps.StepMonitor;
 import org.jbehave.core.steps.StepType;
+import org.jbehave.core.steps.context.StepsContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -28,6 +29,7 @@ public class SerenityStepCandidate extends StepCandidate {
                 stepCandidate.getMethod(),
                 (Class<?>) Extract.field("stepsType").from(stepCandidate),
                 (InjectableStepsFactory) Extract.field("stepsFactory").from(stepCandidate),
+                new StepsContext(),
                 (Keywords) Extract.field("keywords").from(stepCandidate),
                 new RegexPrefixCapturingPatternParser(),
                 new ParameterConverters(),

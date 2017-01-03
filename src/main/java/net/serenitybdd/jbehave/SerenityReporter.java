@@ -749,6 +749,12 @@ public class SerenityReporter implements StoryReporter {
         StepEventBus.getEventBus().stepIgnored();
     }
 
+    @Override
+    public void comment(String step) {
+        StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(step));
+        StepEventBus.getEventBus().stepIgnored();
+    }
+
     public void pending(String stepTitle) {
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepPending();
