@@ -1,11 +1,11 @@
 package net.serenitybdd.jbehave;
 
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
+import net.thucydides.core.configuration.SystemPropertiesConfiguration;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.reports.TestOutcomeLoader;
 import net.thucydides.core.util.MockEnvironmentVariables;
 import net.thucydides.core.webdriver.Configuration;
-import net.thucydides.core.webdriver.SystemPropertiesConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
