@@ -159,6 +159,9 @@ public class SerenityReportingRunner extends Runner {
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
         getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
         getConfiguredEmbedder().embedderControls().useStoryTimeouts(getStoryTimeout());
+
+        getConfiguredEmbedder().embedderControls().useThreads(getThreadCount());
+
         if (metaFiltersAreDefined()) {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
@@ -396,6 +399,10 @@ public class SerenityReportingRunner extends Runner {
     protected int getStoryTimeoutInSecs() {
         return environmentVariables.getPropertyAsInteger(SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS.getName(),
                                                          (int) getConfiguredEmbedder().embedderControls().storyTimeoutInSecs());
+    }
+
+    protected int getThreadCount() {
+        return environmentVariables.getPropertyAsInteger(SerenityJBehaveSystemProperties.JBEHAVE_THREADS.getName(), 1);
     }
 
     protected String getStoryTimeout() {

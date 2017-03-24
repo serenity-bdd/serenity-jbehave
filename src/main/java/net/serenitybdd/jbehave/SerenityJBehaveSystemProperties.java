@@ -55,7 +55,12 @@ public enum SerenityJBehaveSystemProperties {
     /**
      * Controls the ignoreFailuresInView flag in JBehave (see http://jbehave.org/reference/stable/running-stories.html).
      */
-    IGNORE_FAILURES_IN_VIEW;
+    IGNORE_FAILURES_IN_VIEW,
+
+    /**
+     * The number of threads to run stories in.
+     */
+    JBEHAVE_THREADS;
 
     public String getName() {return toString().toLowerCase().replaceAll("_",".");}
 
