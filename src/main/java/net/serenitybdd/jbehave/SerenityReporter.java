@@ -9,10 +9,8 @@ import com.google.common.collect.Maps;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
-import net.thucydides.core.model.DataTable;
-import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestResult;
-import net.thucydides.core.model.TestTag;
+import net.thucydides.core.model.*;
+import net.thucydides.core.model.stacktrace.RootCauseAnalyzer;
 import net.thucydides.core.reports.ReportService;
 import net.thucydides.core.steps.BaseStepListener;
 import net.thucydides.core.steps.ExecutedStepDescription;
@@ -25,6 +23,7 @@ import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.model.*;
+import org.jbehave.core.model.Story;
 import org.jbehave.core.reporters.StoryReporter;
 import org.junit.internal.AssumptionViolatedException;
 import org.slf4j.Logger;
@@ -219,6 +218,19 @@ public class SerenityReporter implements StoryReporter {
 
     private boolean isCurrentScenario(String scenarioTitle) {
         return !activeScenarios.empty() && scenarioTitle.equals(activeScenarios.peek());
+    }
+
+    private String currentScenarioTitle() {
+        return (activeScenarios.isEmpty()) ? "" : activeScenarios.peek();
+    }
+
+    private Optional<Scenario> currentScenario() {
+        for(Scenario scenario : currentStory().getScenarios()) {
+            if (scenario.getTitle().equals(currentScenarioTitle())) {
+                return Optional.of(scenario);
+            }
+        }
+        return Optional.absent();
     }
 
     private void startNewStep(String scenarioTitle) {
@@ -675,8 +687,17 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private DataTable serenityTableFrom(ExamplesTable table) {
-        return DataTable.withHeaders(table.getHeaders()).andMappedRows(table.getRows()).build();
+        String scenarioOutline = scenarioOutlineFrom(currentScenario());
+        return DataTable.withHeaders(table.getHeaders())
+                        .andScenarioOutline(scenarioOutline)
+                        .andMappedRows(table.getRows())
+                        .build();
 
+    }
+
+    private String scenarioOutlineFrom(Optional<Scenario> scenario) {
+        if (!scenario.isPresent()) { return null; }
+        return Joiner.on(System.lineSeparator()).join(scenario.get().getSteps());
     }
 
     public void example(Map<String, String> tableRow) {
@@ -767,17 +788,21 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void failed(String stepTitle, Throwable cause) {
-        Throwable rootCause = cause.getCause() != null ? cause.getCause() : cause;
         if (!StepEventBus.getEventBus().testSuiteHasStarted()) {
             declareOutOfSuiteFailure();
         }
 
-        StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
-        if (isAssumptionFailure(rootCause)) {
-            StepEventBus.getEventBus().assumptionViolated(rootCause.getMessage());
-        } else {
-            StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), rootCause));
+        if (!errorOrFailureRecordedForStep(stepTitle, cause.getCause())) {
+            StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
+            Throwable rootCause = new RootCauseAnalyzer(cause.getCause()).getRootCause().toException();
+
+            if (isAssumptionFailure(rootCause)) {
+                StepEventBus.getEventBus().assumptionViolated(rootCause.getMessage());
+            } else {
+                StepEventBus.getEventBus().stepFailed(new StepFailure(ExecutedStepDescription.withTitle(normalized(stepTitle)), rootCause));
+            }
         }
+
     }
 
     private void declareOutOfSuiteFailure() {
@@ -881,4 +906,27 @@ public class SerenityReporter implements StoryReporter {
         return value.replaceAll(OPEN_PARAM_CHAR, "{").replaceAll(CLOSE_PARAM_CHAR, "}");
 
     }
+
+    private boolean errorOrFailureRecordedForStep(String stepTitle, Throwable cause) {
+        if (!latestTestOutcome().isPresent()) {
+            return false;
+        }
+        if (!latestTestOutcome().get().testStepWithDescription(stepTitle).isPresent()) {
+            return false;
+        }
+
+        Optional<TestStep> matchingTestStep = latestTestOutcome().get().testStepWithDescription(stepTitle);
+        if (matchingTestStep.isPresent() && matchingTestStep.get().getException() != null) {
+            return (matchingTestStep.get().getException().getOriginalCause() == cause);
+        }
+
+        return false;
+    }
+
+    private Optional<TestOutcome> latestTestOutcome() {
+        List<TestOutcome> recordedOutcomes = StepEventBus.getEventBus().getBaseStepListener().getTestOutcomes();
+        return (recordedOutcomes.isEmpty()) ? Optional.<TestOutcome>absent()
+                : Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
+    }
+
 }
