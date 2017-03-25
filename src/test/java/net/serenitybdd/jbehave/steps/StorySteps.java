@@ -4,13 +4,10 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Question;
 import net.serenitybdd.screenplay.Task;
+import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.steps.StepEventBus;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Named;
-import org.jbehave.core.annotations.Pending;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
+import org.jbehave.core.annotations.*;
 
 import java.util.Date;
 
@@ -54,6 +51,19 @@ public class StorySteps {
 
     @Given("the scenario works")
     public void givenTheScenarioWorks() {
+    }
+
+    public static class MyLog {
+        @Step
+        public void foo(String message) {}
+    }
+
+    @Steps
+    private MyLog log;
+
+    @BeforeStory
+    public void runBeforeStory() {
+        log.foo("bar");
     }
 
     @When("I run the scenario")
