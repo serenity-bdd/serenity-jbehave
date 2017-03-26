@@ -911,15 +911,12 @@ public class SerenityReporter implements StoryReporter {
         if (!latestTestOutcome().isPresent()) {
             return false;
         }
-        if (!latestTestOutcome().get().testStepWithDescription(stepTitle).isPresent()) {
-            return false;
-        }
 
-        Optional<TestStep> matchingTestStep = latestTestOutcome().get().testStepWithDescription(stepTitle);
-        if (matchingTestStep.isPresent() && matchingTestStep.get().getException() != null) {
-            return (matchingTestStep.get().getException().getOriginalCause() == cause);
+        for(TestStep step : latestTestOutcome().get().getFlattenedTestSteps()) {
+            if ((step.getException() != null) && (step.getException().getOriginalCause() == cause)) {
+                return true;
+            }
         }
-
         return false;
     }
 
