@@ -58,7 +58,7 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.2.2'
+    serenityCoreVersion = '1.2.3'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -154,6 +154,7 @@ dependencies {
     compile("org.codehaus.groovy:groovy-all:${groovyVersion}")
     compile "junit:junit:${junitVersion}"
 
+    testCompile("net.serenity-bdd:serenity-screenplay:${project.serenityCoreVersion}")
     testCompile ("ch.qos.logback:logback-classic:1.0.13") {
         exclude module: 'slf4j-api'
     }
