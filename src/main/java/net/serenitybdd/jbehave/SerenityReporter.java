@@ -697,7 +697,11 @@ public class SerenityReporter implements StoryReporter {
 
     private String scenarioOutlineFrom(Optional<Scenario> scenario) {
         if (!scenario.isPresent()) { return null; }
-        return Joiner.on(System.lineSeparator()).join(scenario.get().getSteps());
+        StringBuilder outline = new StringBuilder();
+        for(String step : scenario.get().getSteps()) {
+            outline.append(step.trim()).append(System.lineSeparator());
+        }
+        return outline.toString();
     }
 
     public void example(Map<String, String> tableRow) {
@@ -792,7 +796,7 @@ public class SerenityReporter implements StoryReporter {
             declareOutOfSuiteFailure();
         }
 
-        if (!errorOrFailureRecordedForStep(stepTitle, cause.getCause())) {
+        if (!errorOrFailureRecordedForStep(cause.getCause())) {
             StepEventBus.getEventBus().updateCurrentStepTitle(stepTitle);
             Throwable rootCause = new RootCauseAnalyzer(cause.getCause()).getRootCause().toException();
 
@@ -907,7 +911,7 @@ public class SerenityReporter implements StoryReporter {
 
     }
 
-    private boolean errorOrFailureRecordedForStep(String stepTitle, Throwable cause) {
+    private boolean errorOrFailureRecordedForStep(Throwable cause) {
         if (!latestTestOutcome().isPresent()) {
             return false;
         }
