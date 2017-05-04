@@ -22,13 +22,8 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
         }
     }
 
-    @Before
-    public void reset_driver() {
-        environmentVariables.setProperty("webdriver.driver", "htmlunit");
-    }
-
     @Test
-    public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() throws Throwable {
+    public void a_simple_web_test_should_run_correctly() throws Throwable {
 
         // Given
         SerenityStories story = newStory("aPassingBehaviorWithSelenium.story");
@@ -82,7 +77,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     @Test
     public void stories_with_errors_in_one_scenario_should_still_run_subsequent_scenarios() throws Throwable {
 
-        environmentVariables.setProperty("restart.browser.each.scenario","true");
+        //environmentVariables.setProperty("restart.browser.each.scenario","true");
 
         // Given
         SerenityStories story = newStory("failingAndPassingBehaviorsWithSelenium.story");

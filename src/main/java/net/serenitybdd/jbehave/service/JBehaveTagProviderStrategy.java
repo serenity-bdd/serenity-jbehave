@@ -1,10 +1,12 @@
 package net.serenitybdd.jbehave.service;
 
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableSet;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.requirements.FileSystemRequirementsTagProvider;
+import net.thucydides.core.statistics.service.InjectedTagProvider;
+import net.thucydides.core.statistics.service.ContextTagProvider;
 import net.thucydides.core.statistics.service.TagProvider;
 import net.thucydides.core.statistics.service.TagProviderStrategy;
 import net.thucydides.core.steps.StepEventBus;
@@ -28,14 +30,18 @@ public class JBehaveTagProviderStrategy implements TagProviderStrategy {
     }
 
     @Override
-    public Iterable<TagProvider> getTagProviders() {
+    public Iterable<? extends TagProvider> getTagProviders() {
         String rootDirectory = ThucydidesSystemProperty.THUCYDIDES_REQUIREMENTS_DIR.from(environmentVariables,"stories");
-        return Lists.newArrayList((TagProvider) new FileSystemRequirementsTagProvider(environmentVariables,rootDirectory));
+        return ImmutableSet.of(
+                new FileSystemRequirementsTagProvider(environmentVariables,rootDirectory),
+                new InjectedTagProvider(environmentVariables),
+                new ContextTagProvider(environmentVariables)
+        );
     }
 
     @Override
     public boolean hasHighPriority() {
-        return true;
+        return false;
     }
 
 }

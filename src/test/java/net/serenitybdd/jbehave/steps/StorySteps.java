@@ -72,6 +72,11 @@ public class StorySteps {
         assertThat(true).isEqualTo(false);
     }
 
+    @Then("a step that is executed after each scenario regardless of outcome")
+    public void afterLifecycle() {
+        System.out.println("After the lifecycle");
+    }
+
     @Given("the scenario contains an error")
     public void givenTheScenarioHasAnError() {
         System.out.println("Deliberate error");

@@ -87,7 +87,6 @@ public class SomeSeleniumSteps {
     @Alias("I should see <firstname> and <lastname> in the names fields")
     public void thenIShouldSeeInTheNamesFields(String expectedFirstname,
                                                String expectedLastname) {
-        StaticSitePage indexPage = page;
         assertThat(page.firstName().getValue(), is(expectedFirstname));
         assertThat(page.lastName().getValue(), is(expectedLastname));
     }
