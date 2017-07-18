@@ -38,7 +38,6 @@ public class SerenityJBehave {
         Properties viewResources = new Properties();
         viewResources.put("decorateNonHtml", "true");
 
-        new ParameterConverters.DateConverter();
         TableTransformers tableTransformers = new TableTransformers();
         return new ParanamerConfiguration()
                 .useTableTransformers(tableTransformers)
