@@ -8,6 +8,7 @@ import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.failures.FailureStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
+import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
@@ -38,9 +39,11 @@ public class SerenityJBehave {
         viewResources.put("decorateNonHtml", "true");
 
         new ParameterConverters.DateConverter();
+        TableTransformers tableTransformers = new TableTransformers();
         return new ParanamerConfiguration()
+                .useTableTransformers(tableTransformers)
                 .useParameterConverters(
-                        new ParameterConverters().addConverters(
+                        new ParameterConverters(tableTransformers).addConverters(
                                 new ParameterConverters.DateConverter(),
                                 new DateListConverter(),
                                 new DateTimeConverter(),

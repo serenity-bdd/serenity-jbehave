@@ -3,6 +3,7 @@ package net.serenitybdd.jbehave;
 import com.thoughtworks.paranamer.Paranamer;
 import net.serenitybdd.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
+import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.ParameterControls;
@@ -32,7 +33,7 @@ public class SerenityStepCandidate extends StepCandidate {
                 new StepsContext(),
                 (Keywords) Extract.field("keywords").from(stepCandidate),
                 new RegexPrefixCapturingPatternParser(),
-                new ParameterConverters(),
+                new ParameterConverters(new TableTransformers()),
                 new ParameterControls());
         this.composedOf(stepCandidate.composedSteps());
         this.stepCandidate = stepCandidate;
