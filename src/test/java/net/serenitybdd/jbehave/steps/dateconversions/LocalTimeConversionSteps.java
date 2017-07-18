@@ -8,7 +8,7 @@ import org.joda.time.LocalTime;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.convert;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocalTimeConversionSteps {
 

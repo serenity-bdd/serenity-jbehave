@@ -1,7 +1,6 @@
 package net.serenitybdd.jbehave;
 
 
-import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -19,10 +18,9 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import static ch.lambdaj.Lambda.convert;
 
 /**
  * Load classes from a given package.
@@ -105,16 +103,10 @@ public class ClassFinder {
     }
 
     private Collection<Class<?>> classesFrom(Set<Method> annotatedMethods) {
-        return convert(annotatedMethods, toDeclaringCasses());
-    }
 
-    private Converter<Method, Class<?>> toDeclaringCasses() {
-        return new Converter<Method, Class<?>>() {
-
-            public Class convert(Method from) {
-                return from.getDeclaringClass();
-            }
-        };
+        return annotatedMethods.stream()
+                .map(Method::getDeclaringClass)
+                .collect(Collectors.toList());
     }
 
     private Enumeration<URL> classResourcesOn(String path) {
@@ -147,7 +139,7 @@ public class ClassFinder {
         } catch (Exception e) {
             throw new RuntimeException(
                     "failed to find classes" +
-                    "in directory=[" + directory + "], with packageName=[" + packageName + "]",
+                            "in directory=[" + directory + "], with packageName=[" + packageName + "]",
                     e
             );
         }
@@ -158,9 +150,9 @@ public class ClassFinder {
         final String schemeSpecificPart = jarDirectory.getSchemeSpecificPart();
 
         List<Class<?>> classes = Lists.newArrayList();
-        String [] split = schemeSpecificPart.split("!");
+        String[] split = schemeSpecificPart.split("!");
         URL jar = new URL(split[0]);
-        try(ZipInputStream zip = new ZipInputStream(jar.openStream())) {
+        try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null) {
                 if (entry.getName().endsWith(".class")) {
@@ -201,7 +193,7 @@ public class ClassFinder {
         return entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
     }
 
-    private Optional<? extends Class<?>> loadClassWithName(String className){
+    private Optional<? extends Class<?>> loadClassWithName(String className) {
         try {
             return Optional.of(getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
@@ -210,7 +202,7 @@ public class ClassFinder {
         } catch (NoClassDefFoundError noClassDefFoundError) {
             return Optional.absent();
         }
-     }
+    }
 
     private Optional<? extends Class<?>> correspondingClass(String packageName, File file) {
         String fullyQualifiedClassName = packagePrefixFor(packageName) + simpleClassNameOf(file);

@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import ch.lambdaj.function.convert.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -32,8 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-import static ch.lambdaj.Lambda.*;
 import static net.thucydides.core.ThucydidesSystemProperty.WEBDRIVER_DRIVER;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -225,7 +224,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Optional<Scenario> currentScenario() {
-        for(Scenario scenario : currentStory().getScenarios()) {
+        for (Scenario scenario : currentStory().getScenarios()) {
             if (scenario.getTitle().equals(currentScenarioTitle())) {
                 return Optional.of(scenario);
             }
@@ -238,7 +237,7 @@ public class SerenityReporter implements StoryReporter {
             StepEventBus.getEventBus().updateCurrentStepTitleAsPrecondition(scenarioTitle);
         } else {
             StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(scenarioTitle),
-                                                   givenStoryMonitor.isInGivenStory());
+                    givenStoryMonitor.isInGivenStory());
         }
     }
 
@@ -313,7 +312,9 @@ public class SerenityReporter implements StoryReporter {
 
     private String getRequestedDriver(Meta metaData) {
 
-        if (metaData == null) { return null; }
+        if (metaData == null) {
+            return null;
+        }
 
         if (StringUtils.isNotEmpty(metaData.getProperty("driver"))) {
             return metaData.getProperty("driver");
@@ -330,50 +331,40 @@ public class SerenityReporter implements StoryReporter {
 
     private List<TestTag> getFeatureOrFeaturesPropertyValues(Meta metaData) {
         List<String> features = getTagPropertyValues(metaData, "feature");
-        return convert(features, toFeatureTags());
+
+        return features.stream().map(
+                featureName -> TestTag.withName(featureName).andType("feature")
+        ).collect(Collectors.toList());
     }
 
     private List<TestTag> getEpicOrEpicsPropertyValues(Meta metaData) {
         List<String> epics = getTagPropertyValues(metaData, "epic");
-        return convert(epics, toEpicTags());
+        return epics.stream().map(
+                epicName -> TestTag.withName(epicName).andType("epic")
+        ).collect(Collectors.toList());
     }
 
     private List<TestTag> getTagOrTagsPropertyValues(Meta metaData) {
         List<String> tags = getTagPropertyValues(metaData, "tag");
-        return convert(tags, toTags());
+        return tags.stream()
+                .map(  this::toTag )
+                .collect(Collectors.toList());
     }
 
-    private Converter<String, TestTag> toTags() {
-        return new Converter<String, TestTag>() {
-            public TestTag convert(String tag) {
-                List<String> tagParts = Lists.newArrayList(Splitter.on(":").trimResults().split(tag));
-                if (tagParts.size() == 2) {
-                    return TestTag.withName(tagParts.get(1)).andType(tagParts.get(0));
-                } else {
-                    return TestTag.withName("true").andType(tagParts.get(0));
-                }
-            }
-        };
+    public TestTag toTag(String tag) {
+        List<String> tagParts = Lists.newArrayList(Splitter.on(":").trimResults().split(tag));
+        if (tagParts.size() == 2) {
+            return TestTag.withName(tagParts.get(1)).andType(tagParts.get(0));
+        } else {
+            return TestTag.withName("true").andType(tagParts.get(0));
+        }
     }
 
-    private Converter<String, TestTag> toFeatureTags() {
-        return new Converter<String, TestTag>() {
-            public TestTag convert(String featureName) {
-                return TestTag.withName(featureName).andType("feature");
-            }
-        };
-    }
-
-    private Converter<String, TestTag> toEpicTags() {
-        return new Converter<String, TestTag>() {
-            public TestTag convert(String featureName) {
-                return TestTag.withName(featureName).andType("epic");
-            }
-        };
-    }
 
     private List<String> getTagPropertyValues(Meta metaData, String tagType) {
-        if (metaData == null) { return new ArrayList<>(); }
+        if (metaData == null) {
+            return new ArrayList<>();
+        }
 
         String singularTag = metaData.getProperty(tagType);
         String pluralTagType = Inflector.getInstance().pluralize(tagType);
@@ -433,7 +424,9 @@ public class SerenityReporter implements StoryReporter {
 
     private Map<String, String> getMetadataFrom(Meta metaData) {
         Map<String, String> metadataValues = Maps.newHashMap();
-        if (metaData == null) { return metadataValues; }
+        if (metaData == null) {
+            return metadataValues;
+        }
 
         for (String propertyName : metaData.getPropertyNames()) {
             metadataValues.put(propertyName, metaData.getProperty(propertyName));
@@ -533,7 +526,11 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public List<TestOutcome> getAllTestOutcomes() {
-        return flatten(extract(baseStepListeners, on(BaseStepListener.class).getTestOutcomes()));
+
+        return baseStepListeners.stream()
+                .map(BaseStepListener::getTestOutcomes)
+                .flatMap(outcomes -> outcomes.stream())
+                .collect(Collectors.toList());
     }
 
     public void narrative(Narrative narrative) {
@@ -565,7 +562,7 @@ public class SerenityReporter implements StoryReporter {
 
     private boolean shouldResetStepsBeforeEachScenario() {
         return systemConfiguration.getEnvironmentVariables().getPropertyAsBoolean(
-                         SerenityJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
+                SerenityJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
     }
 
     public void scenarioMeta(Meta meta) {
@@ -680,7 +677,9 @@ public class SerenityReporter implements StoryReporter {
 
     public void beforeExamples(List<String> steps, ExamplesTable table) {
         logger.debug("beforeExamples " + steps + " " + table);
-        if (givenStoryMonitor.isInGivenStory()) { return; }
+        if (givenStoryMonitor.isInGivenStory()) {
+            return;
+        }
 
         exampleCount = 0;
         StepEventBus.getEventBus().useExamplesFrom(serenityTableFrom(table));
@@ -689,16 +688,18 @@ public class SerenityReporter implements StoryReporter {
     private DataTable serenityTableFrom(ExamplesTable table) {
         String scenarioOutline = scenarioOutlineFrom(currentScenario());
         return DataTable.withHeaders(table.getHeaders())
-                        .andScenarioOutline(scenarioOutline)
-                        .andMappedRows(table.getRows())
-                        .build();
+                .andScenarioOutline(scenarioOutline)
+                .andMappedRows(table.getRows())
+                .build();
 
     }
 
     private String scenarioOutlineFrom(Optional<Scenario> scenario) {
-        if (!scenario.isPresent()) { return null; }
+        if (!scenario.isPresent()) {
+            return null;
+        }
         StringBuilder outline = new StringBuilder();
-        for(String step : scenario.get().getSteps()) {
+        for (String step : scenario.get().getSteps()) {
             outline.append(step.trim()).append(System.lineSeparator());
         }
         return outline.toString();
@@ -707,7 +708,9 @@ public class SerenityReporter implements StoryReporter {
     public void example(Map<String, String> tableRow) {
         StepEventBus.getEventBus().clearStepFailures();
 
-        if (givenStoryMonitor.isInGivenStory()) { return; }
+        if (givenStoryMonitor.isInGivenStory()) {
+            return;
+        }
 
         if (executingExamples()) {
             finishExample();
@@ -729,7 +732,9 @@ public class SerenityReporter implements StoryReporter {
     }
 
     public void afterExamples() {
-        if (givenStoryMonitor.isInGivenStory()) { return; }
+        if (givenStoryMonitor.isInGivenStory()) {
+            return;
+        }
 
         finishExample();
     }
@@ -916,7 +921,7 @@ public class SerenityReporter implements StoryReporter {
             return false;
         }
 
-        for(TestStep step : latestTestOutcome().get().getFlattenedTestSteps()) {
+        for (TestStep step : latestTestOutcome().get().getFlattenedTestSteps()) {
             if ((step.getException() != null) && (step.getException().getOriginalCause() == cause)) {
                 return true;
             }

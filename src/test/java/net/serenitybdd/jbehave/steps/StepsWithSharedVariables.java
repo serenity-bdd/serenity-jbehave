@@ -3,7 +3,7 @@ package net.serenitybdd.jbehave.steps;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by john on 8/10/2014.

@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave.runners;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
@@ -35,16 +34,10 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
-import static net.thucydides.core.ThucydidesSystemProperty.THUCYDIDES_USE_UNIQUE_BROWSER;
-
 public class SerenityReportingRunner extends Runner {
-    private static final Logger logger = LoggerFactory.getLogger(SerenityReportingRunner.class);
 
 	private List<Description> storyDescriptions;
 	private ExtendedEmbedder configuredEmbedder;
@@ -62,10 +55,7 @@ public class SerenityReportingRunner extends Runner {
     private final String IGNORE_FILTER = " -ignore";
     private final String WIP_FILTER = " -wip";
 
-    private final String DEFAULT_METAFILTER = IGNORE_FILTER+" "+SKIP_FILTER+" "+WIP_FILTER;
-
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
 
     @SuppressWarnings("unchecked")
     public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
@@ -315,8 +305,7 @@ public class SerenityReportingRunner extends Runner {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
         Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.or(annotatedMetafilters.or(
-                thucAnnotatedMetafilters.or("")));
+        String metafilters = environmentMetafilters.orElse(annotatedMetafilters.orElse(thucAnnotatedMetafilters.orElse("")));
         if (isGroovy(metafilters)) {
             metafilters = addGroovyMetafilterValuesTo(metafilters);
         }else{
@@ -326,7 +315,7 @@ public class SerenityReportingRunner extends Runner {
     }
 
     private Optional<String> getEnvironmentMetafilters() {
-        return Optional.fromNullable(environmentVariables.getProperty(SerenityJBehaveSystemProperties.METAFILTER.getName()));
+        return Optional.ofNullable(environmentVariables.getProperty(SerenityJBehaveSystemProperties.METAFILTER.getName()));
     }
 
     /**
@@ -337,12 +326,12 @@ public class SerenityReportingRunner extends Runner {
     @Deprecated
     private Optional<String> getThucAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
         return (testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class) != null) ?
-                Optional.of(testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class).value()) : Optional.<String>absent();
+                Optional.of(testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class).value()) : Optional.<String>empty();
     }
 
     private Optional<String> getAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
         return (testClass.getAnnotation(Metafilter.class) != null) ?
-                Optional.of(testClass.getAnnotation(Metafilter.class).value()) : Optional.<String>absent();
+                Optional.of(testClass.getAnnotation(Metafilter.class).value()) : Optional.<String>empty();
     }
 
     private boolean isGroovy(String metaFilters) {
@@ -414,10 +403,6 @@ public class SerenityReportingRunner extends Runner {
     protected List<String> getMetaFilters() {
         String metaFilters = getMetafilterSetting();
         return Lists.newArrayList(Splitter.on(Pattern.compile(",")).trimResults().omitEmptyStrings().split(metaFilters));
-    }
-
-    public boolean usingUniqueBrowser() {
-        return environmentVariables.getPropertyAsBoolean(THUCYDIDES_USE_UNIQUE_BROWSER, false);
     }
 
     protected boolean getIgnoreFailuresInView() { return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW.getName(),true); }

@@ -1,6 +1,6 @@
 package net.serenitybdd.jbehave;
 
-import ch.lambdaj.Lambda;
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -241,7 +241,7 @@ public class SerenityStories extends JUnitStories {
 
     public void findStoriesCalled(String storyNames) {
         Set<String> storyPathElements = new StoryPathFinder(getEnvironmentVariables(), storyNames).findAllElements();
-        storyNamePattern = Lambda.join(storyPathElements, ";");
+        storyNamePattern = Joiner.on(";").join(storyPathElements);
     }
 
 

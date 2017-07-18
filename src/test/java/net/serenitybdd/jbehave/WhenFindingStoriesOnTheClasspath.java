@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Set;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class WhenFindingStoriesOnTheClasspath {
 

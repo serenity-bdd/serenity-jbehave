@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import ch.lambdaj.function.convert.Converter;
 import org.jbehave.core.annotations.ScenarioType;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.BeforeOrAfterStep;
@@ -8,26 +7,20 @@ import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.StepCandidate;
 
 import java.util.List;
-
-import static ch.lambdaj.Lambda.convert;
+import java.util.stream.Collectors;
 
 public class SerenityCandidateSteps implements CandidateSteps {
     private final CandidateSteps candidateSteps;
 
-    public SerenityCandidateSteps(CandidateSteps candidateSteps) {
+    SerenityCandidateSteps(CandidateSteps candidateSteps) {
         this.candidateSteps = candidateSteps;
     }
 
     public List<StepCandidate> listCandidates() {
-        return convert(candidateSteps.listCandidates(), toSerenityStepCandidates());
-    }
 
-    private Converter<StepCandidate, StepCandidate> toSerenityStepCandidates() {
-        return new Converter<StepCandidate, StepCandidate>() {
-            public StepCandidate convert(StepCandidate stepCandidate) {
-                return new SerenityStepCandidate(stepCandidate);
-            }
-        };
+        return candidateSteps.listCandidates().stream()
+                .map(SerenityStepCandidate::new)
+                .collect(Collectors.toList());
     }
 
     public List<BeforeOrAfterStep> listBeforeOrAfterStories() {
