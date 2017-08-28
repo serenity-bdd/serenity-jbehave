@@ -2,8 +2,8 @@ package net.serenitybdd.jbehave.runners;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import de.codecentric.jbehave.junit.monitoring.JUnitDescriptionGenerator;
-import de.codecentric.jbehave.junit.monitoring.JUnitScenarioReporter;
+import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
+import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.annotations.Metafilter;
@@ -16,7 +16,9 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.ConfigurableEmbedder;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.embedder.Embedder;
-import org.jbehave.core.embedder.StoryRunner;
+import org.jbehave.core.embedder.PerformableTree;
+import org.jbehave.core.embedder.PerformableTree.RunContext;
+import org.jbehave.core.failures.BatchFailures;
 import org.jbehave.core.io.StoryPathResolver;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.junit.JUnitStory;
@@ -45,15 +47,10 @@ public class SerenityReportingRunner extends Runner {
 	private Configuration configuration;
 	private Description description;
 	List<CandidateSteps> candidateSteps;
-    private final ExtendedEmbedder extendedEmbedder;
 
     private final ConfigurableEmbedder configurableEmbedder;
     private final Class<? extends ConfigurableEmbedder> testClass;
     private final EnvironmentVariables environmentVariables;
-
-    private final String SKIP_FILTER = " -skip";
-    private final String IGNORE_FILTER = " -ignore";
-    private final String WIP_FILTER = " -wip";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
 
@@ -63,13 +60,12 @@ public class SerenityReportingRunner extends Runner {
     }
 
     public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass,
-                                   ConfigurableEmbedder embedder) throws Throwable {
+                                   ConfigurableEmbedder embedder) {
         this.configurableEmbedder = embedder;
-        this.extendedEmbedder = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
-        this.extendedEmbedder.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor(
-                ((SerenityStories)embedder).getSystemConfiguration(),
-                this.extendedEmbedder));
-        this.configurableEmbedder.useEmbedder(this.extendedEmbedder);
+        ExtendedEmbedder extendedEmbedder = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
+        extendedEmbedder.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor(
+                ((SerenityStories)embedder).getSystemConfiguration(), extendedEmbedder));
+        this.configurableEmbedder.useEmbedder(extendedEmbedder);
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
     }
@@ -259,11 +255,10 @@ public class SerenityReportingRunner extends Runner {
 
 	private List<Description> buildDescriptionFromStories() {
 		JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
-        StoryRunner storyRunner = new StoryRunner();
 		List<Description> storyDescriptions = new ArrayList<>();
 
 		addSuite(storyDescriptions, "BeforeStories");
-		addStories(storyDescriptions, storyRunner, descriptionGenerator);
+		storyDescriptions.addAll(descriptionGenerator.createDescriptionFrom(createPerformableTree(getStoryPaths())));
 		addSuite(storyDescriptions, "AfterStories");
 
 		return storyDescriptions;
@@ -278,16 +273,23 @@ public class SerenityReportingRunner extends Runner {
         return 2;
     }
 
-    private void addStories(List<Description> storyDescriptions,
-			StoryRunner storyRunner, JUnitDescriptionGenerator gen) {
+    private PerformableTree createPerformableTree(List<String> storyPaths) {
+        ExtendedEmbedder configuredEmbedder = this.getConfiguredEmbedder();
+        BatchFailures failures = new BatchFailures(configuredEmbedder.embedderControls().verboseFailures());
+        PerformableTree performableTree = new PerformableTree();
+        RunContext context = performableTree.newRunContext(getConfiguration(), configuredEmbedder.stepsFactory(),
+                configuredEmbedder.embedderMonitor(), configuredEmbedder.metaFilter(), failures);
+        performableTree.addStories(context, storiesOf(performableTree, storyPaths));
+        return performableTree;
+    }
 
-        for (String storyPath : getStoryPaths()) {
-            Story parseStory = storyRunner.storyOfPath(getConfiguration(), storyPath);
-            this.extendedEmbedder.registerStory(storyPath,parseStory);
-            Description descr = gen.createDescriptionFrom(parseStory);
-            storyDescriptions.add(descr);
-		}
-	}
+    private List<Story> storiesOf(PerformableTree performableTree, List<String> storyPaths) {
+        List<Story> stories = new ArrayList<>();
+        for (String storyPath : storyPaths) {
+            stories.add(performableTree.storyOfPath(getConfiguration(), storyPath));
+        }
+        return stories;
+    }
 
 	private void addSuite(List<Description> storyDescriptions, String name) {
 		storyDescriptions.add(Description.createTestDescription(Object.class,
@@ -305,13 +307,7 @@ public class SerenityReportingRunner extends Runner {
         Optional<String> environmentMetafilters = getEnvironmentMetafilters();
         Optional<String> annotatedMetafilters = getAnnotatedMetafilters(testClass);
         Optional<String> thucAnnotatedMetafilters = getThucAnnotatedMetafilters(testClass);
-        String metafilters = environmentMetafilters.orElse(annotatedMetafilters.orElse(thucAnnotatedMetafilters.orElse("")));
-        if (isGroovy(metafilters)) {
-            metafilters = addGroovyMetafilterValuesTo(metafilters);
-        }else{
-            metafilters = addMetafilterValuesTo(metafilters);
-        }
-        return metafilters;
+        return environmentMetafilters.orElse(annotatedMetafilters.orElse(thucAnnotatedMetafilters.orElse("")));
     }
 
     private Optional<String> getEnvironmentMetafilters() {
@@ -326,59 +322,12 @@ public class SerenityReportingRunner extends Runner {
     @Deprecated
     private Optional<String> getThucAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
         return (testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class) != null) ?
-                Optional.of(testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class).value()) : Optional.<String>empty();
+                Optional.of(testClass.getAnnotation(net.thucydides.jbehave.annotations.Metafilter.class).value()) : Optional.empty();
     }
 
     private Optional<String> getAnnotatedMetafilters(Class<? extends ConfigurableEmbedder> testClass) {
         return (testClass.getAnnotation(Metafilter.class) != null) ?
-                Optional.of(testClass.getAnnotation(Metafilter.class).value()) : Optional.<String>empty();
-    }
-
-    private boolean isGroovy(String metaFilters) {
-        return (metaFilters != null) && (metaFilters.startsWith("groovy:"));
-    }
-
-
-    private String addGroovyMetafilterValuesTo(String metaFilters) {
-        String filters = "";
-        if (!metaFilters.contains("skip")) {
-            filters = filters + " && !skip";
-        }
-        if (!metaFilters.contains("ignore")) {
-            filters = filters + " && !ignore";
-        }
-        if (!metaFilters.contains("wip")) {
-            filters = filters + " && !wip";
-        }
-        if (!filters.isEmpty()) {
-            return "groovy: ((" + metaFilters.substring(7).trim() + ")" + filters+")";
-        } else {
-            return metaFilters;
-        }
-    }
-
-    private String addMetafilterValuesTo(String metaFilters) {
-        String filters = "";
-        if (!metaFilters.contains("skip")) {
-            filters = filters + SKIP_FILTER;
-        }
-        if (!metaFilters.contains("ignore")) {
-            if (StringUtils.isNotEmpty(filters)) {
-                filters = filters + ",";
-            }
-            filters = filters + IGNORE_FILTER;
-        }
-        if (!metaFilters.contains("wip")) {
-            if (StringUtils.isNotEmpty(filters)) {
-                filters = filters + ",";
-            }
-            filters = filters + WIP_FILTER;
-        }
-        if (!filters.isEmpty()) {
-            return metaFilters + (StringUtils.isNotEmpty(metaFilters) ? "," : "") + filters;
-        } else {
-            return metaFilters;
-        }
+                Optional.of(testClass.getAnnotation(Metafilter.class).value()) : Optional.empty();
     }
 
     protected boolean getIgnoreFailuresInStories() {
