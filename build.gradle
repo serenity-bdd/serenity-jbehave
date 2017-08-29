@@ -99,7 +99,7 @@ artifacts {
 
 configurations.all {
     resolutionStrategy {
-        failOnVersionConflict()
+        //failOnVersionConflict()
         force "junit:junit:${junitVersion}",
                 "org.mockito:mockito-core:${mockitoCoreVersion}",
                 "commons-collections:commons-collections:3.2.2",
@@ -108,14 +108,17 @@ configurations.all {
                 "commons-codec:commons-codec:1.10",
                 "org.objenesis:objenesis:2.6",
                 "cglib:cglib-nodep:3.2.4",
-                "org.springframework:spring-core:4.3.8.RELEASE",
-                "org.springframework:spring-beans:4.3.8.RELEASE",
-                "org.springframework:spring-context:4.3.8.RELEASE"
+                "org.seleniumhq.selenium:selenium-api:${seleniumVersion}",
+                "org.springframework:spring-core:${springVersion}",
+                "org.springframework:spring-beans:${springVersion}",
+                "org.springframework:spring-context:${springVersion}"
     }
 }
 
 dependencies {
-    compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}")
+    compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}") {
+        exclude group:"org.seleniumhq.selenium", module:"htmlunit-driver"
+    }
 
     compile "commons-logging:commons-logging:${commonsLoggingVersion}"
 
