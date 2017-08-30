@@ -7,7 +7,7 @@ import org.joda.time.YearMonth;
 
 import java.util.List;
 
-import static ch.lambdaj.Lambda.convert;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MonthYearConversionSteps {
@@ -32,12 +32,11 @@ public class MonthYearConversionSteps {
     @When("I pass a list of YearMonth parameter a value of <value>")
     public void passYearMonthParameterList(List<YearMonth> value) {
         this.yearMonthList = value;
-
     }
 
     @Then("the parameter should be converted to a list of YearMonth with a value of <expected>")
     public void convertToListOfYearMonths(List<String> expected) {
-        assertThat(yearMonthList).isEqualTo(convert(expected, StringDateConverters.toYearMonths()));
+        assertThat(yearMonthList).isEqualTo(expected.stream().map(YearMonth::new).collect(toList()));
     }
 
 }

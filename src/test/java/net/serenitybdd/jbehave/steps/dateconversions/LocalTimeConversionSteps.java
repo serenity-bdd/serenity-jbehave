@@ -7,7 +7,7 @@ import org.joda.time.LocalTime;
 
 import java.util.List;
 
-import static ch.lambdaj.Lambda.convert;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocalTimeConversionSteps {
@@ -36,8 +36,7 @@ public class LocalTimeConversionSteps {
 
     @Then("the parameter should be converted to a list of LocalTimes with values <expected>")
     public void should_get_expected_localtime_value_list(List<String> expected) {
-        assertThat(localTimeParameterList).isEqualTo(convert(expected, StringDateConverters.toLocalTimes()));
+        assertThat(localTimeParameterList).isEqualTo(expected.stream().map(LocalTime::new).collect(toList()));
     }
-
 
 }
