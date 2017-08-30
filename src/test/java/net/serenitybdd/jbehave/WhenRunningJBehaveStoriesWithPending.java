@@ -7,8 +7,8 @@ import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static ch.lambdaj.Lambda.filter;
 import static net.serenitybdd.jbehave.TestOutcomeFinder.theScenarioCalled;
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.PENDING;
@@ -123,17 +123,10 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
-        List<? extends TestOutcome> success = TestOutcomes.of(filter(withResult(TestResult.SUCCESS), outcomes)).getTests();
-        assertThat(success.size(), is(1));
-
-        List<? extends TestOutcome> pending = TestOutcomes.of(filter(withResult(TestResult.PENDING), outcomes)).getTests();
-        assertThat(pending.size(), is(1));
-
-        List<? extends TestOutcome> skipped = TestOutcomes.of(filter(withResult(TestResult.SKIPPED), outcomes)).getTests();
-        assertThat(skipped.size(), is(2));
-
-        List<? extends TestOutcome> ignored = TestOutcomes.of(filter(withResult(TestResult.IGNORED), outcomes)).getTests();
-        assertThat(ignored.size(), is(1));
+        assertThat(filter(outcomes, TestResult.SUCCESS).size(), is(1));
+        assertThat(filter(outcomes, TestResult.PENDING).size(), is(1));
+        assertThat(filter(outcomes, TestResult.SKIPPED).size(), is(2));
+        assertThat(filter(outcomes, TestResult.IGNORED).size(), is(1));
 
         // And
         assertThat(outcomes.get(1).getStepCount(), is(4));
@@ -161,7 +154,6 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
         assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.PENDING));
     }
 
-
     @Test
     public void a_tagged_ignored_outcome_should_be_ignored() throws Throwable {
 
@@ -182,4 +174,8 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
         assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.IGNORED));
     }
 
+    private List<? extends TestOutcome> filter(List<TestOutcome> outcomes, TestResult testResult) {
+        return TestOutcomes.of(outcomes.stream().filter(o -> o.getResult() == testResult).collect(Collectors.toList()))
+                .getTests();
+    }
 }

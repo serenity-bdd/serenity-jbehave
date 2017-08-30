@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import ch.lambdaj.function.convert.Converter;
 import com.google.common.collect.Lists;
 import net.serenitybdd.core.di.DependencyInjector;
 import net.thucydides.core.guice.Injectors;
@@ -17,8 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static ch.lambdaj.Lambda.convert;
+import java.util.stream.Collectors;
 
 public class SerenityStepFactory extends AbstractStepsFactory {
 
@@ -41,8 +39,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
     }
 
     public List<CandidateSteps> createCandidateSteps() {
-        List<CandidateSteps> coreCandidateSteps = super.createCandidateSteps();
-        return convert(coreCandidateSteps, toSerenityCandidateSteps());
+        return super.createCandidateSteps().stream().map(SerenityCandidateSteps::new).collect(Collectors.toList());
     }
 
     @Override
@@ -67,14 +64,6 @@ public class SerenityStepFactory extends AbstractStepsFactory {
         }
 
         return candidateClasses;
-    }
-
-    private Converter<CandidateSteps, CandidateSteps> toSerenityCandidateSteps() {
-        return new Converter<CandidateSteps, CandidateSteps>() {
-            public CandidateSteps convert(CandidateSteps candidateSteps) {
-                return new SerenityCandidateSteps(candidateSteps);
-            }
-        };
     }
 
     public Object createInstanceOfType(Class<?> type) {

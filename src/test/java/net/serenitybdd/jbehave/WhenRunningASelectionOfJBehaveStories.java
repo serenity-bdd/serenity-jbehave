@@ -6,19 +6,13 @@ import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
 import net.thucydides.core.reports.TestOutcomes;
 import net.thucydides.core.util.EnvironmentVariables;
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.withResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static ch.lambdaj.Lambda.*;
 
 public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory {
 
@@ -207,11 +201,13 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
         assertThat(outcomes.size(), is(3));
     }
 
-    private List<? extends TestOutcome> excludeSkippedAndIgnored(final List<TestOutcome> source){
-        return TestOutcomes.of(filter(
-                having(on(TestOutcome.class).getResult(),
-                        not(isIn(Arrays.asList(TestResult.SKIPPED,TestResult.IGNORED)))
-                ),source)).getOutcomes();
+    private List<? extends TestOutcome> excludeSkippedAndIgnored(final List<TestOutcome> source) {
+        return TestOutcomes.of(source.stream()
+                .filter(t -> {
+                    TestResult result = t.getResult();
+                    return TestResult.SKIPPED != result && TestResult.IGNORED != result;
+                })
+                .collect(Collectors.toList())).getOutcomes();
     }
 
 }
