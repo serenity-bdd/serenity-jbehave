@@ -159,7 +159,9 @@ public class SerenityReporter implements StoryReporter {
                 }
             }
 
-            isRunningFirstScenario = true;
+            if (!isUnexecutedScenario()) {
+                isRunningFirstScenario = true;
+            }
 
         } else if (givenStory) {
             shouldNestScenarios(true);
@@ -192,11 +194,11 @@ public class SerenityReporter implements StoryReporter {
         logger.debug("before scenario started ".concat(scenarioTitle));
         clearScenarioResult();
 
-//        restartBrowserIfNecessary();
-
-        if (shouldResetStepsBeforeEachScenario() && !runningFirstScenario()) {
+        if (shouldResetStepsBeforeEachScenario()) {
             SerenityStepFactory.resetContext();
         }
+
+        resetDriverIfNecessary();
 
         if (isCurrentScenario(scenarioTitle)) {
             return;
@@ -211,8 +213,10 @@ public class SerenityReporter implements StoryReporter {
         }
     }
 
-    private boolean runningFirstScenario() {
-        return isRunningFirstScenario;
+    private void resetDriverIfNecessary() {
+        if (Serenity.currentDriverIsDisabled()) {
+            Serenity.getWebdriverManager().resetDriver();
+        }
     }
 
     private boolean isCurrentScenario(String scenarioTitle) {
@@ -490,6 +494,7 @@ public class SerenityReporter implements StoryReporter {
         } else if (isManual(metaData) || isStoryManual()) {
             StepEventBus.getEventBus().testIsManual();
             StepEventBus.getEventBus().suspendTest();
+            forcedScenarioResult = Optional.of(TestResult.PENDING);
         } else if (isIgnored(metaData)) {
             forcedScenarioResult = Optional.of(TestResult.IGNORED);
         }
@@ -638,6 +643,10 @@ public class SerenityReporter implements StoryReporter {
             isRunningFirstScenario = false;
             activeScenarios.pop();
         }
+    }
+
+    private boolean isUnexecutedScenario() {
+        return isPendingScenario() || isSkippedScenario() || isIgnoredScenario();
     }
 
     private boolean isPendingScenario() {

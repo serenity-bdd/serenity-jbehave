@@ -68,7 +68,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
 
     public Object createInstanceOfType(Class<?> type) {
         Object stepsInstance = getContext().newInstanceOf(type);
-        StepAnnotations.injectScenarioStepsInto(stepsInstance, getStepFactory());
+        StepAnnotations.injector().injectScenarioStepsInto(stepsInstance, getStepFactory());
         ThucydidesWebDriverSupport.initializeFieldsIn(stepsInstance);
         injectDependencies(stepsInstance);
 
