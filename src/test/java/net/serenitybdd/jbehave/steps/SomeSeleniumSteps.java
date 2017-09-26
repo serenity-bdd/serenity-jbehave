@@ -14,9 +14,7 @@ import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class SomeSeleniumSteps {
 
@@ -103,7 +101,7 @@ public class SomeSeleniumSteps {
 
     @Then("I should be using $browser")
     public void andIShouldBeUsingHtmlUnit(String browser) {
-        assertThat(((WebDriverFacade)webDriver).getDriverClass().getName(), containsString(browser));
+        assertThat(((WebDriverFacade)webDriver).getDriverName(), equalTo(browser));
     }
 
     @Given("the scenario throws an exception")

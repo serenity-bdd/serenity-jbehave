@@ -7,7 +7,7 @@ Given I am on the test page
 When I type in the first name <firstname>
 And I type in the last name <lastname>
 Then I should see entered values of <expectedFirstname> and <expectedLastname>
-And I should be using Chrome
+And I should be using chrome
 
 Examples:
 |firstname|lastname| expectedFirstname | expectedLastname |
