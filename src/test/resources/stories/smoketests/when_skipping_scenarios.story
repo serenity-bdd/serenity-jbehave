@@ -19,12 +19,19 @@ Given I want to search for something
 When I lookup apple
 Then I should see "apple at DuckDuckGo" in the page title
 
-Scenario: 4 Running another scenario
+Scenario: 4 A skipped manual scenario
+Meta:
+@skip @manual
+Given I want to search for something
+When I lookup apple
+Then I should see "apple at DuckDuckGo" in the page title
+
+Scenario: 5 Running another scenario
 Given I want to search for something
 When I lookup pear
 Then I should see "pear at DuckDuckGo" in the page title
 
-Scenario: 5 A pending scenario
+Scenario: 6 A pending scenario
 Meta:
 @pending
 Given I want to search for something

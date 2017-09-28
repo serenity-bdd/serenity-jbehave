@@ -8,9 +8,14 @@ import net.thucydides.core.annotations.Steps;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 
 public class SkippingScenariosStepDefinitions {
 
@@ -23,12 +28,19 @@ public class SkippingScenariosStepDefinitions {
         @FindBy(id="search_button_homepage")
         WebElementFacade searchButton;
 
+        @FindBy(className = "result__title")
+        List<WebElementFacade> results;
+
         public void enterSearchTerm(String searchTerm) {
             searchField.type(searchTerm);
         }
 
         public void requestSearch() {
             searchButton.click();
+        }
+
+        public List<String> getResults() {
+            return results.stream().map(element -> element.getText()).collect(Collectors.toList());
         }
     }
 
@@ -51,6 +63,11 @@ public class SkippingScenariosStepDefinitions {
         public void shouldSeeTitle(String title) {
             assertThat(searchPage.getTitle()).contains(title);
         }
+
+        @Step
+        public void shouldSeeAListOfResults() {
+            assertThat(searchPage.getResults().size()).isGreaterThan(0);
+        }
     }
 
     @Steps
@@ -69,6 +86,11 @@ public class SkippingScenariosStepDefinitions {
     @Then("I should see \"$title\" in the page title")
     public void thenIShouldSeeTitle(String title) {
         connor.shouldSeeTitle(title);
+    }
+
+    @Then("I should see search results")
+    public void thenIShouldSeeSearchResults() {
+        connor.shouldSeeAListOfResults();
     }
 
 }

@@ -59,7 +59,6 @@ public class SerenityReporter implements StoryReporter {
     private static Optional<TestResult> forcedScenarioResult;
 
     private GivenStoryMonitor givenStoryMonitor;
-    private boolean isRunningFirstScenario;
 
     public SerenityReporter(Configuration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
@@ -157,10 +156,6 @@ public class SerenityReporter implements StoryReporter {
                 if (givenStoriesPresentFor(story)) {
                     startTestForFirstScenarioIn(story);
                 }
-            }
-
-            if (!isUnexecutedScenario()) {
-                isRunningFirstScenario = true;
             }
 
         } else if (givenStory) {
@@ -463,6 +458,8 @@ public class SerenityReporter implements StoryReporter {
             StepEventBus.getEventBus().suspendTest();
         } else if (isIgnored(metaData)) {
             StepEventBus.getEventBus().suspendTest();
+        } else if (isManual(metaData)) {
+            StepEventBus.getEventBus().suspendTest();
         }
     }
 
@@ -640,7 +637,6 @@ public class SerenityReporter implements StoryReporter {
             } else {
                 StepEventBus.getEventBus().testFinished();
             }
-            isRunningFirstScenario = false;
             activeScenarios.pop();
         }
     }

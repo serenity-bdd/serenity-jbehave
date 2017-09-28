@@ -40,6 +40,21 @@ public class WhenRunningJBehaveStoriesWithError extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.ERROR));
     }
 
+    @Test
+    public void stories_with_undefined_steps_should_be_reported_as_pending() throws Throwable {
+
+        // Given
+        SerenityStories failingStory = newStory("aBehaviorWithAnUndefinedStep.story");
+
+        // When
+        run(failingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.PENDING));
+    }
+
     private void runStories(SerenityStories stories) throws Throwable {
         run(stories);
     }

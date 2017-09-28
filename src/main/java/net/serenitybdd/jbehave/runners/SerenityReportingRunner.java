@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 
 public class SerenityReportingRunner extends Runner {
 
-	private List<Description> storyDescriptions;
+    private List<Description> storyDescriptions;
 	private ExtendedEmbedder configuredEmbedder;
 	private List<String> storyPaths;
 	private Configuration configuration;
@@ -157,7 +157,7 @@ public class SerenityReportingRunner extends Runner {
 		// tell the reporter how to handle pending steps
 		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 
-		addToStoryReporterFormats(junitReporter);
+        addToStoryReporterFormats(junitReporter);
 
 		try {
             getConfiguredEmbedder().runStoriesAsPaths(getStoryPaths());
