@@ -56,8 +56,6 @@ public class SerenityReporter implements StoryReporter {
     private static final String BEFORE_STORIES = "BeforeStories";
     private static final String AFTER_STORIES = "AfterStories";
 
-    private static Optional<TestResult> forcedScenarioResult;
-
     private GivenStoryMonitor givenStoryMonitor;
 
     public SerenityReporter(Configuration systemConfiguration) {
@@ -66,13 +64,8 @@ public class SerenityReporter implements StoryReporter {
         reportServiceThreadLocal = new ThreadLocal<>();
         baseStepListeners = Lists.newArrayList();
         givenStoryMonitor = new GivenStoryMonitor();
-        clearScenarioResult();
-
     }
 
-    private void clearScenarioResult() {
-        forcedScenarioResult = Optional.absent();
-    }
 
     protected void clearListeners() {
         serenityListenersThreadLocal.remove();
@@ -149,8 +142,6 @@ public class SerenityReporter implements StoryReporter {
 
             SerenityStepFactory.resetContext();
 
-            //getSerenityListeners().withDriver(ThucydidesWebDriverSupport.getDriver());
-
             if (!isAStoryLevelGiven(story)) {
                 startTestSuiteForStory(story);
                 if (givenStoriesPresentFor(story)) {
@@ -187,7 +178,6 @@ public class SerenityReporter implements StoryReporter {
 
     public void beforeScenario(String scenarioTitle) {
         logger.debug("before scenario started ".concat(scenarioTitle));
-        clearScenarioResult();
 
         if (shouldResetStepsBeforeEachScenario()) {
             SerenityStepFactory.resetContext();
@@ -284,14 +274,23 @@ public class SerenityReporter implements StoryReporter {
         return story.getName().equalsIgnoreCase(givenStoryName);
     }
 
-//    Map<Story, WebDriver> drivers = Maps.newConcurrentMap();
-
     private void configureDriver(Story story) {
         StepEventBus.getEventBus().setUniqueSession(systemConfiguration.shouldUseAUniqueBrowser());
         String requestedDriver = getRequestedDriver(story.getMeta());
-        if (StringUtils.isNotEmpty(requestedDriver) && (!driverIsProvidedInTheEnvironmentVariables())) {
+        // An annotated driver that ends with "!" overrides the command-line configured driver
+        if (isEmphatic(requestedDriver)) {
+            ThucydidesWebDriverSupport.useDefaultDriver(unemphasised(requestedDriver));
+        } else if (StringUtils.isNotEmpty(requestedDriver) && (!driverIsProvidedInTheEnvironmentVariables())){
             ThucydidesWebDriverSupport.useDefaultDriver(requestedDriver);
         }
+    }
+
+    private String unemphasised(String requestedDriver) {
+        return requestedDriver.replace("!","");
+    }
+
+    private boolean isEmphatic(String requestedDriver) {
+        return requestedDriver != null && requestedDriver.endsWith("!");
     }
 
     private boolean driverIsProvidedInTheEnvironmentVariables() {
@@ -463,37 +462,15 @@ public class SerenityReporter implements StoryReporter {
         }
     }
 
-    private Optional<TestResult> getStoryMetadataResult() {
-        if (isPending(currentStory().getMeta())) {
-            return Optional.of(TestResult.PENDING);
-        } else if (isSkipped(currentStory().getMeta())) {
-            return Optional.of(TestResult.SKIPPED);
-        } else if (isIgnored(currentStory().getMeta())) {
-            return Optional.of(TestResult.IGNORED);
-        } else {
-            return Optional.absent();
-        }
-    }
-
     private boolean isStoryManual() {
         return isManual(currentStory().getMeta());
     }
 
-    private Optional<TestResult> getScenarioMetadataResult() {
-        return forcedScenarioResult;
-    }
-
     private void registerScenarioMeta(Meta metaData) {
-        if (isPending(metaData)) {
-            forcedScenarioResult = Optional.of(TestResult.PENDING);
-        } else if (isSkipped(metaData)) {
-            forcedScenarioResult = Optional.of(TestResult.SKIPPED);
-        } else if (isManual(metaData) || isStoryManual()) {
+
+        // Manual can be combined with the other tags to override the default result category
+        if (isManual(metaData) || isStoryManual()) {
             StepEventBus.getEventBus().testIsManual();
-            StepEventBus.getEventBus().suspendTest();
-            forcedScenarioResult = Optional.of(TestResult.PENDING);
-        } else if (isIgnored(metaData)) {
-            forcedScenarioResult = Optional.of(TestResult.IGNORED);
         }
     }
 
@@ -548,18 +525,10 @@ public class SerenityReporter implements StoryReporter {
         StepEventBus.getEventBus().testIgnored();
     }
 
-    private void startScenarioCalled(String scenarioTitle) {
-        startScenarioCalled(scenarioTitle, scenarioIdFrom(scenarioTitle));
-    }
-
     private void startScenarioCalled(String scenarioTitle, String scenarioId) {
         StepEventBus.getEventBus().setTestSource(StepEventBus.TEST_SOURCE_JBEHAVE);
         StepEventBus.getEventBus().testStarted(scenarioTitle, scenarioId);
         activeScenarios.add(scenarioTitle);
-    }
-
-    private String scenarioIdFrom(String title) {
-        return currentStory().getPath() + ";" + title;
     }
 
     private boolean shouldResetStepsBeforeEachScenario() {
@@ -567,7 +536,13 @@ public class SerenityReporter implements StoryReporter {
                 SerenityJBehaveSystemProperties.RESET_STEPS_EACH_SCENARIO.getName(), true);
     }
 
+    List<String> scenarioTags;
+
     public void scenarioMeta(Meta meta) {
+
+        scenarioTags = new ArrayList<>(meta.getPropertyNames());
+        scenarioTags.addAll(currentStory().getMeta().getPropertyNames());
+
         final String title = activeScenarios.peek();
         logger.debug("scenario:\"" + (StringUtils.isEmpty(title) ? " don't know name " : title) + "\" registering metadata for" + meta);
         registerIssues(meta);
@@ -575,11 +550,42 @@ public class SerenityReporter implements StoryReporter {
         registerTags(meta);
         registerMetadata(meta);
         registerScenarioMeta(meta);
-        if (isPendingScenario()) {
-            StepEventBus.getEventBus().testPending();
-        } else if (isSkippedScenario()) {
-            StepEventBus.getEventBus().testSkipped();
+
+        markAsSkippedOrPendingIfAnnotatedAsSuchIn(scenarioTags);
+    }
+
+    private void markAsSkippedOrPendingIfAnnotatedAsSuchIn(List<String> tags) {
+        if (isManual(tags)) {
+            StepEventBus.getEventBus().testIsManual();
         }
+        if (isSkipped(tags)) {
+            StepEventBus.getEventBus().testSkipped();
+            StepEventBus.getEventBus().getBaseStepListener().overrideResultTo(TestResult.SKIPPED);
+        }
+        if (isPending(tags)) {
+            StepEventBus.getEventBus().testPending();
+            StepEventBus.getEventBus().getBaseStepListener().overrideResultTo(TestResult.PENDING);
+        }
+        if (isIgnored(tags)) {
+            StepEventBus.getEventBus().testIgnored();
+            StepEventBus.getEventBus().getBaseStepListener().overrideResultTo(TestResult.IGNORED);
+        }
+    }
+
+    private boolean isSkipped(List<String> tags) {
+        return tags.contains("skip") || tags.contains("wip");
+    }
+
+    private boolean isPending(List<String> tags) {
+        return tags.contains("pending");
+    }
+
+    private boolean isIgnored(List<String> tags) {
+        return tags.contains("ignore");
+    }
+
+    private boolean isManual(List<String> tags) {
+        return tags.contains("manual");
     }
 
     private boolean isPending(Meta metaData) {
@@ -604,10 +610,6 @@ public class SerenityReporter implements StoryReporter {
         return !isIgnored(metaData) && !isPending(metaData) && !isSkipped(metaData);
     }
 
-    private boolean isCandidateToBeExecuted(Story story) {
-        return isCandidateToBeExecuted(story.getMeta());
-    }
-
     private boolean isIgnored(Meta metaData) {
         if (metaData == null) return false;
 
@@ -623,51 +625,13 @@ public class SerenityReporter implements StoryReporter {
 
         if (givenStoryMonitor.isInGivenStory() || shouldNestScenarios()) {
             StepEventBus.getEventBus().stepFinished();
-//            unnestScenarios();
         } else {
-            if (isPendingScenario() || isPendingStory()) {
-                StepEventBus.getEventBus().setAllStepsTo(TestResult.PENDING);
-                StepEventBus.getEventBus().testPending();
-            } else if (isSkippedScenario() || isSkippedStory()) {
-                StepEventBus.getEventBus().setAllStepsTo(TestResult.SKIPPED);
-                StepEventBus.getEventBus().testSkipped();
-            } else if (isIgnoredScenario()) {
-                StepEventBus.getEventBus().testIgnored();
-                StepEventBus.getEventBus().setAllStepsTo(TestResult.IGNORED);
-            } else {
+            if (!(isPending(scenarioTags) || isSkipped(scenarioTags) || isIgnored(scenarioTags))) {
                 StepEventBus.getEventBus().testFinished();
             }
             activeScenarios.pop();
         }
     }
-
-    private boolean isUnexecutedScenario() {
-        return isPendingScenario() || isSkippedScenario() || isIgnoredScenario();
-    }
-
-    private boolean isPendingScenario() {
-        return (getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.PENDING)
-                || (getScenarioMetadataResult().or(TestResult.UNDEFINED) == TestResult.PENDING);
-    }
-
-    private boolean isSkippedScenario() {
-        return (getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.SKIPPED)
-                || (getScenarioMetadataResult().or(TestResult.UNDEFINED) == TestResult.SKIPPED);
-    }
-
-    private boolean isIgnoredScenario() {
-        return (getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.IGNORED)
-                || (getScenarioMetadataResult().or(TestResult.UNDEFINED) == TestResult.IGNORED);
-    }
-
-    private boolean isPendingStory() {
-        return getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.PENDING;
-    }
-
-    private boolean isSkippedStory() {
-        return getStoryMetadataResult().or(TestResult.UNDEFINED) == TestResult.SKIPPED;
-    }
-
 
     public void givenStories(GivenStories givenStories) {
         logger.debug("givenStories " + givenStories);
@@ -934,10 +898,10 @@ public class SerenityReporter implements StoryReporter {
         return false;
     }
 
-    private Optional<TestOutcome> latestTestOutcome() {
+    private java.util.Optional<TestOutcome> latestTestOutcome() {
         List<TestOutcome> recordedOutcomes = StepEventBus.getEventBus().getBaseStepListener().getTestOutcomes();
-        return (recordedOutcomes.isEmpty()) ? Optional.<TestOutcome>absent()
-                : Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
+        return (recordedOutcomes.isEmpty()) ? java.util.Optional.<TestOutcome>empty()
+                : java.util.Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
     }
 
 }

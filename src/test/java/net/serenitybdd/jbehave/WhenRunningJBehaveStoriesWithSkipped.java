@@ -55,16 +55,16 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         TestOutcome pendingOutcome = theScenarioCalled("A scenario that is work-in-progress").in(outcomes);
-        assertThat(pendingOutcome.getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getResult(), is(SKIPPED));
         assertThat(pendingOutcome.countTestSteps(), is(4));
-        assertThat(pendingOutcome.getTestSteps().get(0).getResult(), is(TestResult.SKIPPED));
-        assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(TestResult.SKIPPED));
-        assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(TestResult.SKIPPED));
-        assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(0).getResult(), is(IGNORED));
+        assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(IGNORED));
+        assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(IGNORED));
+        assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(IGNORED));
     }
 
     @Test
-    public void a_tagged_skipped_outcome_should_be_skipped() throws Throwable {
+    public void a_tagged_skipped_outcome_should_be_skipped_and_the_steps_ignored() throws Throwable {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -75,12 +75,12 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         TestOutcome pendingOutcome = theScenarioCalled("scenario that is work-in-progress").in(outcomes);
-        assertThat(pendingOutcome.getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getResult(), is(SKIPPED));
         assertThat(pendingOutcome.countTestSteps(), is(4));
-        assertThat(pendingOutcome.getTestSteps().get(0).getResult(), is(TestResult.SKIPPED));
-        assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(TestResult.SKIPPED));
-        assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(TestResult.SKIPPED));
-        assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.SKIPPED));
+        assertThat(pendingOutcome.getTestSteps().get(0).getResult(), is(IGNORED));
+        assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(IGNORED));
+        assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(IGNORED));
+        assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(IGNORED));
     }
 
     @Test
@@ -95,8 +95,8 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(2));
-        assertThat(outcomes.get(0).getResult(), is(TestResult.SKIPPED));
-        assertThat(outcomes.get(1).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(0).getResult(), is(SKIPPED));
+        assertThat(outcomes.get(1).getResult(), is(SKIPPED));
     }
 
     @Test

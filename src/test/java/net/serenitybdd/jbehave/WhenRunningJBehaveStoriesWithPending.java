@@ -91,7 +91,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
         // And
         assertThat(outcomes.get(0).getResult(), is(PENDING));
         // And
-        assertThat(outcomes.get(0), containsResults(SUCCESS, SUCCESS, SUCCESS, SUCCESS, SUCCESS, SUCCESS, PENDING, PENDING, PENDING));
+        assertThat(outcomes.get(0), containsResults(SUCCESS, SUCCESS, PENDING, PENDING, PENDING));
 
     }
 
@@ -172,6 +172,40 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
         assertThat(pendingOutcome.getTestSteps().get(1).getResult(), is(TestResult.IGNORED));
         assertThat(pendingOutcome.getTestSteps().get(2).getResult(), is(TestResult.IGNORED));
         assertThat(pendingOutcome.getTestSteps().get(3).getResult(), is(TestResult.IGNORED));
+    }
+
+
+    @Test
+    public void should_be_able_to_report_pending_and_skipped_results() throws Throwable {
+
+        // Given
+        SerenityStories passingStory = newStory("when_skipping_scenarios.story");
+
+        // When
+        run(passingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SKIPPED));
+
+        assertThat(outcomes.get(1).getResult(), is(TestResult.SUCCESS));
+
+        assertThat(outcomes.get(2).getResult(), is(TestResult.PENDING));
+        assertThat(outcomes.get(2).isManual(), is(true));
+
+        assertThat(outcomes.get(3).getResult(), is(TestResult.IGNORED));
+
+        assertThat(outcomes.get(4).getResult(), is(TestResult.SUCCESS));
+
+        assertThat(outcomes.get(5).getResult(), is(TestResult.PENDING));
+
+        assertThat(outcomes.get(6).getResult(), is(TestResult.PENDING));
+
+        assertThat(outcomes.get(7).getResult(), is(TestResult.SKIPPED));
+
+        assertThat(outcomes.get(8).getResult(), is(TestResult.SKIPPED));
+        assertThat(outcomes.get(8).isManual(), is(true));
+
     }
 
     private List<? extends TestOutcome> filter(List<TestOutcome> outcomes, TestResult testResult) {

@@ -1,5 +1,5 @@
 Meta:
-@driver firefox
+@driver phantomjs!
 
 Scenario: A scenario that uses selenium
 

@@ -1,4 +1,4 @@
-package net.serenitybdd.jbehave.smoketests;
+package smoketests.stepdefinitions;
 
 import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
@@ -93,6 +93,13 @@ public class SkippingScenariosStepDefinitions {
         connor.shouldSeeAListOfResults();
     }
 
+    @Then("subsequent steps should be ignored")
+    public void ignoreSubsequentSteps() {}
+
+    @Then("steps should be ignored")
+    public void ignoreSteps() {}
+
+
     @Given("I want to indicate that a scenario should be performed manually")
     public void manual() {}
 
@@ -104,5 +111,4 @@ public class SkippingScenariosStepDefinitions {
 
     @Then("it should be reported as ${state}")
     public void reported_as(String states) {}
-
 }

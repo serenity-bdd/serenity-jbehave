@@ -76,43 +76,13 @@ public class WhenRunningJBehaveStoriesWithError extends AbstractJBehaveStory {
 
     @Test
     public void a_test_running_a_failing_story_should_fail() throws Throwable {
-        SerenityStories stories = new AFailingBehavior();
+        SerenityStories stories = newStory("aFailingBehavior.story");
         stories.setSystemConfiguration(systemConfiguration);
         runStories(stories);
 
-        assert !raisedErrors.isEmpty();
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
     }
 
-    @Test
-    public void a_test_running_a_failing_story_among_several_should_fail() throws Throwable {
-        SerenityStories stories = new ASetOfBehaviorsContainingFailures();
-        stories.setSystemConfiguration(systemConfiguration);
-        runStories(stories);
-
-        assert !raisedErrors.isEmpty();
-    }
-
-    @Test
-    public void failing_stories_run_in_junit_should_fail() throws Throwable {
-
-        // Given
-        SerenityStories failingStory = newStory("aFailingBehavior.story");
-
-        // When
-        runStories(failingStory);
-
-        assert !raisedErrors.isEmpty();
-    }
-
-    @Test
-    public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
-
-        // Given
-        SerenityStories failingStory = newStory("aBehaviorThrowingAnException.story");
-
-        // When
-        runStories(failingStory);
-
-        assert !raisedErrors.isEmpty();
-    }
 }

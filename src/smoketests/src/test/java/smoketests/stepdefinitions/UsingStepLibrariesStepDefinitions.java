@@ -1,4 +1,4 @@
-package net.serenitybdd.jbehave.smoketests;
+package smoketests.stepdefinitions;
 
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;

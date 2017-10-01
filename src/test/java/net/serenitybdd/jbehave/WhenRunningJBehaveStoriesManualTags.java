@@ -51,6 +51,23 @@ public class WhenRunningJBehaveStoriesManualTags extends AbstractJBehaveStory {
     }
 
     @Test
+    public void steps_should_be_marked_skipped_and_manual_if_annotated_skipped() throws Throwable {
+
+        // Given
+        SerenityStories story = newStory("aBehaviorWithSkippedManualScenario.story");
+
+        // When
+        run(story);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.get(0), havingTag(TestTag.withName("Manual").andType("External Tests")));
+        assertThat(outcomes.get(0).isManual(), equalTo(true));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.SKIPPED));
+
+    }
+
+    @Test
     public void scenario_manual_tags_should_not_be_shared_between_scenarios() throws Throwable {
 
         // Given

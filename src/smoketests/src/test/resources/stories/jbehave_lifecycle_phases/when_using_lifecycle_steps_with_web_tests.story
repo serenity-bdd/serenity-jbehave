@@ -1,13 +1,13 @@
-A scenario that uses lifecycle phases
+Lifecycle phases also work with web tests
 
 Lifecycle:
-Before:
+Before: Open the search page
 Given I want to search for something
 
-After:
+After: Check that some results are displayed
 Then I should see search results
 
-Scenario: Look for pears§
+Scenario: Look for pears
 When I lookup pear
 Then I should see "pear at DuckDuckGo" in the page title
 

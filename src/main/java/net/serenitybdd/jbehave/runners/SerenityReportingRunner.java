@@ -38,6 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class SerenityReportingRunner extends Runner {
 
@@ -53,6 +54,7 @@ public class SerenityReportingRunner extends Runner {
     private final EnvironmentVariables environmentVariables;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SerenityReportingRunner.class);
+    private boolean runningInMaven;
 
     @SuppressWarnings("unchecked")
     public SerenityReportingRunner(Class<? extends ConfigurableEmbedder> testClass) throws Throwable {
@@ -136,8 +138,8 @@ public class SerenityReportingRunner extends Runner {
         return testCount;
     }
 
-	@Override
-	public void run(RunNotifier notifier) {
+    @Override
+    public void run(RunNotifier notifier) {
 
         beforeStoriesRun(getConfiguredEmbedder());
 
@@ -152,21 +154,28 @@ public class SerenityReportingRunner extends Runner {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
 
-        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(),
-                getConfiguredEmbedder().configuration().keywords());
-		// tell the reporter how to handle pending steps
-		junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
+        if (!isRunningInMaven() && !isRunningInGradle()) {
 
-        addToStoryReporterFormats(junitReporter);
+            JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(),
+                    getConfiguredEmbedder().configuration().keywords());
+            // tell the reporter how to handle pending steps
+            junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 
-		try {
+            addToStoryReporterFormats(junitReporter);
+        }
+
+        try {
             getConfiguredEmbedder().runStoriesAsPaths(getStoryPaths());
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		} finally {
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        } finally {
             getConfiguredEmbedder().generateCrossReference();
-		}
+        }
         shutdownTestSuite();
+    }
+
+    private boolean isRunningInGradle() {
+        return Stream.of(new Exception().getStackTrace()).anyMatch( elt -> elt.getClassName().startsWith("org.gradle"));
     }
 
     /**
@@ -355,4 +364,8 @@ public class SerenityReportingRunner extends Runner {
     }
 
     protected boolean getIgnoreFailuresInView() { return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW.getName(),true); }
+
+    public boolean isRunningInMaven() {
+        return Stream.of(new Exception().getStackTrace()).anyMatch( elt -> elt.getClassName().contains("maven"));
+    }
 }
