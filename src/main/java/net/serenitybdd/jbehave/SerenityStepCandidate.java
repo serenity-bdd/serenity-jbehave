@@ -33,7 +33,7 @@ public class SerenityStepCandidate extends StepCandidate {
                 new StepsContext(),
                 (Keywords) Extract.field("keywords").from(stepCandidate),
                 new RegexPrefixCapturingPatternParser(),
-                new ParameterConverters(new TableTransformers()),
+                new ParameterConverters(),
                 new ParameterControls());
         this.composedOf(stepCandidate.composedSteps());
         this.stepCandidate = stepCandidate;
