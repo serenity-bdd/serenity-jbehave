@@ -8,6 +8,7 @@ import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.failures.FailureStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
+import org.jbehave.core.io.StoryLoader;
 import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
@@ -39,10 +40,11 @@ public class SerenityJBehave {
         viewResources.put("decorateNonHtml", "true");
 
         TableTransformers tableTransformers = new TableTransformers();
+        UTF8StoryLoader utf8StoryLoader = new UTF8StoryLoader();
         return new ParanamerConfiguration()
                 .useTableTransformers(tableTransformers)
                 .useParameterConverters(
-                        new ParameterConverters(tableTransformers).addConverters(
+                        new ParameterConverters(utf8StoryLoader, tableTransformers).addConverters(
                                 new ParameterConverters.DateConverter(),
                                 new DateListConverter(),
                                 new DateTimeConverter(),
@@ -63,7 +65,7 @@ public class SerenityJBehave {
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
                                 .withFailureTrace(true).withFailureTraceCompression(true)
                                 .withReporters(new SerenityReporter(systemConfiguration)))
-                .useStoryLoader(new UTF8StoryLoader())
+                .useStoryLoader(utf8StoryLoader)
                 .useFailureStrategy(new IgnoreAssumptionViolations());
     }
 
