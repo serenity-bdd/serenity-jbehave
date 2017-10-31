@@ -1,15 +1,19 @@
 package net.serenitybdd.jbehave.runners;
 
+import com.github.valfirst.jbehave.junit.monitoring.JUnitReportingRunner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
+//import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
+import net.serenitybdd.core.exceptions.SerenityManagedException;
 import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.annotations.Metafilter;
 import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
 import net.serenitybdd.jbehave.embedders.monitors.ReportingEmbedderMonitor;
+import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
+import net.thucydides.core.reports.ResultChecker;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.codehaus.plexus.util.StringUtils;
@@ -23,6 +27,7 @@ import org.jbehave.core.io.StoryPathResolver;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.junit.JUnitStory;
 import org.jbehave.core.model.Story;
+import org.jbehave.core.reporters.NullStoryReporter;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.InjectableStepsFactory;
@@ -34,20 +39,22 @@ import org.junit.runner.notification.RunNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SerenityReportingRunner extends Runner {
 
     private List<Description> storyDescriptions;
-	private ExtendedEmbedder configuredEmbedder;
-	private List<String> storyPaths;
-	private Configuration configuration;
-	private Description description;
-	List<CandidateSteps> candidateSteps;
+    private ExtendedEmbedder configuredEmbedder;
+    private List<String> storyPaths;
+    private Configuration configuration;
+    private Description description;
+    List<CandidateSteps> candidateSteps;
 
     private final ConfigurableEmbedder configurableEmbedder;
     private final Class<? extends ConfigurableEmbedder> testClass;
@@ -66,7 +73,7 @@ public class SerenityReportingRunner extends Runner {
         this.configurableEmbedder = embedder;
         ExtendedEmbedder extendedEmbedder = new ExtendedEmbedder(this.configurableEmbedder.configuredEmbedder());
         extendedEmbedder.getEmbedderMonitor().subscribe(new ReportingEmbedderMonitor(
-                ((SerenityStories)embedder).getSystemConfiguration(), extendedEmbedder));
+                ((SerenityStories) embedder).getSystemConfiguration(), extendedEmbedder));
         this.configurableEmbedder.useEmbedder(extendedEmbedder);
         this.testClass = testClass;
         this.environmentVariables = environmentVariablesFrom(configurableEmbedder);
@@ -88,7 +95,7 @@ public class SerenityReportingRunner extends Runner {
 
     public ExtendedEmbedder getConfiguredEmbedder() {
         if (configuredEmbedder == null) {
-            configuredEmbedder = (ExtendedEmbedder)configurableEmbedder.configuredEmbedder();
+            configuredEmbedder = (ExtendedEmbedder) configurableEmbedder.configuredEmbedder();
         }
         return configuredEmbedder;
     }
@@ -98,11 +105,11 @@ public class SerenityReportingRunner extends Runner {
             try {
                 if (configurableEmbedder instanceof JUnitStory) {
                     getStoryPathsFromJUnitStory();
-                } else  if (configurableEmbedder instanceof JUnitStories) {
+                } else if (configurableEmbedder instanceof JUnitStories) {
                     getStoryPathsFromJUnitStories(testClass);
                 }
-            } catch(Throwable e) {
-                LOGGER.error("Could not load story paths",e);
+            } catch (Throwable e) {
+                LOGGER.error("Could not load story paths", e);
                 return Collections.EMPTY_LIST;
             }
         }
@@ -113,25 +120,25 @@ public class SerenityReportingRunner extends Runner {
         if (configurableEmbedder instanceof SerenityStories) {
             return ((SerenityStories) configurableEmbedder).getEnvironmentVariables();
         } else {
-            return Injectors.getInjector().getProvider(EnvironmentVariables.class).get() ;
+            return Injectors.getInjector().getProvider(EnvironmentVariables.class).get();
         }
     }
 
     @Override
-	public Description getDescription() {
+    public Description getDescription() {
         if (description == null) {
             description = Description.createSuiteDescription(configurableEmbedder.getClass());
-            for (Description childDescription: getDescriptions()) {
+            for (Description childDescription : getDescriptions()) {
                 description.addChild(childDescription);
             }
         }
-		return description;
-	}
+        return description;
+    }
 
     private int testCount = 0;
 
-	@Override
-	public int testCount() {
+    @Override
+    public int testCount() {
         if (testCount == 0) {
             testCount = countStories();
         }
@@ -147,27 +154,28 @@ public class SerenityReportingRunner extends Runner {
         getConfiguredEmbedder().embedderControls().doIgnoreFailureInStories(getIgnoreFailuresInStories());
         getConfiguredEmbedder().embedderControls().useStoryTimeoutInSecs(getStoryTimeoutInSecs());
         getConfiguredEmbedder().embedderControls().useStoryTimeouts(getStoryTimeout());
-
         getConfiguredEmbedder().embedderControls().useThreads(getThreadCount());
 
         if (metaFiltersAreDefined()) {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
 
-        if (!isRunningInMaven() && !isRunningInGradle()) {
+//      if (!isRunningInMaven() && !isRunningInGradle()) {
 
-            JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(),
-                    getConfiguredEmbedder().configuration().keywords());
-            // tell the reporter how to handle pending steps
-            junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
+        JUnitScenarioReporter junitReporter = new JUnitScenarioReporter(notifier, testCount(), getDescription(),
+                getConfiguredEmbedder().configuration().keywords());
+        // tell the reporter how to handle pending steps
+        junitReporter.usePendingStepStrategy(getConfiguration().pendingStepStrategy());
 
-            addToStoryReporterFormats(junitReporter);
-        }
+        JUnitReportingRunner.recommendedControls(getConfiguredEmbedder());
+
+        addToStoryReporterFormats(junitReporter);
+//      }
 
         try {
             getConfiguredEmbedder().runStoriesAsPaths(getStoryPaths());
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throw new SerenityManagedException(e);
         } finally {
             getConfiguredEmbedder().generateCrossReference();
         }
@@ -175,14 +183,16 @@ public class SerenityReportingRunner extends Runner {
     }
 
     private boolean isRunningInGradle() {
-        return Stream.of(new Exception().getStackTrace()).anyMatch( elt -> elt.getClassName().startsWith("org.gradle"));
+        return Stream.of(new Exception().getStackTrace()).anyMatch(elt -> elt.getClassName().startsWith("org.gradle"));
     }
 
     /**
      * Override this method to add custom configuration to the JBehave embedder object.
+     *
      * @param configuredEmbedder
      */
-    public void beforeStoriesRun(ExtendedEmbedder configuredEmbedder) {}
+    public void beforeStoriesRun(ExtendedEmbedder configuredEmbedder) {
+    }
 
     private void shutdownTestSuite() {
         StepEventBus.getEventBus().testSuiteFinished();
@@ -196,82 +206,82 @@ public class SerenityReportingRunner extends Runner {
         return candidateSteps;
     }
 
-	private void createCandidateStepsWith(StepMonitor stepMonitor) {
-		// reset step monitor and recreate candidate steps
+    private void createCandidateStepsWith(StepMonitor stepMonitor) {
+        // reset step monitor and recreate candidate steps
         getConfiguration().useStepMonitor(stepMonitor);
         candidateSteps = buildCandidateSteps();
-		for (CandidateSteps step : candidateSteps) {
-			step.configuration().useStepMonitor(stepMonitor);
-		}
-	}
+        candidateSteps.forEach(
+                step -> step.configuration().useStepMonitor(stepMonitor)
+        );
+    }
 
-	private StepMonitor createCandidateStepsWithNoMonitor() {
-		StepMonitor usedStepMonitor = getConfiguration().stepMonitor();
-		createCandidateStepsWith(new NullStepMonitor());
-		return usedStepMonitor;
-	}
+    private StepMonitor createCandidateStepsWithNoMonitor() {
+        StepMonitor usedStepMonitor = getConfiguration().stepMonitor();
+        createCandidateStepsWith(new NullStepMonitor());
+        return usedStepMonitor;
+    }
 
-	private void getStoryPathsFromJUnitStory() {
-		StoryPathResolver resolver = getConfiguredEmbedder().configuration().storyPathResolver();
-		storyPaths = Arrays.asList(resolver.resolve(configurableEmbedder.getClass()));
-	}
+    private void getStoryPathsFromJUnitStory() {
+        StoryPathResolver resolver = getConfiguredEmbedder().configuration().storyPathResolver();
+        storyPaths = Arrays.asList(resolver.resolve(configurableEmbedder.getClass()));
+    }
 
-	@SuppressWarnings("unchecked")
-	private void getStoryPathsFromJUnitStories(
-			Class<? extends ConfigurableEmbedder> testClass)
-			throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
-		Method method = makeStoryPathsMethodPublic(testClass);
-		storyPaths = ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
-	}
+    @SuppressWarnings("unchecked")
+    private void getStoryPathsFromJUnitStories(
+            Class<? extends ConfigurableEmbedder> testClass)
+            throws NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException {
+        Method method = makeStoryPathsMethodPublic(testClass);
+        storyPaths = ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
+    }
 
-	private Method makeStoryPathsMethodPublic(
-			Class<? extends ConfigurableEmbedder> testClass)
-			throws NoSuchMethodException {
-		Method method;
-		try {
-			method = testClass.getDeclaredMethod("storyPaths", (Class[]) null);
-		} catch (NoSuchMethodException e) {
-			method = testClass.getMethod("storyPaths", (Class[]) null);
-		}
-		method.setAccessible(true);
-		return method;
-	}
+    private Method makeStoryPathsMethodPublic(
+            Class<? extends ConfigurableEmbedder> testClass)
+            throws NoSuchMethodException {
+        Method method;
+        try {
+            method = testClass.getDeclaredMethod("storyPaths", (Class[]) null);
+        } catch (NoSuchMethodException e) {
+            method = testClass.getMethod("storyPaths", (Class[]) null);
+        }
+        method.setAccessible(true);
+        return method;
+    }
 
-	private List<CandidateSteps> buildCandidateSteps() {
+    private List<CandidateSteps> buildCandidateSteps() {
         List<CandidateSteps> candidateSteps;
 
         InjectableStepsFactory stepsFactory = configurableEmbedder
-				.stepsFactory();
-		if (stepsFactory != null) {
-			candidateSteps = stepsFactory.createCandidateSteps();
-		} else {
-			Embedder embedder = getConfiguredEmbedder();
-			candidateSteps = embedder.candidateSteps();
-			if (candidateSteps == null || candidateSteps.isEmpty()) {
-				candidateSteps = embedder.stepsFactory().createCandidateSteps();
-			}
-		}
+                .stepsFactory();
+        if (stepsFactory != null) {
+            candidateSteps = stepsFactory.createCandidateSteps();
+        } else {
+            Embedder embedder = getConfiguredEmbedder();
+            candidateSteps = embedder.candidateSteps();
+            if (candidateSteps == null || candidateSteps.isEmpty()) {
+                candidateSteps = embedder.stepsFactory().createCandidateSteps();
+            }
+        }
         return candidateSteps;
-	}
+    }
 
-	private void addToStoryReporterFormats(JUnitScenarioReporter junitReporter) {
-		StoryReporterBuilder storyReporterBuilder = getConfiguration().storyReporterBuilder();
-		StoryReporterBuilder.ProvidedFormat junitReportFormat
+    private void addToStoryReporterFormats(JUnitScenarioReporter junitReporter) {
+        StoryReporterBuilder storyReporterBuilder = getConfiguration().storyReporterBuilder();
+        StoryReporterBuilder.ProvidedFormat junitReportFormat
                 = new StoryReporterBuilder.ProvidedFormat(junitReporter);
-		storyReporterBuilder.withFormats(junitReportFormat);
-	}
+        storyReporterBuilder.withFormats(junitReportFormat);
+    }
 
-	private List<Description> buildDescriptionFromStories() {
-		JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
-		List<Description> storyDescriptions = new ArrayList<>();
+    private List<Description> buildDescriptionFromStories() {
+        JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
+        List<Description> storyDescriptions = new ArrayList<>();
 
-		addSuite(storyDescriptions, "BeforeStories");
-		storyDescriptions.addAll(descriptionGenerator.createDescriptionFrom(createPerformableTree(getStoryPaths())));
-		addSuite(storyDescriptions, "AfterStories");
+        addSuite(storyDescriptions, "BeforeStories");
+        storyDescriptions.addAll(descriptionGenerator.createDescriptionFrom(createPerformableTree(getStoryPaths())));
+        addSuite(storyDescriptions, "AfterStories");
 
-		return storyDescriptions;
-	}
+        return storyDescriptions;
+    }
 
     private int countStories() {
         JUnitDescriptionGenerator descriptionGenerator = new JUnitDescriptionGenerator(getCandidateSteps(), getConfiguration());
@@ -293,19 +303,18 @@ public class SerenityReportingRunner extends Runner {
     }
 
     private List<Story> storiesOf(PerformableTree performableTree, List<String> storyPaths) {
-        List<Story> stories = new ArrayList<>();
-        for (String storyPath : storyPaths) {
-            stories.add(performableTree.storyOfPath(getConfiguration(), storyPath));
-        }
-        return stories;
+
+        final Configuration configuration = getConfiguration();
+
+        return storyPaths.parallelStream().map(
+                storyPath -> performableTree.storyOfPath(configuration, storyPath)
+        ).collect(Collectors.toList());
     }
 
-	private void addSuite(List<Description> storyDescriptions, String name) {
-		storyDescriptions.add(Description.createTestDescription(Object.class,
-				name));
-	}
-
-    //////////////////
+    private void addSuite(List<Description> storyDescriptions, String name) {
+        storyDescriptions.add(Description.createTestDescription(Object.class,
+                name));
+    }
 
     private boolean metaFiltersAreDefined() {
         String metaFilters = getMetafilterSetting();
@@ -325,6 +334,7 @@ public class SerenityReportingRunner extends Runner {
 
     /**
      * When Metafilter in thucydides package is removed, this method and callers will be removed
+     *
      * @param testClass
      * @return
      */
@@ -340,12 +350,12 @@ public class SerenityReportingRunner extends Runner {
     }
 
     protected boolean getIgnoreFailuresInStories() {
-        return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES.getName(),false);
+        return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_STORIES.getName(), false);
     }
 
     protected int getStoryTimeoutInSecs() {
         return environmentVariables.getPropertyAsInteger(SerenityJBehaveSystemProperties.STORY_TIMEOUT_IN_SECS.getName(),
-                                                         (int) getConfiguredEmbedder().embedderControls().storyTimeoutInSecs());
+                (int) getConfiguredEmbedder().embedderControls().storyTimeoutInSecs());
     }
 
     protected int getThreadCount() {
@@ -363,9 +373,11 @@ public class SerenityReportingRunner extends Runner {
         return Lists.newArrayList(Splitter.on(Pattern.compile(",")).trimResults().omitEmptyStrings().split(metaFilters));
     }
 
-    protected boolean getIgnoreFailuresInView() { return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW.getName(),true); }
+    protected boolean getIgnoreFailuresInView() {
+        return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW.getName(), true);
+    }
 
     public boolean isRunningInMaven() {
-        return Stream.of(new Exception().getStackTrace()).anyMatch( elt -> elt.getClassName().contains("maven"));
+        return Stream.of(new Exception().getStackTrace()).anyMatch(elt -> elt.getClassName().contains("maven"));
     }
 }

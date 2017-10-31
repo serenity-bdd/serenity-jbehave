@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 public class SerenityJBehave {
 
-    private static final CrossReference xref = new CrossReference();
+//    private static final CrossReference xref = new CrossReference();
 
     /**
      * Returns a default JBehave configuration object suitable for ThucydidesWebdriverIntegration tests.
@@ -59,7 +59,7 @@ public class SerenityJBehave {
                         new StoryReporterBuilder()
                                 .withDefaultFormats()
                                 .withFormats((Format[]) formats.toArray())
-                                .withCrossReference(xref)
+//                                .withCrossReference(xref)
                                 .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                                 .withViewResources(viewResources)
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
