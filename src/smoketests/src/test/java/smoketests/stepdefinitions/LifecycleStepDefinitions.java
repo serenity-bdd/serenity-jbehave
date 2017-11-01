@@ -5,10 +5,7 @@ import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.DefaultUrl;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
-import org.openqa.selenium.support.FindBy;
+import org.jbehave.core.annotations.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,6 +34,21 @@ public class LifecycleStepDefinitions {
 
     @Given("I have a calculator")
     public void givenIHaveACalculator() {
+    }
+
+    @AfterScenario
+    public void afterScenario() {
+        System.out.println("After scenario: " + calculations + "=>" + calculations.total);
+    }
+
+    @AfterStory
+    public void afterStory() {
+        System.out.println("After story: " + calculations + "=>" + calculations.total);
+    }
+
+    @AfterStories
+    public void afterStories() {
+        System.out.println("After stories: " + calculations + "=>" + calculations.total);
     }
 
     @Given("I add $amount")
