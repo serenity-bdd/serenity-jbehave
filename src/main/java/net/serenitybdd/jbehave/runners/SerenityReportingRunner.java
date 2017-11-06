@@ -102,18 +102,54 @@ public class SerenityReportingRunner extends Runner {
 
     List<String> getStoryPaths() {
         if ((storyPaths == null) || (storyPaths.isEmpty())) {
-            try {
-                if (configurableEmbedder instanceof JUnitStory) {
-                    getStoryPathsFromJUnitStory();
-                } else if (configurableEmbedder instanceof JUnitStories) {
-                    getStoryPathsFromJUnitStories(testClass);
-                }
-            } catch (Throwable e) {
-                LOGGER.error("Could not load story paths", e);
-                return Collections.EMPTY_LIST;
-            }
+            storyPaths = storyPathsFromRunnerClass();
         }
         return storyPaths;
+    }
+
+    private List<String> storyPathsFromRunnerClass() {
+        try {
+            List<String> storyPaths = new ArrayList<>();
+
+            if (configurableEmbedder instanceof JUnitStory) {
+                storyPaths = getStoryPathsFromJUnitStory();
+            } else if (configurableEmbedder instanceof JUnitStories) {
+                storyPaths = getStoryPathsFromJUnitStories(testClass);
+            }
+
+            String storyFilter = getStoryFilterFrom(configurableEmbedder);
+
+            return storyPaths.stream()
+                             .filter(story -> story.matches(storyFilter))
+                             .collect(Collectors.toList());
+
+        } catch (Throwable e) {
+            LOGGER.error("Could not load story paths", e);
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    private String getStoryFilterFrom(ConfigurableEmbedder embedder) {
+
+        String storyFilter = environmentVariables.getProperty(SerenityJBehaveSystemProperties.STORY_FILTER.getName(), ".*");
+
+        Optional<Method> getStoryFilter = Arrays.stream(embedder.getClass().getMethods())
+                .filter(method -> method.getName().equals("getStoryFilter"))
+                .findFirst();
+
+        if (getStoryFilter.isPresent()) {
+            try {
+                storyFilter = getStoryFilter.get().invoke(embedder).toString();
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                LOGGER.warn("Could not invoke getStoryFilter() method on " + embedder, e);
+            }
+        }
+        return storyFilter;
+    }
+
+    private boolean storyMatchesFilter(String story) {
+        String storyFilter = environmentVariables.getProperty(SerenityJBehaveSystemProperties.STORY_FILTER.getName(), ".*");
+        return story.matches(storyFilter);
     }
 
     private EnvironmentVariables environmentVariablesFrom(ConfigurableEmbedder configurableEmbedder) {
@@ -221,18 +257,18 @@ public class SerenityReportingRunner extends Runner {
         return usedStepMonitor;
     }
 
-    private void getStoryPathsFromJUnitStory() {
+    private List<String> getStoryPathsFromJUnitStory() {
         StoryPathResolver resolver = getConfiguredEmbedder().configuration().storyPathResolver();
-        storyPaths = Arrays.asList(resolver.resolve(configurableEmbedder.getClass()));
+        return Arrays.asList(resolver.resolve(configurableEmbedder.getClass()));
     }
 
     @SuppressWarnings("unchecked")
-    private void getStoryPathsFromJUnitStories(
+    private List<String> getStoryPathsFromJUnitStories(
             Class<? extends ConfigurableEmbedder> testClass)
             throws NoSuchMethodException, IllegalAccessException,
             InvocationTargetException {
         Method method = makeStoryPathsMethodPublic(testClass);
-        storyPaths = ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
+        return ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
     }
 
     private Method makeStoryPathsMethodPublic(

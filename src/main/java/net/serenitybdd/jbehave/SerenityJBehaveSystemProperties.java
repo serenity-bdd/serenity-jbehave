@@ -28,6 +28,12 @@ public enum SerenityJBehaveSystemProperties {
     METAFILTER,
 
     /**
+     * A regular expression that indicates which stories are included in the test run, based on the story name.
+     * Can be used to speed up tests, but must be used in conjunction with the metafilter tag.
+     */
+    STORY_FILTER,
+
+    /**
      * If you don't restart a browser between scenarios, do you clear the session cookies? (defaults to true)
      */
     RESET_COOKIES_EACH_SCENARIO,

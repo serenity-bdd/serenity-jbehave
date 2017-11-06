@@ -18,7 +18,7 @@ public class SerenityCandidateSteps implements CandidateSteps {
 
     public List<StepCandidate> listCandidates() {
 
-        return candidateSteps.listCandidates().stream()
+        return candidateSteps.listCandidates().parallelStream()
                 .map(SerenityStepCandidate::new)
                 .collect(Collectors.toList());
     }

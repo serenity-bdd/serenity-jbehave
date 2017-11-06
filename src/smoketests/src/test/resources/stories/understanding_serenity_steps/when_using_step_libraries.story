@@ -1,4 +1,4 @@
-Serenity automatically instantiates step libraries
+Meta: @ignore
 
 Scenario: Serenity automatically instantiates step library fields in step definition classes
 Meta:

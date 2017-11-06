@@ -79,7 +79,7 @@ public class UsingStepLibrariesStepDefinitions {
 
     @Then("the state of the library should be updated")
     public void thenTheStateOfTheLibraryShouldBeUpdated() {
-        assertThat(myStepLibrary.stepRunCount, is(1));
+        assertThat(myStepLibrary.stepRunCount, is(2));
     }
 
     ////

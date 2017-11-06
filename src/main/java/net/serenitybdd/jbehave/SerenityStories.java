@@ -244,6 +244,16 @@ public class SerenityStories extends JUnitStories {
         storyNamePattern = Joiner.on(";").join(storyPathElements);
     }
 
+    private String storyFilter;
+
+    public void matchStories(String storyFilter) {
+        this.storyFilter = storyFilter;
+    }
+
+    public String getStoryFilter() {
+        return storyFilter;
+    }
+
 
     /**
      * Use this to override the default ThucydidesWebdriverIntegration configuration - for testing purposes only.

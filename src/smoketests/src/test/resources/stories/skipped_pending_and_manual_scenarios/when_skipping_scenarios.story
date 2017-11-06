@@ -25,6 +25,14 @@ Given I want to search for something
 When I lookup apple
 Then I should see "apple at DuckDuckGo" in the page title
 
+Scenario: Commenting in a scenario
+Meta:
+@tag expected-outcome:success
+!-- A comment should be allowed here
+Given I want to search for something
+When I lookup apple
+Then I should see "apple at DuckDuckGo" in the page title
+
 Scenario: You mark a scenario as pending using the @pending annotation
 Pending scenarios are meant to indicate a scenario that has not been completed yet.
 Meta:
