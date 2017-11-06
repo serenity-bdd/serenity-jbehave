@@ -131,7 +131,7 @@ public class SerenityReportingRunner extends Runner {
 
     private String getStoryFilterFrom(ConfigurableEmbedder embedder) {
 
-        String storyFilter = environmentVariables.getProperty(SerenityJBehaveSystemProperties.STORY_FILTER.getName(), ".*");
+        String defaultStoryFilter = environmentVariables.getProperty(SerenityJBehaveSystemProperties.STORY_FILTER.getName(), ".*");
 
         Optional<Method> getStoryFilter = Arrays.stream(embedder.getClass().getMethods())
                 .filter(method -> method.getName().equals("getStoryFilter"))
@@ -139,12 +139,13 @@ public class SerenityReportingRunner extends Runner {
 
         if (getStoryFilter.isPresent()) {
             try {
-                storyFilter = getStoryFilter.get().invoke(embedder).toString();
+                Optional<Object> storyFilterValue = Optional.ofNullable(getStoryFilter.get().invoke(embedder));
+                return storyFilterValue.orElse(defaultStoryFilter).toString();
             } catch (IllegalAccessException | InvocationTargetException e) {
                 LOGGER.warn("Could not invoke getStoryFilter() method on " + embedder, e);
             }
         }
-        return storyFilter;
+        return defaultStoryFilter;
     }
 
     private boolean storyMatchesFilter(String story) {
