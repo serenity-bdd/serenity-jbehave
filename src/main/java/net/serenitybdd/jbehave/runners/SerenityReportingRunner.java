@@ -331,6 +331,7 @@ public class SerenityReportingRunner extends Runner {
 
     private PerformableTree createPerformableTree(List<String> storyPaths) {
         ExtendedEmbedder configuredEmbedder = this.getConfiguredEmbedder();
+        configuredEmbedder.useMetaFilters(getMetaFilters());
         BatchFailures failures = new BatchFailures(configuredEmbedder.embedderControls().verboseFailures());
         PerformableTree performableTree = new PerformableTree();
         RunContext context = performableTree.newRunContext(getConfiguration(), configuredEmbedder.stepsFactory(),
