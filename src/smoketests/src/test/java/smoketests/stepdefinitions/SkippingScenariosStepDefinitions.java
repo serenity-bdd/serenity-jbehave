@@ -1,5 +1,6 @@
 package smoketests.stepdefinitions;
 
+import net.serenitybdd.core.SkipNested;
 import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.DefaultUrl;
@@ -12,6 +13,7 @@ import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,11 +33,9 @@ public class SkippingScenariosStepDefinitions {
         @FindBy(className = "result__title")
         List<WebElementFacade> results;
 
+        @Step
         public void enterSearchTerm(String searchTerm) {
             searchField.type(searchTerm);
-        }
-
-        public void requestSearch() {
             searchButton.click();
         }
 
@@ -44,7 +44,15 @@ public class SkippingScenariosStepDefinitions {
         }
     }
 
-    public static class CuriousSurfer {
+    public static class TestSteps {
+
+        @Step(callNestedMethods = false)
+        public void print(String value) {
+            System.out.println("INSIDE STEP WITH VALUE " + value);
+        }
+    }
+
+    public static class CuriousSurfer implements SkipNested {
 
         DuckDuckGoSearchPage searchPage;
 
@@ -55,12 +63,13 @@ public class SkippingScenariosStepDefinitions {
 
         @Step
         public void searchesFor(String searchTerm) {
+            System.out.println("searchesFor " + searchTerm);
             searchPage.enterSearchTerm(searchTerm);
-            searchPage.requestSearch();
         }
 
         @Step
         public void shouldSeeTitle(String title) {
+            System.out.println("shouldSeeTitle " + title);
             assertThat(searchPage.getTitle()).contains(title);
         }
 
@@ -73,8 +82,18 @@ public class SkippingScenariosStepDefinitions {
     @Steps
     CuriousSurfer connor;
 
+    @Steps
+    TestSteps steps;
+
+    @When("print '$value'")
+    public void print(String value) {
+        System.out.println("WHEN STEP FOR " + value);
+        steps.print(value);
+    }
+
     @Given("I want to search for something")
     public void givenIWantToSearchForFruit() {
+        System.out.println("Opens search page");
         connor.opensTheSearchApp();
     }
 

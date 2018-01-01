@@ -631,6 +631,8 @@ public class SerenityReporter implements StoryReporter {
             }
             activeScenarios.pop();
         }
+
+        ThucydidesWebDriverSupport.clearStepLibraries();
     }
 
     public void givenStories(GivenStories givenStories) {

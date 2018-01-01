@@ -1,19 +1,16 @@
 package net.serenitybdd.jbehave.runners;
 
 import com.github.valfirst.jbehave.junit.monitoring.JUnitReportingRunner;
+import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-//import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
-import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
 import net.serenitybdd.core.exceptions.SerenityManagedException;
 import net.serenitybdd.jbehave.SerenityJBehaveSystemProperties;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.annotations.Metafilter;
 import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
 import net.serenitybdd.jbehave.embedders.monitors.ReportingEmbedderMonitor;
-import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.reports.ResultChecker;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.codehaus.plexus.util.StringUtils;
@@ -27,7 +24,6 @@ import org.jbehave.core.io.StoryPathResolver;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.junit.JUnitStory;
 import org.jbehave.core.model.Story;
-import org.jbehave.core.reporters.NullStoryReporter;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.InjectableStepsFactory;
@@ -39,7 +35,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -146,11 +141,6 @@ public class SerenityReportingRunner extends Runner {
             }
         }
         return defaultStoryFilter;
-    }
-
-    private boolean storyMatchesFilter(String story) {
-        String storyFilter = environmentVariables.getProperty(SerenityJBehaveSystemProperties.STORY_FILTER.getName(), ".*");
-        return story.matches(storyFilter);
     }
 
     private EnvironmentVariables environmentVariablesFrom(ConfigurableEmbedder configurableEmbedder) {

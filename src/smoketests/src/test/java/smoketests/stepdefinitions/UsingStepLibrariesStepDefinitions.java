@@ -110,6 +110,6 @@ public class UsingStepLibrariesStepDefinitions {
 
     @Then("both should refer to the same instance")
     public void thenBothShouldReferToTheSameInstance() {
-        assertThat(aSharedStepLibrary, is(not(sameInstance(anotherSharedStepLibrary))));
+        assertThat(aSharedStepLibrary, is(sameInstance(anotherSharedStepLibrary)));
     }
 }

@@ -1,5 +1,8 @@
 Lifecycle phases also work with web tests
 
+Meta:
+@ignore
+
 Lifecycle:
 Before: Open the search page
 Given I want to search for something
@@ -9,8 +12,14 @@ Then I should see search results
 
 Scenario: Look for pears
 When I lookup pear
-Then I should see "pear at DuckDuckGo" in the page title
+Then I should see "DuckDuckGo" in the page title
 
 Scenario: Look for apples
 When I lookup apple
-Then I should see "apple at DuckDuckGo" in the page title
+Then I should see "DuckDuckGo" in the page title
+
+
+Scenario: Look for oranges
+When I lookup oranges
+Then I should see "DuckDuckGo" in the page title
+

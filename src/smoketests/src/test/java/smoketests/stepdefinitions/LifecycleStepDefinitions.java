@@ -29,11 +29,33 @@ public class LifecycleStepDefinitions {
 
     }
 
-    @Steps
+    static class SelfishCalculations {
+
+        int total = 0;
+
+        @Step
+        public void add(int amount) {
+            total += amount;
+        }
+
+        @Step
+        public void substract(int amount) {
+            total -= amount;
+        }
+
+        public int getTotal() { return total; }
+
+    }
+
+    @Steps(shared = true)
     Calculations calculations;
+
+    @Steps
+    SelfishCalculations selfishCalculations;
 
     @Given("I have a calculator")
     public void givenIHaveACalculator() {
+        assertThat(calculations).isNotNull();
     }
 
     @AfterScenario
