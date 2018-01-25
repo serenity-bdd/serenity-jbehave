@@ -11,9 +11,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>1.8.17</serenity.version>
-        <serenity.maven.version>1.8.17</serenity.maven.version>
-        <serenity.jbehave.version>1.34.1-SNAPSHOT</serenity.jbehave.version>
+        <serenity.version>1.8.21</serenity.version>
+        <serenity.maven.version>1.8.21</serenity.maven.version>
+        <serenity.jbehave.version>1.35.0</serenity.jbehave.version>
         <encoding>UTF-8</encoding>
         <parallel.tests>4</parallel.tests>
     </properties>

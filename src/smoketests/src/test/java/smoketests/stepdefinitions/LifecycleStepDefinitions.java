@@ -58,6 +58,11 @@ public class LifecycleStepDefinitions {
         assertThat(calculations).isNotNull();
     }
 
+    @Given("I have a scientific calculator")
+    public void givenIHaveAScientificCalculator() {
+        calculations = new Calculations();
+    }
+
     @AfterScenario
     public void afterScenario() {
         System.out.println("After scenario: " + calculations + "=>" + calculations.total);
@@ -74,12 +79,14 @@ public class LifecycleStepDefinitions {
     }
 
     @Given("I add $amount")
+    @Alias("I add <a>")
     public void givenIAdd(int amount) {
         calculations.add(amount);
     }
 
     @When("I add $amount")
-    public void whenIAdd(int amount) {
+    @Alias("I add <amount>")
+    public void whenIAdd(@Named("amount") int amount) {
         calculations.add(amount);
     }
 
@@ -89,7 +96,8 @@ public class LifecycleStepDefinitions {
     }
 
     @Then("the total should be $total")
-    public void thenTheTotalShouldBe(int total) {
+    @Alias("the total should be <total>")
+    public void thenTheTotalShouldBe(@Named("total") int total) {
         assertThat(calculations.total).isEqualTo(total);
     }
 

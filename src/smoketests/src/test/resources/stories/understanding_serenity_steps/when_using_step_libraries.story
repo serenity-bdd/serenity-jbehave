@@ -1,5 +1,3 @@
-Meta: @ignore
-
 Scenario: Serenity automatically instantiates step library fields in step definition classes
 Meta:
 @tag expected-outcome:success
