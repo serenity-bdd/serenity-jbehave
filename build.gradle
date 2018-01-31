@@ -132,14 +132,6 @@ dependencies {
         exclude group: 'com.thoughtworks.paranamer', module: 'paranamer'
     }
 
-    compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
-        exclude group: 'org.freemarker', module: 'freemarker'
-        exclude group: 'junit', module: 'junit'
-        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
-        exclude group: 'commons-collections', module: 'commons-collections'
-        exclude group: 'com.thoughtworks.paranamer', module: 'paranamer'
-    }
-
     compile ("com.github.valfirst:jbehave-junit-runner:${jbehaveJUnitRunner}") {
         exclude group: 'org.mockito', module: 'mockito-core'
         exclude group: 'junit', module: 'junit'
