@@ -1,7 +1,7 @@
 Lifecycle phases also work with web tests
 
 Meta:
-@ignore
+@driver chrome
 
 Lifecycle:
 Before: Open the search page
