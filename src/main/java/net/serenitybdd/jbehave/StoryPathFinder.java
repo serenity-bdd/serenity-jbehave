@@ -3,11 +3,11 @@ package net.serenitybdd.jbehave;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ class StoryPathFinder {
     private final String storyNames;
     private final EnvironmentVariables environmentVariables;
 
-    Set<String> identifiedStoryPaths = Sets.newHashSet();
+    Set<String> identifiedStoryPaths = new HashSet<>();
 
     public StoryPathFinder(EnvironmentVariables environmentVariables, String storyNames) {
         this.environmentVariables = environmentVariables;
@@ -28,11 +28,11 @@ class StoryPathFinder {
 
     public Set<String> findAllElements() {
         List<String> rootStoryNames = rootStoryNamesFrom(storyNames);
-        Set<String> storyPathElements = Sets.newHashSet();
+        Set<String> storyPathElements = new HashSet<>();
 
         for(String rootStoryName : rootStoryNames) {
             rootStoryName = stripLeadingWildcards(rootStoryName);
-            Set<String> newPathElements = Sets.newHashSet();
+            Set<String> newPathElements = new HashSet<>();
 
             Optional<URL> storyOnClasspath = storyOnClasspath(rootStoryName);
 

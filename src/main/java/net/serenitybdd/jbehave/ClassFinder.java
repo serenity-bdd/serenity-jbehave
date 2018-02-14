@@ -1,9 +1,7 @@
 package net.serenitybdd.jbehave;
 
-
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.ResourcesScanner;
@@ -92,7 +90,7 @@ public class ClassFinder {
                 new MethodAnnotationsScanner(),
                 new ResourcesScanner(), getClassLoader());
 
-        Set<Class<?>> matchingClasses = Sets.newHashSet();
+        Set<Class<?>> matchingClasses = new HashSet<>();
         for (Class<? extends Annotation> expectedAnnotation : expectedAnnotations) {
             matchingClasses.addAll(reflections.getTypesAnnotatedWith(expectedAnnotation));
             matchingClasses.addAll(classesFrom(reflections.getMethodsAnnotatedWith(expectedAnnotation)));

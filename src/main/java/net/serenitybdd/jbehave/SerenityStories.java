@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
@@ -24,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -96,7 +96,7 @@ public class SerenityStories extends JUnitStories {
     }
 
     public List<String> storyPaths() {
-        Set<String> storyPaths = Sets.newHashSet();
+        Set<String> storyPaths = new HashSet<>();
 
         List<String> pathExpressions = getStoryPathExpressions();
         StoryFinder storyFinder = new StoryFinder();
@@ -120,7 +120,7 @@ public class SerenityStories extends JUnitStories {
     }
 
     private Set<String> removeDuplicatesFrom(Set<String> storyPaths) {
-        Set<String> trimmedPaths = Sets.newHashSet();
+        Set<String> trimmedPaths = new HashSet<>();
         for(String storyPath : storyPaths) {
             if (!thereExistsALongerVersionOf(storyPath, storyPaths)) {
                 trimmedPaths.add(storyPath);
@@ -146,7 +146,7 @@ public class SerenityStories extends JUnitStories {
                     .and().pathsNotStartingWith("/" + skippedPrecondition)
                     .filter();
         }
-        return Sets.newHashSet(filteredPaths);
+        return new HashSet<>(filteredPaths);
     }
 
     class FilterBuilder {
@@ -194,7 +194,7 @@ public class SerenityStories extends JUnitStories {
 
     private Set<URL> allClasspathRoots() {
         try {
-            Set<URL> baseRoots = Sets.newHashSet(Collections.list(getClassLoader().getResources(".")));
+            Set<URL> baseRoots = new HashSet<>(Collections.list(getClassLoader().getResources(".")));
             return addGradleResourceRootsTo(baseRoots);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not load the classpath roots when looking for story files", e);
@@ -202,7 +202,7 @@ public class SerenityStories extends JUnitStories {
     }
 
     private Set<URL> addGradleResourceRootsTo(Set<URL> baseRoots) throws MalformedURLException {
-        Set<URL> rootsWithGradleResources = Sets.newHashSet(baseRoots);
+        Set<URL> rootsWithGradleResources = new HashSet<>(baseRoots);
         for (URL baseUrl : baseRoots) {
             String gradleResourceUrl = baseUrl.toString().replace("/build/classes/", "/build/resources/");
             rootsWithGradleResources.add(new URL(gradleResourceUrl));
