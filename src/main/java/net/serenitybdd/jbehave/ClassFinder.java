@@ -1,10 +1,6 @@
 package net.serenitybdd.jbehave;
 
-
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.ResourcesScanner;
@@ -67,7 +63,7 @@ public class ClassFinder {
                 URL resource = resources.nextElement();
                 dirs.add(resource.toURI());
             }
-            List<Class<?>> classes = Lists.newArrayList();
+            List<Class<?>> classes = new ArrayList<>();
             for (URI directory : dirs) {
                 classes.addAll(findClasses(directory, packageName));
             }
@@ -93,7 +89,7 @@ public class ClassFinder {
                 new MethodAnnotationsScanner(),
                 new ResourcesScanner(), getClassLoader());
 
-        Set<Class<?>> matchingClasses = Sets.newHashSet();
+        Set<Class<?>> matchingClasses = new HashSet<>();
         for (Class<? extends Annotation> expectedAnnotation : expectedAnnotations) {
             matchingClasses.addAll(reflections.getTypesAnnotatedWith(expectedAnnotation));
             matchingClasses.addAll(classesFrom(reflections.getMethodsAnnotatedWith(expectedAnnotation)));
@@ -149,7 +145,7 @@ public class ClassFinder {
     private List<Class<?>> findClassesInJar(URI jarDirectory, String packageName) throws IOException {
         final String schemeSpecificPart = jarDirectory.getSchemeSpecificPart();
 
-        List<Class<?>> classes = Lists.newArrayList();
+        List<Class<?>> classes = new ArrayList<>();
         String[] split = schemeSpecificPart.split("!");
         URL jar = new URL(split[0]);
         try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
@@ -158,7 +154,7 @@ public class ClassFinder {
                 if (entry.getName().endsWith(".class")) {
                     String className = classNameFor(entry);
                     if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
-                        classes.addAll(loadClassWithName(className).asSet());
+                        loadClassWithName(className).ifPresent(classes::add);
                     }
                 }
             }
@@ -168,7 +164,7 @@ public class ClassFinder {
     }
 
     private List<Class<?>> findClassesInFileSystemDirectory(URI jarDirectory, String packageName) {
-        List<Class<?>> classes = Lists.newArrayList();
+        List<Class<?>> classes = new ArrayList<>();
 
         File directory = new File(jarDirectory);
 
@@ -181,7 +177,7 @@ public class ClassFinder {
                 if (file.isDirectory()) {
                     classes.addAll(findClasses(file.toURI(), packageName + "." + file.getName()));
                 } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
-                    classes.addAll(correspondingClass(packageName, file).asSet());
+                    correspondingClass(packageName, file).ifPresent(classes::add);
                 }
             }
         }
@@ -198,9 +194,9 @@ public class ClassFinder {
             return Optional.of(getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
 //            throw new IllegalArgumentException("Could not find or access class for " + className, e);
-            return Optional.absent();
+            return Optional.empty();
         } catch (NoClassDefFoundError noClassDefFoundError) {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
