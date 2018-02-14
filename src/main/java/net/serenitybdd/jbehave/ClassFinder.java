@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -155,7 +154,7 @@ public class ClassFinder {
                 if (entry.getName().endsWith(".class")) {
                     String className = classNameFor(entry);
                     if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
-                        classes.addAll(loadClassWithName(className).asSet());
+                        loadClassWithName(className).ifPresent(classes::add);
                     }
                 }
             }
@@ -178,7 +177,7 @@ public class ClassFinder {
                 if (file.isDirectory()) {
                     classes.addAll(findClasses(file.toURI(), packageName + "." + file.getName()));
                 } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
-                    classes.addAll(correspondingClass(packageName, file).asSet());
+                    correspondingClass(packageName, file).ifPresent(classes::add);
                 }
             }
         }
@@ -195,9 +194,9 @@ public class ClassFinder {
             return Optional.of(getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
 //            throw new IllegalArgumentException("Could not find or access class for " + className, e);
-            return Optional.absent();
+            return Optional.empty();
         } catch (NoClassDefFoundError noClassDefFoundError) {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

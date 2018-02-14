@@ -1,7 +1,6 @@
 package net.serenitybdd.jbehave;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.serenitybdd.core.Serenity;
@@ -212,12 +211,9 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Optional<Scenario> currentScenario() {
-        for (Scenario scenario : currentStory().getScenarios()) {
-            if (scenario.getTitle().equals(currentScenarioTitle())) {
-                return Optional.of(scenario);
-            }
-        }
-        return Optional.absent();
+        return currentStory().getScenarios().stream()
+                .filter(scenario -> scenario.getTitle().equals(currentScenarioTitle()))
+                .findFirst();
     }
 
     private void startNewStep(String scenarioTitle) {
@@ -656,7 +652,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private DataTable serenityTableFrom(ExamplesTable table) {
-        String scenarioOutline = scenarioOutlineFrom(currentScenario());
+        String scenarioOutline = currentScenario().map(this::scenarioOutlineFrom).orElse(null);
         return DataTable.withHeaders(table.getHeaders())
                 .andScenarioOutline(scenarioOutline)
                 .andMappedRows(table.getRows())
@@ -664,12 +660,9 @@ public class SerenityReporter implements StoryReporter {
 
     }
 
-    private String scenarioOutlineFrom(Optional<Scenario> scenario) {
-        if (!scenario.isPresent()) {
-            return null;
-        }
+    private String scenarioOutlineFrom(Scenario scenario) {
         StringBuilder outline = new StringBuilder();
-        for (String step : scenario.get().getSteps()) {
+        for (String step : scenario.getSteps()) {
             outline.append(step.trim()).append(System.lineSeparator());
         }
         return outline.toString();
@@ -899,10 +892,10 @@ public class SerenityReporter implements StoryReporter {
         return false;
     }
 
-    private java.util.Optional<TestOutcome> latestTestOutcome() {
+    private Optional<TestOutcome> latestTestOutcome() {
         List<TestOutcome> recordedOutcomes = StepEventBus.getEventBus().getBaseStepListener().getTestOutcomes();
-        return (recordedOutcomes.isEmpty()) ? java.util.Optional.<TestOutcome>empty()
-                : java.util.Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
+        return recordedOutcomes.isEmpty() ? Optional.empty()
+                : Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
     }
 
 }

@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.thucydides.core.util.EnvironmentVariables;
@@ -9,6 +8,7 @@ import org.codehaus.plexus.util.StringUtils;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static net.serenitybdd.jbehave.SerenityJBehaveSystemProperties.JBEHAVE_STORY_PACKAGES;
@@ -79,9 +79,8 @@ class StoryPathFinder {
     }
 
     private Optional<URL> storyOnClasspath(String storyFile) {
-        return Optional.fromNullable(getClassLoader().getResource(storyFile));
+        return Optional.ofNullable(getClassLoader().getResource(storyFile));
     }
-
 
     private List<String> rootStoryNamesFrom(String storyNames) {
         return Lists.newArrayList(Splitter.on(";").trimResults().omitEmptyStrings().split(storyNames));
