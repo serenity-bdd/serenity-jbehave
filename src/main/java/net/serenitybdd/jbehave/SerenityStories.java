@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -157,7 +158,7 @@ public class SerenityStories extends JUnitStories {
         }
 
         public FilterBuilder pathsNotStartingWith(String skippedPrecondition) {
-            List<String> filteredPaths = Lists.newArrayList();
+            List<String> filteredPaths = new ArrayList<>();
             for (String path : paths) {
                 if (!startsWith(skippedPrecondition, path)) {
                     filteredPaths.add(path);

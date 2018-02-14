@@ -62,7 +62,7 @@ public class SerenityReporter implements StoryReporter {
         this.systemConfiguration = systemConfiguration;
         serenityListenersThreadLocal = new ThreadLocal<>();
         reportServiceThreadLocal = new ThreadLocal<>();
-        baseStepListeners = Lists.newArrayList();
+        baseStepListeners = new ArrayList<>();
         givenStoryMonitor = new GivenStoryMonitor();
     }
 
@@ -99,7 +99,7 @@ public class SerenityReporter implements StoryReporter {
     private Stack<Story> storyStack = new Stack<>();
 
     private Stack<String> activeScenarios = new Stack<>();
-    private List<String> givenStories = Lists.newArrayList();
+    private List<String> givenStories = new ArrayList<>();
     private Map<String, Meta> scenarioMeta = new ConcurrentHashMap<>();
     private Set<String> scenarioMetaProcessed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
@@ -398,7 +398,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private List<TestTag> featureAndEpicTags(Meta metaData) {
-        List<TestTag> featuresAndEpics = Lists.newArrayList();
+        List<TestTag> featuresAndEpics = new ArrayList<>();
         featuresAndEpics.addAll(getFeatureOrFeaturesPropertyValues(metaData));
         featuresAndEpics.addAll(getEpicOrEpicsPropertyValues(metaData));
         return featuresAndEpics;

@@ -3,7 +3,6 @@ package net.serenitybdd.jbehave;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -67,7 +66,7 @@ public class ClassFinder {
                 URL resource = resources.nextElement();
                 dirs.add(resource.toURI());
             }
-            List<Class<?>> classes = Lists.newArrayList();
+            List<Class<?>> classes = new ArrayList<>();
             for (URI directory : dirs) {
                 classes.addAll(findClasses(directory, packageName));
             }
@@ -149,7 +148,7 @@ public class ClassFinder {
     private List<Class<?>> findClassesInJar(URI jarDirectory, String packageName) throws IOException {
         final String schemeSpecificPart = jarDirectory.getSchemeSpecificPart();
 
-        List<Class<?>> classes = Lists.newArrayList();
+        List<Class<?>> classes = new ArrayList<>();
         String[] split = schemeSpecificPart.split("!");
         URL jar = new URL(split[0]);
         try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
@@ -168,7 +167,7 @@ public class ClassFinder {
     }
 
     private List<Class<?>> findClassesInFileSystemDirectory(URI jarDirectory, String packageName) {
-        List<Class<?>> classes = Lists.newArrayList();
+        List<Class<?>> classes = new ArrayList<>();
 
         File directory = new File(jarDirectory);
 

@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import com.google.common.collect.Lists;
 import net.serenitybdd.core.di.DependencyInjector;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.PageObjectDependencyInjector;
@@ -56,7 +55,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
     private List<Class> getCandidateClasses() {
 
         List<Class<?>> allClassesUnderRootPackage = ClassFinder.loadClasses().withClassLoader(classLoader).fromPackage(rootPackage);
-        List<Class> candidateClasses = Lists.newArrayList();
+        List<Class> candidateClasses = new ArrayList<>();
         for(Class<?> classUnderRootPackage : allClassesUnderRootPackage) {
             if (hasAnnotatedMethods(classUnderRootPackage)) {
                 candidateClasses.add(classUnderRootPackage);
