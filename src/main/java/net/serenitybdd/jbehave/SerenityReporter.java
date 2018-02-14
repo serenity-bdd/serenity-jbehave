@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
@@ -421,7 +420,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Map<String, String> getMetadataFrom(Meta metaData) {
-        Map<String, String> metadataValues = Maps.newHashMap();
+        Map<String, String> metadataValues = new HashMap<>();
         if (metaData == null) {
             return metadataValues;
         }
