@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 public class WhenRunningJBehaveStoriesWithTitle extends AbstractJBehaveStory {
 
     @Test
-    public void for_stories_with_title_use_the_title_as_tag_name() throws Throwable {
+    public void for_stories_with_title_use_the_title_as_tag_name() {
 
         // Given
         SerenityStories storyWithTitle = newStory("aBehaviorWithATitle.story");
@@ -35,7 +35,7 @@ public class WhenRunningJBehaveStoriesWithTitle extends AbstractJBehaveStory {
     }
 
     @Test
-    public void for_stories_with_no_title_use_the_story_file_name_as_tag_name() throws Throwable {
+    public void for_stories_with_no_title_use_the_story_file_name_as_tag_name() {
 
         // Given
         SerenityStories storyWithTitle = newStory("aBehaviorWithNoTitle.story");

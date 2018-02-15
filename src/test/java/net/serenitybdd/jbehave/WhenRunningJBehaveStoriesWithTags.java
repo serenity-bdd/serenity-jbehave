@@ -17,7 +17,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
 
 
     @Test
-    public void a_test_should_be_associated_with_a_corresponding_issue_if_specified() throws Throwable {
+    public void a_test_should_be_associated_with_a_corresponding_issue_if_specified() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithAnIssue.story");
@@ -33,7 +33,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_story_can_be_associated_with_several_issues() throws Throwable {
+    public void a_test_story_can_be_associated_with_several_issues() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithOneStoryAndMultipleIssues.story");
@@ -48,7 +48,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void all_the_scenarios_in_a_story_should_be_associated_with_a_corresponding_issue_if_specified_at_the_story_level() throws Throwable {
+    public void all_the_scenarios_in_a_story_should_be_associated_with_a_corresponding_issue_if_specified_at_the_story_level() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithIssues.story");
@@ -67,7 +67,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
 
 
     @Test
-    public void a_test_should_have_a_story_tag_matching_the_jbehave_story() throws Throwable {
+    public void a_test_should_have_a_story_tag_matching_the_jbehave_story() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithAnIssue.story");
@@ -81,7 +81,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_should_have_features_defined_by_the_feature_meta_field() throws Throwable {
+    public void a_test_should_have_features_defined_by_the_feature_meta_field() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithFeatures.story");
@@ -95,7 +95,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_should_have_features_defined_at_the_story_levelby_the_feature_meta_field() throws Throwable {
+    public void a_test_should_have_features_defined_at_the_story_levelby_the_feature_meta_field() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithFeatures.story");
@@ -111,7 +111,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
 
 
     @Test
-    public void a_test_should_have_multiple_features_defined_at_the_story_level_by_the_feature_meta_field() throws Throwable {
+    public void a_test_should_have_multiple_features_defined_at_the_story_level_by_the_feature_meta_field() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithMultipleFeatures.story");
@@ -128,7 +128,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
 
 
     @Test
-    public void a_test_should_have_tags_defined_by_the_tag_meta_field() throws Throwable {
+    public void a_test_should_have_tags_defined_by_the_tag_meta_field() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithTags.story");
@@ -142,7 +142,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_should_accept_boolean_tags() throws Throwable {
+    public void a_test_should_accept_boolean_tags() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithTags.story");
@@ -156,7 +156,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() throws Throwable {
+    public void a_test_should_have_storywide_tags_defined_by_the_tag_meta_field() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithTags.story");
@@ -172,7 +172,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void steps_should_have_access_to_meta_tags_specified_in_the_story_files() throws Throwable {
+    public void steps_should_have_access_to_meta_tags_specified_in_the_story_files() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithCustomMetaTags.story");
@@ -187,7 +187,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void steps_should_have_access_to_meta_tags_specified_in_the_story_files_at_the_story_level() throws Throwable {
+    public void steps_should_have_access_to_meta_tags_specified_in_the_story_files_at_the_story_level() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithCustomMetaTagsAtSeveralLevels.story");
@@ -203,7 +203,7 @@ public class WhenRunningJBehaveStoriesWithTags extends AbstractJBehaveStory {
     }
 
     @Test
-    public void scenario_metatags_should_not_be_shared_between_scenarios() throws Throwable {
+    public void scenario_metatags_should_not_be_shared_between_scenarios() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithCustomMetaTagsInSeveralScenarios.story");

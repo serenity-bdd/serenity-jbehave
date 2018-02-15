@@ -29,7 +29,7 @@ public class WhenRunningWebJBehaveStoriesUsingDataDriven extends AbstractJBehave
     }
 
     @Test
-    public void data_driven_steps_should_appear_as_nested_steps() throws Throwable {
+    public void data_driven_steps_should_appear_as_nested_steps() {
 
         // Given
         SerenityStories story = newStory("dataDrivenBehavior.story");

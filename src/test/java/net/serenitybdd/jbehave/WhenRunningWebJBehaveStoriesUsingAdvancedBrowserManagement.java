@@ -30,7 +30,7 @@ public class WhenRunningWebJBehaveStoriesUsingAdvancedBrowserManagement extends 
     }
 
     @Test
-    public void a_test_should_use_a_different_browser_if_requested() throws Throwable {
+    public void a_test_should_use_a_different_browser_if_requested() {
 
         // Given
         EnvironmentVariables environmentVariables = new MockEnvironmentVariables();
@@ -45,7 +45,7 @@ public class WhenRunningWebJBehaveStoriesUsingAdvancedBrowserManagement extends 
     }
 
     @Test
-    public void should_be_able_to_specify_the_browser_in_the_base_test() throws Throwable {
+    public void should_be_able_to_specify_the_browser_in_the_base_test() {
 
         // Given
         SerenityStories story = new APassingWebTestSampleWithASpecifiedBrowser();
