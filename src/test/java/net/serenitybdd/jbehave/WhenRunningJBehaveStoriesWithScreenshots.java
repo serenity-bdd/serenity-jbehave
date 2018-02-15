@@ -1,8 +1,7 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestStep;
-import net.thucydides.core.util.EnvironmentVariables;
+
 import org.junit.Test;
 
 import java.util.List;

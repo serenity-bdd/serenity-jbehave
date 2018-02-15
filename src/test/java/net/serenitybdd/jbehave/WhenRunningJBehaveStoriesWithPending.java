@@ -13,7 +13,6 @@ import static net.serenitybdd.jbehave.TestOutcomeFinder.theScenarioCalled;
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.PENDING;
 import static net.thucydides.core.model.TestResult.SUCCESS;
-import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.withResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

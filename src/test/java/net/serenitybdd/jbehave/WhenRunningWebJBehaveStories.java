@@ -2,7 +2,7 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
-import org.junit.Before;
+
 import org.junit.Test;
 
 import java.util.List;

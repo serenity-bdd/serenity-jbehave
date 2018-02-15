@@ -1,7 +1,6 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestTag;
 import net.thucydides.core.steps.StepEventBus;
 import org.junit.Test;
 

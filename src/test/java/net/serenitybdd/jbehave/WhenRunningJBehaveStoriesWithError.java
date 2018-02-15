@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
-import static net.thucydides.core.model.TestResult.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
