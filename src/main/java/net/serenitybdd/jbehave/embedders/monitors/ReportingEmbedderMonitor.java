@@ -37,7 +37,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
         this(configuration(), embedder);
     }
 
-    public ReportingEmbedderMonitor(final net.thucydides.core.webdriver.Configuration configuration,
+    public ReportingEmbedderMonitor(final Configuration configuration,
                                     final ExtendedEmbedder embedder) {
         this.configuration = configuration;
         this.embedder = embedder;
@@ -213,7 +213,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
 
     private static Configuration configuration() {
         Configuration configuration =
-                Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
+                Injectors.getInjector().getInstance(Configuration.class);
         EnvironmentVariables variables =
                 Injectors.getInjector().getProvider(EnvironmentVariables.class).get().copy();
         if (variables != null) {

@@ -11,6 +11,7 @@ import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.InjectableStepsFactory;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class SerenityStepFactory extends AbstractStepsFactory {
 
     private static final ThreadLocal<SerenityStepContext> context = new ThreadLocal<>();
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SerenityStepFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SerenityStepFactory.class);
 
     private final String rootPackage;
     private ClassLoader classLoader;

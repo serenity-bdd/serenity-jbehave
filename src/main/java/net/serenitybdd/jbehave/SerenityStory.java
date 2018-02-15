@@ -2,6 +2,8 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
+import net.thucydides.core.webdriver.Configuration;
+
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class SerenityStory extends SerenityStories {
         findStoriesCalled(storynamesDerivedFromClassName());
     }
 
-    protected SerenityStory(net.thucydides.core.webdriver.Configuration configuration) {
+    protected SerenityStory(Configuration configuration) {
         super(configuration);
         findStoriesCalled(storynamesDerivedFromClassName());
     }

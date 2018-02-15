@@ -2,6 +2,7 @@ package net.thucydides.jbehave;
 
 import net.serenitybdd.jbehave.SerenityStory;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.webdriver.Configuration;
 
 /**
  * @deprecated Use SerenityStory instead
@@ -19,7 +20,7 @@ public class ThucydidesJUnitStory extends SerenityStory {
         super(environmentVariables);
     }
 
-    protected ThucydidesJUnitStory(net.thucydides.core.webdriver.Configuration configuration) {
+    protected ThucydidesJUnitStory(Configuration configuration) {
         super(configuration);
     }
 }
