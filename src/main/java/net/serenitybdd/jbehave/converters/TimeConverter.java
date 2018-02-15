@@ -8,10 +8,7 @@ import java.lang.reflect.Type;
 public class TimeConverter implements ParameterConverters.ParameterConverter {
 
         public boolean accept(Type type) {
-            if (type instanceof Class<?>) {
-                return LocalTime.class.isAssignableFrom((Class<?>) type);
-            }
-            return false;
+            return type instanceof Class<?> && LocalTime.class.isAssignableFrom((Class<?>) type);
         }
 
         public Object convertValue(String value, Type type) {

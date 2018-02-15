@@ -584,21 +584,15 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isPending(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(PENDING));
+        return metaData != null && (metaData.hasProperty(PENDING));
     }
 
     private boolean isManual(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(MANUAL));
+        return metaData != null && (metaData.hasProperty(MANUAL));
     }
 
     private boolean isSkipped(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(WIP) || metaData.hasProperty(SKIP));
+        return metaData != null && (metaData.hasProperty(WIP) || metaData.hasProperty(SKIP));
     }
 
     private boolean isCandidateToBeExecuted(Meta metaData) {
@@ -606,9 +600,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isIgnored(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(IGNORE));
+        return metaData != null && (metaData.hasProperty(IGNORE));
     }
 
     public void afterScenario() {
