@@ -28,13 +28,13 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_story_should_read_properties_from_the_thucydides_properties_file() throws Throwable {
+    public void a_story_should_read_properties_from_the_thucydides_properties_file() {
         EnvironmentVariables environmentVariables = Injectors.getInjector().getProvider(EnvironmentVariables.class).get();
         assertThat(environmentVariables.getProperty("environment.variables.are.set"), is("true"));
     }
 
     @Test
-    public void passing_stories_should_be_reported_as_passing() throws Throwable {
+    public void passing_stories_should_be_reported_as_passing() {
 
         // Given
         SerenityStories passingStory = newStory("aPassingBehavior.story");
@@ -49,7 +49,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void test_outcomes_should_record_a_feature_tag_describing_the_jbehave_story() throws Throwable {
+    public void test_outcomes_should_record_a_feature_tag_describing_the_jbehave_story() {
 
         // Given
         SerenityStories passingStory = newStory("aPassingBehavior.story");
@@ -63,7 +63,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void test_outcomes_should_record_a_feature_tag_describing_the_jbehave_story_when_different_to_the_story_file_name() throws Throwable {
+    public void test_outcomes_should_record_a_feature_tag_describing_the_jbehave_story_when_different_to_the_story_file_name() {
 
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithALongName.story");
@@ -77,7 +77,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void state_should_be_conserved_between_steps() throws Throwable {
+    public void state_should_be_conserved_between_steps() {
 
         // Given
         SerenityStories passingStoryWithState = newStory("aPassingBehaviorWithState.story");
@@ -92,7 +92,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void state_should_not_be_conserved_between_stories() throws Throwable {
+    public void state_should_not_be_conserved_between_stories() {
 
         // Given
         SerenityStories passingStoryWithState = newStory("*PassingBehaviorWithState.story");
@@ -108,7 +108,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_passing_story_with_steps_should_record_the_steps() throws Throwable {
+    public void a_passing_story_with_steps_should_record_the_steps() {
 
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithSteps.story");
@@ -124,7 +124,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void the_given_when_then_clauses_should_count_as_steps() throws Throwable {
+    public void the_given_when_then_clauses_should_count_as_steps() {
 
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithSteps.story");
@@ -142,12 +142,12 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
         assertThat(steps.get(3).getDescription(), is("Then the steps should appear in the outcome"));
     }
 
-    private void runStories(SerenityStories stories) throws Throwable {
+    private void runStories(SerenityStories stories) {
         run(stories);
     }
 
     @Test
-    public void a_test_running_a_slow_story_should_not_fail_if_it_does_not_timeout() throws Throwable {
+    public void a_test_running_a_slow_story_should_not_fail_if_it_does_not_timeout() {
         systemConfiguration.getEnvironmentVariables().setProperty("story.timeout.in.secs", "100");
         SerenityStories stories = new ABehaviorContainingSlowTests(systemConfiguration);
 
@@ -163,7 +163,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void test_should_count_not_merge_main_step() throws Throwable {
+    public void test_should_count_not_merge_main_step() {
 
         // Given
         SerenityStories story = new ASingleStoryWithGivenSample();
@@ -213,7 +213,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void test_stories_should_be_named_after_the_main_behavior_when_given_stories_are_present() throws Throwable {
+    public void test_stories_should_be_named_after_the_main_behavior_when_given_stories_are_present() {
 
         // Given
         SerenityStories story = new AnotherStorySample();
@@ -231,7 +231,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_scenario_should_convert_dates_and_times() throws Throwable {
+    public void a_scenario_should_convert_dates_and_times() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithDatesAndTimes.story");
@@ -246,7 +246,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_reset_steps_for_each_scenario() throws Throwable {
+    public void should_reset_steps_for_each_scenario() {
 
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithSeveralScenarios.story");
@@ -262,7 +262,7 @@ public class WhenRunningJBehaveStoriesWithSuccess extends AbstractJBehaveStory {
     }
 
     @Test
-    public void shared_variables_between_steps_are_allowed_if_configured() throws Throwable {
+    public void shared_variables_between_steps_are_allowed_if_configured() {
 
         // Given
         environmentVariables.setProperty("reset.steps.each.scenario", "false");

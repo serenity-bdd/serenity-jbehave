@@ -27,7 +27,7 @@ public class AbstractJBehaveStory {
 
     protected File outputDirectory;
 
-    protected List<Throwable> raisedErrors = new ArrayList<Throwable>();
+    protected List<Throwable> raisedErrors = new ArrayList<>();
 
     @Before
     public void prepareReporter() throws IOException {
@@ -56,7 +56,7 @@ public class AbstractJBehaveStory {
         }
     }
 
-    protected void run(SerenityStories stories) throws Throwable {
+    protected void run(SerenityStories stories) {
         SerenityReportingRunner runner;
 
         AlertingNotifier notifier = new AlertingNotifier();
@@ -74,7 +74,7 @@ public class AbstractJBehaveStory {
         }
     }
 
-    protected List<TestOutcome> loadTestOutcomes() throws IOException {
+    protected List<TestOutcome> loadTestOutcomes() {
         TestOutcomeLoader loader = new TestOutcomeLoader();
         return loader.loadFrom(outputDirectory);
     }

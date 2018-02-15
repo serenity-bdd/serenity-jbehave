@@ -1,21 +1,17 @@
 package net.serenitybdd.jbehave;
 
-import com.thoughtworks.paranamer.Paranamer;
 import net.serenitybdd.jbehave.reflection.Extract;
 import org.jbehave.core.configuration.Keywords;
-import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.ParameterControls;
 import org.jbehave.core.steps.ParameterConverters;
 import org.jbehave.core.steps.Step;
 import org.jbehave.core.steps.StepCandidate;
-import org.jbehave.core.steps.StepMonitor;
 import org.jbehave.core.steps.StepType;
 import org.jbehave.core.steps.context.StepsContext;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 
 public class SerenityStepCandidate extends StepCandidate {

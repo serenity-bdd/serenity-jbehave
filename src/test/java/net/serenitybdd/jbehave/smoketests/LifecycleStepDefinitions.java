@@ -1,14 +1,10 @@
 package net.serenitybdd.jbehave.smoketests;
 
-import net.serenitybdd.core.pages.PageObject;
-import net.serenitybdd.core.pages.WebElementFacade;
-import net.thucydides.core.annotations.DefaultUrl;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
-import org.openqa.selenium.support.FindBy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

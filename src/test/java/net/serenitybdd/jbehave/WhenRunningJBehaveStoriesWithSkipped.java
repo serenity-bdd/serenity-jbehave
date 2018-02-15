@@ -1,7 +1,6 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestResult;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void steps_after_a_failing_step_should_be_skipped() throws Throwable {
+    public void steps_after_a_failing_step_should_be_skipped() {
 
         // Given
         SerenityStories story = newStory("aComplexFailingBehavior.story");
@@ -44,7 +43,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_tagged_wip_outcome_should_be_skipped() throws Throwable {
+    public void a_tagged_wip_outcome_should_be_skipped() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -64,7 +63,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_tagged_skipped_outcome_should_be_skipped_and_the_steps_ignored() throws Throwable {
+    public void a_tagged_skipped_outcome_should_be_skipped_and_the_steps_ignored() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -84,7 +83,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_be_able_to_declare_a_story_as_wip_using_a_tag() throws Throwable {
+    public void should_be_able_to_declare_a_story_as_wip_using_a_tag() {
 
         // Given
         SerenityStories passingStory = newStory("aTaggedWIPBehaviorWithSeveralScenarios.story");
@@ -100,7 +99,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void skipped_stories_should_not_be_executed() throws Throwable {
+    public void skipped_stories_should_not_be_executed() {
 
         // Given
         SerenityStories sharedVariablesStory = newStory("aSkippedBehavior.story");
@@ -116,7 +115,7 @@ public class WhenRunningJBehaveStoriesWithSkipped extends AbstractJBehaveStory {
     }
 
     @Test
-    public void wip_or_skipped_stories_should_not_be_executed() throws Throwable {
+    public void wip_or_skipped_stories_should_not_be_executed() {
 
         // Given
         SerenityStories sharedVariablesStory = newStory("aWIPBehavior.story");

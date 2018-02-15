@@ -2,7 +2,7 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
-import net.thucydides.core.model.TestStep;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ public class WhenRunningWebJBehaveStoriesUsingPageObjects extends AbstractJBehav
 
 
     @Test
-    public void a_jbehave_step_library_can_use_page_objects_directly() throws Throwable {
+    public void a_jbehave_step_library_can_use_page_objects_directly() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithSeleniumPageObjects.story");

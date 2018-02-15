@@ -35,7 +35,7 @@ public class JUnitDescriptionGenerator {
 			new HashMap<>();
 	{
 		for (ScenarioType scenarioType : ScenarioType.values()) {
-			beforeOrAfterScenario.put(scenarioType, new ArrayList<BeforeOrAfterStep>());
+			beforeOrAfterScenario.put(scenarioType, new ArrayList<>());
 		}
 	}
 
@@ -59,7 +59,7 @@ public class JUnitDescriptionGenerator {
 
 	public List<Description> createDescriptionFrom(PerformableTree performableTree) {
         return performableTree.getRoot().getStories().parallelStream()
-                .filter(performableStory -> performableStory.isAllowed())
+                .filter(PerformableStory::isAllowed)
                 .flatMap(performableStory -> streamOf(descriptionFor(performableStory)))
                 .collect(Collectors.toList());
 	}

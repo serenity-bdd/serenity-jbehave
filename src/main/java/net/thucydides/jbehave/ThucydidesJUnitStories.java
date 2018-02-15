@@ -3,6 +3,8 @@ package net.thucydides.jbehave;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.webdriver.Configuration;
+
 import org.junit.runner.RunWith;
 
 /**
@@ -24,7 +26,7 @@ public class ThucydidesJUnitStories extends SerenityStories {
         super(environmentVariables);
     }
 
-    protected ThucydidesJUnitStories(net.thucydides.core.webdriver.Configuration configuration) {
+    protected ThucydidesJUnitStories(Configuration configuration) {
         super(configuration);
     }
 

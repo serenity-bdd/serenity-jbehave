@@ -2,7 +2,7 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
-import org.junit.Before;
+
 import org.junit.Test;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_simple_web_test_should_run_correctly() throws Throwable {
+    public void a_simple_web_test_should_run_correctly() {
 
         // Given
         SerenityStories story = newStory("aPassingBehaviorWithSelenium.story");
@@ -46,7 +46,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_be_able_to_set_thucydides_properties_in_the_base_test() throws Throwable {
+    public void should_be_able_to_set_thucydides_properties_in_the_base_test() {
 
         // Given
         SerenityStories story = new APassingWebTestSampleWithThucydidesPropertiesDefined(systemConfiguration);
@@ -75,7 +75,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void stories_with_errors_in_one_scenario_should_still_run_subsequent_scenarios() throws Throwable {
+    public void stories_with_errors_in_one_scenario_should_still_run_subsequent_scenarios() {
 
         //environmentVariables.setProperty("restart.browser.each.scenario","true");
 

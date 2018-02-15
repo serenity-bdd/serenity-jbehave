@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 public class WhenConfiguringJBehaveStorySteps extends AbstractJBehaveStory {
 
     @Test
-    public void should_find_stories_in_a_jar_file() throws Throwable {
+    public void should_find_stories_in_a_jar_file() {
 
         // Given
         SerenityStories story = newStory("a_top_level_story.story");
@@ -26,7 +26,7 @@ public class WhenConfiguringJBehaveStorySteps extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_find_stories_in_a_subdirectory_in_the_jar_file() throws Throwable {
+    public void should_find_stories_in_a_subdirectory_in_the_jar_file() {
 
         // Given
         SerenityStories story = newStory("annotatedstories/a_story_in_the_stories_directory.story");
@@ -40,7 +40,7 @@ public class WhenConfiguringJBehaveStorySteps extends AbstractJBehaveStory {
     }
 
     @Test
-    public void spring_autowiring_in_jbehave_steps_should_be_supported() throws Throwable {
+    public void spring_autowiring_in_jbehave_steps_should_be_supported() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithSpringBeans.story");
@@ -55,7 +55,7 @@ public class WhenConfiguringJBehaveStorySteps extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_instantiate_page_objects_in_jbehave_steps() throws Throwable {
+    public void should_instantiate_page_objects_in_jbehave_steps() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithSeleniumPageObjects.story");
