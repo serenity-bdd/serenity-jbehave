@@ -503,7 +503,7 @@ public class SerenityReporter implements StoryReporter {
 
         return baseStepListeners.stream()
                 .map(BaseStepListener::getTestOutcomes)
-                .flatMap(outcomes -> outcomes.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
