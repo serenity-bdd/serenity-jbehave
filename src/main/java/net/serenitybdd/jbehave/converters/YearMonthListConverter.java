@@ -43,7 +43,7 @@ public class YearMonthListConverter implements ParameterConverters.ParameterConv
         System.out.println(type);
         Type argumentType = argumentType(type);
         List<String> values = trim(asList(value.split(valueSeparator)));
-        List<YearMonth> times = new ArrayList<YearMonth>();
+        List<YearMonth> times = new ArrayList<>();
         for (String string : values) {
             times.add((YearMonth) yearMonthConverter.convertValue(string, argumentType));
         }

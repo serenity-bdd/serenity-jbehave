@@ -27,7 +27,7 @@ public class AbstractJBehaveStory {
 
     protected File outputDirectory;
 
-    protected List<Throwable> raisedErrors = new ArrayList<Throwable>();
+    protected List<Throwable> raisedErrors = new ArrayList<>();
 
     @Before
     public void prepareReporter() throws IOException {

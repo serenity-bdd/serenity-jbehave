@@ -35,7 +35,7 @@ public class JUnitDescriptionGenerator {
 			new HashMap<>();
 	{
 		for (ScenarioType scenarioType : ScenarioType.values()) {
-			beforeOrAfterScenario.put(scenarioType, new ArrayList<BeforeOrAfterStep>());
+			beforeOrAfterScenario.put(scenarioType, new ArrayList<>());
 		}
 	}
 

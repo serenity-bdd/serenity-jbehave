@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class SerenityStepFactory extends AbstractStepsFactory {
 
-    private static final ThreadLocal<SerenityStepContext> context = new ThreadLocal<SerenityStepContext>();
+    private static final ThreadLocal<SerenityStepContext> context = new ThreadLocal<>();
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SerenityStepFactory.class);
 
     private final String rootPackage;
@@ -43,7 +43,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
 
     @Override
     protected List<Class<?>> stepsTypes() {
-        List<Class<?>> types = new ArrayList<Class<?>>();
+        List<Class<?>> types = new ArrayList<>();
         for (Class candidateClass : getCandidateClasses() ){
             if (hasAnnotatedMethods(candidateClass)) {
                 types.add(candidateClass);
