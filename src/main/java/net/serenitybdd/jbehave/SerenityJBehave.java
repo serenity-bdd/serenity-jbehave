@@ -55,7 +55,7 @@ public class SerenityJBehave {
                 .useStoryReporterBuilder(
                         new StoryReporterBuilder()
                                 .withDefaultFormats()
-                                .withFormats((Format[]) formats.toArray())
+                                .withFormats(formats.toArray(new Format[0]))
 //                                .withCrossReference(xref)
                                 .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                                 .withViewResources(viewResources)
