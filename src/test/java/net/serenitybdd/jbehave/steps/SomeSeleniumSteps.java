@@ -14,9 +14,7 @@ import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class SomeSeleniumSteps {
 
@@ -87,7 +85,6 @@ public class SomeSeleniumSteps {
     @Alias("I should see <firstname> and <lastname> in the names fields")
     public void thenIShouldSeeInTheNamesFields(String expectedFirstname,
                                                String expectedLastname) {
-        StaticSitePage indexPage = page;
         assertThat(page.firstName().getValue(), is(expectedFirstname));
         assertThat(page.lastName().getValue(), is(expectedLastname));
     }
@@ -102,9 +99,9 @@ public class SomeSeleniumSteps {
         assertThat(page.lastName().getValue(), is($expectedLastname));
     }
 
-    @Then("I should be using Chrome")
-    public void andIShouldBeUsingHtmlUnit() {
-        assertThat(((WebDriverFacade)webDriver).getDriverClass().getName(), containsString("Chrome"));
+    @Then("I should be using $browser")
+    public void andIShouldBeUsingHtmlUnit(String browser) {
+        assertThat(((WebDriverFacade)webDriver).getDriverName(), equalTo(browser));
     }
 
     @Given("the scenario throws an exception")

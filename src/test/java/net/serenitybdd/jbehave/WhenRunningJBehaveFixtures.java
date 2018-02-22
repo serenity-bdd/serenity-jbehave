@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static net.serenitybdd.jbehave.TestOutcomeFinder.theScenarioCalled;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -25,7 +26,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
 
 
     @Test
-    public void should_run_before_story_methods() throws Throwable {
+    public void should_run_before_story_methods() {
 
         // Given
         SerenityStories stories = new AStorySample("aPassingBehavior.story");
@@ -41,7 +42,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_run_before_scenario_methods() throws Throwable {
+    public void should_run_before_scenario_methods() {
 
         // Given
         SerenityStories stories = new AStorySample("aPassingBehaviorWithSeveralScenarios.story");
@@ -57,7 +58,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_run_before_scenario_methods_for_lots_of_stories() throws Throwable {
+    public void should_run_before_scenario_methods_for_lots_of_stories() {
 
         // Given
         SerenityStories stories = new AStorySample("*PassingBehavior.story");
@@ -82,7 +83,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_not_run_given_stories_separately() throws Throwable {
+    public void should_not_run_given_stories_separately() {
 
         // Given
         SerenityStories story = new AnotherStorySample();
@@ -94,7 +95,9 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(3));
 
-        TestOutcome scenarioWithGivens = outcomes.get(2);
+        TestOutcome scenarioWithGivens = theScenarioCalled("some scenario with givens").in(outcomes);
+
+//        TestOutcome scenarioWithGivens = outcomes.get(2);
         assertThat(scenarioWithGivens.getTestSteps().size(), is(5));
 
         TestStep firstStep = scenarioWithGivens.getTestSteps().get(0);
@@ -120,7 +123,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
 
 
     @Test
-    public void should_count_preconditions_as_step() throws Throwable {
+    public void should_count_preconditions_as_step() {
 
         // Given
         SerenityStories story = new AnotherSingleStorySample();
@@ -149,7 +152,7 @@ public class WhenRunningJBehaveFixtures extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_run_stories_with_composite_steps() throws Throwable {
+    public void should_run_stories_with_composite_steps() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithCompositeSteps.story");

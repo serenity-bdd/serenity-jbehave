@@ -42,7 +42,7 @@ public class DateTimeListConverter implements ParameterConverters.ParameterConve
     public Object convertValue(String value, Type type) {
         Type argumentType = argumentType(type);
         List<String> values = trim(asList(value.split(valueSeparator)));
-        List<DateTime> times = new ArrayList<DateTime>();
+        List<DateTime> times = new ArrayList<>();
         for (String string : values) {
             times.add((DateTime) datetimeConverter.convertValue(string, argumentType));
         }

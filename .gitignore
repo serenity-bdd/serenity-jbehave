@@ -5,3 +5,5 @@ lib
 target
 *.iml
 *.log
+/serenity-jbehave.ipr
+/serenity-jbehave.iws

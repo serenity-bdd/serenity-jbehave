@@ -1,10 +1,9 @@
 package net.serenitybdd.jbehave;
 
-import ch.lambdaj.Lambda;
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
@@ -17,20 +16,18 @@ import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.jbehave.core.reporters.Format.CONSOLE;
-import static org.jbehave.core.reporters.Format.HTML;
-import static org.jbehave.core.reporters.Format.XML;
+import static org.jbehave.core.reporters.Format.*;
 
 /**
  * A JUnit-runnable test case designed to run a set of SerenityWebdriverIntegration-enabled JBehave stories in a given package.
@@ -40,10 +37,9 @@ import static org.jbehave.core.reporters.Format.XML;
 @RunWith(SerenityReportingRunner.class)
 public class SerenityStories extends JUnitStories {
 
-    private static final Logger logger = LoggerFactory.getLogger(SerenityStories.class);
-
     public static final String DEFAULT_STORY_NAME = "**/*.story";
-    public static final List<String> DEFAULT_GIVEN_STORY_PREFIX = ImmutableList.of("Given", "Precondition");
+    public static final List<String> DEFAULT_GIVEN_STORY_PREFIX
+            = ImmutableList.of("Given", "Precondition", "preconditions");
 
     private net.thucydides.core.webdriver.Configuration systemConfiguration;
     private EnvironmentVariables environmentVariables;
@@ -100,7 +96,7 @@ public class SerenityStories extends JUnitStories {
     }
 
     public List<String> storyPaths() {
-        Set<String> storyPaths = Sets.newHashSet();
+        Set<String> storyPaths = new HashSet<>();
 
         List<String> pathExpressions = getStoryPathExpressions();
         StoryFinder storyFinder = new StoryFinder();
@@ -111,9 +107,35 @@ public class SerenityStories extends JUnitStories {
             for (URL classpathRootUrl : allClasspathRoots()) {
                 storyPaths.addAll(storyFinder.findPaths(classpathRootUrl, pathExpression, ""));
             }
+            storyPaths = removeDuplicatesFrom(storyPaths);
             storyPaths = pruneGivenStoriesFrom(storyPaths);
         }
-        return Lists.newArrayList(storyPaths);
+        return sorted(storyPaths);
+    }
+
+    private List<String> sorted(Set<String> storyPaths) {
+        List<String> sortedStories = Lists.newArrayList(storyPaths);
+        Collections.sort(sortedStories);
+        return sortedStories;
+    }
+
+    private Set<String> removeDuplicatesFrom(Set<String> storyPaths) {
+        Set<String> trimmedPaths = new HashSet<>();
+        for(String storyPath : storyPaths) {
+            if (!thereExistsALongerVersionOf(storyPath, storyPaths)) {
+                trimmedPaths.add(storyPath);
+            }
+        }
+        return trimmedPaths;
+    }
+
+    private boolean thereExistsALongerVersionOf(String storyPath, Set<String> storyPaths) {
+        for(String existingPath : storyPaths) {
+            if ((existingPath.endsWith("/" + storyPath)) || (existingPath.endsWith("\\" + storyPath))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Set<String> pruneGivenStoriesFrom(Set<String> storyPaths) {
@@ -124,7 +146,7 @@ public class SerenityStories extends JUnitStories {
                     .and().pathsNotStartingWith("/" + skippedPrecondition)
                     .filter();
         }
-        return Sets.newHashSet(filteredPaths);
+        return new HashSet<>(filteredPaths);
     }
 
     class FilterBuilder {
@@ -136,7 +158,7 @@ public class SerenityStories extends JUnitStories {
         }
 
         public FilterBuilder pathsNotStartingWith(String skippedPrecondition) {
-            List<String> filteredPaths = Lists.newArrayList();
+            List<String> filteredPaths = new ArrayList<>();
             for (String path : paths) {
                 if (!startsWith(skippedPrecondition, path)) {
                     filteredPaths.add(path);
@@ -170,19 +192,19 @@ public class SerenityStories extends JUnitStories {
         return (!pathExpression.contains("*"));
     }
 
-    private List<URL> allClasspathRoots() {
+    private Set<URL> allClasspathRoots() {
         try {
-            List<URL> baseRoots = Collections.list(getClassLoader().getResources("."));
+            Set<URL> baseRoots = new HashSet<>(Collections.list(getClassLoader().getResources(".")));
             return addGradleResourceRootsTo(baseRoots);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not load the classpath roots when looking for story files", e);
         }
     }
 
-    private List<URL> addGradleResourceRootsTo(List<URL> baseRoots) throws MalformedURLException {
-        List<URL> rootsWithGradleResources = Lists.newArrayList(baseRoots);
+    private Set<URL> addGradleResourceRootsTo(Set<URL> baseRoots) throws MalformedURLException {
+        Set<URL> rootsWithGradleResources = new HashSet<>(baseRoots);
         for (URL baseUrl : baseRoots) {
-            String gradleResourceUrl = baseUrl.toString().replace("/build/classes/", "build/resources/");
+            String gradleResourceUrl = baseUrl.toString().replace("/build/classes/", "/build/resources/");
             rootsWithGradleResources.add(new URL(gradleResourceUrl));
         }
         return rootsWithGradleResources;
@@ -192,22 +214,9 @@ public class SerenityStories extends JUnitStories {
      * The root package on the classpath containing the JBehave stories to be run.
      */
     protected String getRootPackage() {
-        final Package current = this.getClass().getPackage();
-        final String path=current.getName();
-        String[] elements = path.split("\\.");
-        if (elements.length >= 1) {
-            elements = Arrays.copyOfRange(elements, 0, elements.length - 1);
-        }
-        return concatElements(elements);
+        return RootPackage.forPackage(getClass().getPackage());
     }
 
-    private String concatElements(final String[] subpaths) {
-        final StringBuilder builder = new StringBuilder();
-        for (String path : subpaths) {
-            builder.append(path).append(".");
-        }
-        return builder.substring(0, builder.length() - 1);
-    }
 
     protected List<String> getStoryPathExpressions() {
         return Lists.newArrayList(Splitter.on(';').trimResults().omitEmptyStrings().split(getStoryPath()));
@@ -233,7 +242,17 @@ public class SerenityStories extends JUnitStories {
 
     public void findStoriesCalled(String storyNames) {
         Set<String> storyPathElements = new StoryPathFinder(getEnvironmentVariables(), storyNames).findAllElements();
-        storyNamePattern = Lambda.join(storyPathElements, ";");
+        storyNamePattern = Joiner.on(";").join(storyPathElements);
+    }
+
+    private String storyFilter;
+
+    public void matchStories(String storyFilter) {
+        this.storyFilter = storyFilter;
+    }
+
+    public String getStoryFilter() {
+        return storyFilter;
     }
 
 

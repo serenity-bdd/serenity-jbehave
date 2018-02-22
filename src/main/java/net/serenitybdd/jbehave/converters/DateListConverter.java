@@ -42,7 +42,7 @@ public class DateListConverter implements ParameterConverters.ParameterConverter
     public Object convertValue(String value, Type type) {
         Type argumentType = argumentType(type);
         List<String> values = trim(asList(value.split(valueSeparator)));
-        List<Date> dates = new ArrayList<Date>();
+        List<Date> dates = new ArrayList<>();
         for (String string : values) {
             dates.add((Date) dateConverter.convertValue(string, argumentType));
         }

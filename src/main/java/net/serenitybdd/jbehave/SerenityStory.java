@@ -1,10 +1,12 @@
 package net.serenitybdd.jbehave;
 
-import com.google.common.collect.Lists;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
+import net.thucydides.core.webdriver.Configuration;
+
 import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.join;
@@ -23,7 +25,7 @@ public class SerenityStory extends SerenityStories {
         findStoriesCalled(storynamesDerivedFromClassName());
     }
 
-    protected SerenityStory(net.thucydides.core.webdriver.Configuration configuration) {
+    protected SerenityStory(Configuration configuration) {
         super(configuration);
         findStoriesCalled(storynamesDerivedFromClassName());
     }
@@ -42,7 +44,7 @@ public class SerenityStory extends SerenityStories {
     }
 
     private List<String> getStoryNameCandidatesFrom(String... storyNameCandidates) {
-        List<String> storyNames = Lists.newArrayList();
+        List<String> storyNames = new ArrayList<>();
         for(String storyName : storyNameCandidates) {
             if (storyNames.isEmpty()) {
                 addIfPresent(storyNames, "/" + storyName + ".story");

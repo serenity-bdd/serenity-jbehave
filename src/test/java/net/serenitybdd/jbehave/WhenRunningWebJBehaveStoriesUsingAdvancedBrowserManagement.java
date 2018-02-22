@@ -2,6 +2,8 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.model.TestResult;
+import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.util.MockEnvironmentVariables;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,9 +30,10 @@ public class WhenRunningWebJBehaveStoriesUsingAdvancedBrowserManagement extends 
     }
 
     @Test
-    public void a_test_should_use_a_different_browser_if_requested() throws Throwable {
+    public void a_test_should_use_a_different_browser_if_requested() {
 
         // Given
+        EnvironmentVariables environmentVariables = new MockEnvironmentVariables();
         SerenityStories story = newStory("aBehaviorWithSeleniumUsingADifferentBrowser.story");
 
         // When
@@ -42,7 +45,7 @@ public class WhenRunningWebJBehaveStoriesUsingAdvancedBrowserManagement extends 
     }
 
     @Test
-    public void should_be_able_to_specify_the_browser_in_the_base_test() throws Throwable {
+    public void should_be_able_to_specify_the_browser_in_the_base_test() {
 
         // Given
         SerenityStories story = new APassingWebTestSampleWithASpecifiedBrowser();

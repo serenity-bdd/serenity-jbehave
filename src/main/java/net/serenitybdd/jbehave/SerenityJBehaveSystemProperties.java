@@ -11,11 +11,17 @@ public enum SerenityJBehaveSystemProperties {
     IGNORE_FAILURES_IN_STORIES,
 
     /**
+     * @deprecated use story.timeout instead
      * How long before the JBehave stories time out (defaults to 300 seconds, or 5 minutes).
      * Note that this applies to ALL of the JBehave stories as a whole (i.e. the total test
      * time for all of the tests), not the individual tests.
      */
     STORY_TIMEOUT_IN_SECS,
+
+    /**
+     * This appears to have replaced the story.timeout.in.secs property in the JBehave API.
+     */
+    STORY_TIMEOUT,
 
     /**
      * JBehave meta filters expressions, separated by commas.
@@ -26,9 +32,15 @@ public enum SerenityJBehaveSystemProperties {
     METAFILTER,
 
     /**
-     * Force Serenity to restart the browser before each scenario.
+     * A regular expression that indicates which stories are included in the test run, based on the story name.
+     * Can be used to speed up tests, but must be used in conjunction with the metafilter tag.
      */
-    RESTART_BROWSER_EACH_SCENARIO,
+    STORY_FILTER,
+
+    /**
+     * If you don't restart a browser between scenarios, do you clear the session cookies? (defaults to true)
+     */
+    RESET_COOKIES_EACH_SCENARIO,
 
     /**
      * Reset step libraries in JBehave step definitions for each scenario.
@@ -53,7 +65,12 @@ public enum SerenityJBehaveSystemProperties {
     /**
      * Controls the ignoreFailuresInView flag in JBehave (see http://jbehave.org/reference/stable/running-stories.html).
      */
-    IGNORE_FAILURES_IN_VIEW;
+    IGNORE_FAILURES_IN_VIEW,
+
+    /**
+     * The number of threads to run stories in.
+     */
+    JBEHAVE_THREADS;
 
     public String getName() {return toString().toLowerCase().replaceAll("_",".");}
 

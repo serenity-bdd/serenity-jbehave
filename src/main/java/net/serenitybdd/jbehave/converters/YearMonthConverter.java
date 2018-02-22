@@ -16,12 +16,7 @@ public class YearMonthConverter implements ParameterConverters.ParameterConverte
 
     @Override
     public boolean accept(Type type) {
-        if (type instanceof Class<?>) {
-            return YearMonth.class.isAssignableFrom((Class<?>) type);
-        } else {
-            return false;
-        }
-
+        return type instanceof Class<?> && YearMonth.class.isAssignableFrom((Class<?>) type);
     }
 
     @Override

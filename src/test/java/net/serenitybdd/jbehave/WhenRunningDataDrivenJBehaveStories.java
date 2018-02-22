@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
 
     @Test
-    public void a_data_driven_test_should_produce_a_set_of_steps_per_line_of_data() throws Throwable {
+    public void a_data_driven_test_should_produce_a_set_of_steps_per_line_of_data() {
 
         // Given
         SerenityStories story = newStory("aDataDrivenBehavior.story");
@@ -31,7 +31,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_data_driven_test_should_produce_a_steps_with_the_data_values_in_the_titles() throws Throwable {
+    public void a_data_driven_test_should_produce_a_steps_with_the_data_values_in_the_titles() {
 
         // Given
         SerenityStories story = newStory("aDataDrivenBehavior.story");
@@ -48,7 +48,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_data_driven_test_should_produce_a_successful_result_if_all_rows_are_successful() throws Throwable {
+    public void a_data_driven_test_should_produce_a_successful_result_if_all_rows_are_successful() {
 
         // Given
         SerenityStories story = newStory("aDataDrivenBehavior.story");
@@ -62,7 +62,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
 
 
     @Test
-    public void a_failing_step_in_a_data_driven_test_should_not_affect_subsequent_steps() throws Throwable {
+    public void a_failing_step_in_a_data_driven_test_should_not_affect_subsequent_steps() {
 
         // Given
         SerenityStories story = newStory("aFailingDataDrivenBehavior.story");
@@ -82,7 +82,7 @@ public class WhenRunningDataDrivenJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_failing_step_in_a_data_driven_test_should_be_recorded_in_the_examples_table() throws Throwable {
+    public void a_failing_step_in_a_data_driven_test_should_be_recorded_in_the_examples_table() {
 
         // Given
         SerenityStories story = newStory("aFailingDataDrivenBehavior.story");

@@ -8,8 +8,8 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import static ch.lambdaj.Lambda.convert;
-import static org.fest.assertions.Assertions.assertThat;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateTimeConversionSteps {
 
@@ -36,6 +36,6 @@ public class DateTimeConversionSteps {
 
     @Then("the parameter should be converted to a list of DateTimes with values <expected>")
     public void thenTheParameterShouldBeConvertedToAListOfDateTimesWithValues(List<String> expected) {
-        assertThat(dateTimeParameterList).isEqualTo(convert(expected, StringDateConverters.toDateTimes()));
+        assertThat(dateTimeParameterList).isEqualTo(expected.stream().map(DateTime::new).collect(toList()));
     }
 }

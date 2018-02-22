@@ -7,9 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.IGNORED;
-import static net.thucydides.core.model.TestResult.PENDING;
 import static net.thucydides.core.model.TestResult.SUCCESS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -27,12 +25,12 @@ public class WhenRunningJBehaveStoriesWithIgnored extends AbstractJBehaveStory {
         }
     }
 
-    private void runStories(SerenityStories stories) throws Throwable {
+    private void runStories(SerenityStories stories) {
         run(stories);
     }
 
     @Test
-    public void a_test_running_a_failing_story_should_not_fail_if_ignore_failures_in_stories_is_set_to_true() throws Throwable {
+    public void a_test_running_a_failing_story_should_not_fail_if_ignore_failures_in_stories_is_set_to_true() {
 
         systemConfiguration.getEnvironmentVariables().setProperty("ignore.failures.in.stories", "true");
         SerenityStories stories = new AFailingBehavior();
@@ -41,7 +39,7 @@ public class WhenRunningJBehaveStoriesWithIgnored extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_mark_scenarios_with_failing_assumption_as_skipped() throws Throwable {
+    public void should_mark_scenarios_with_failing_assumption_as_skipped() {
 
         // Given
         SerenityStories stories = new ABehaviorWithAFailingAssumption(environmentVariables);
@@ -57,7 +55,7 @@ public class WhenRunningJBehaveStoriesWithIgnored extends AbstractJBehaveStory {
     }
 
     @Test
-    public void stories_with_failing_assumptions_should_be_ignored() throws Throwable {
+    public void stories_with_failing_assumptions_should_be_ignored() {
 
         // Given
         SerenityStories pendingStory = newStory("aBehaviorWithAFailingAssumption.story");

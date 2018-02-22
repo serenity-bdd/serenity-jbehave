@@ -26,14 +26,15 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
     }
 
     @Test
-    public void failing_stories_should_be_reported_as_failing() throws Throwable {
+    public void failing_stories_should_be_reported_as_failing() {
 
         // Given
         SerenityStories failingStory = newStory("aFailingBehavior.story");
 
-        // When
-        run(failingStory);
-
+        try {
+            // When
+            run(failingStory);
+        } catch(RuntimeException e) {}
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(), is(1));
@@ -41,14 +42,17 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_not_reset_steps_for_each_scenario_if_configured() throws Throwable {
+    public void should_not_reset_steps_for_each_scenario_if_configured() {
 
+//        environmentVariables.setProperty("reset.steps.each.scenario", "false");
         environmentVariables.setProperty("reset.steps.each.scenario", "false");
         // Given
         SerenityStories passingStory = newStory("aPassingBehaviorWithSeveralScenarios.story");
 
-        // When
-        run(passingStory);
+        try {
+            // When
+            run(passingStory);
+        } catch(RuntimeException e) {}
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
@@ -58,13 +62,15 @@ public class WhenRunningJBehaveStoriesWithFailure extends AbstractJBehaveStory {
     }
 
     @Test
-    public void variables_are_reset_between_steps_by_default() throws Throwable {
+    public void variables_are_reset_between_steps_by_default() {
 
         // Given
         SerenityStories sharedVariablesStory = newStory("aBehaviorWithSharedVariables.story");
 
-        // When
-        run(sharedVariablesStory);
+        try {
+            // When
+            run(sharedVariablesStory);
+        } catch(RuntimeException e) {}
 
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();

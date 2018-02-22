@@ -1,10 +1,6 @@
 package net.serenitybdd.jbehave;
 
-
-import ch.lambdaj.function.convert.Converter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.ResourcesScanner;
@@ -17,15 +13,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import static ch.lambdaj.Lambda.convert;
 
 /**
  * Load classes from a given package.
@@ -63,13 +54,16 @@ public class ClassFinder {
     private List<Class<?>> allClassesInPackage(String packageName) {
         try {
             String path = packageName.replace('.', '/');
+            if (packageName.isEmpty()) {
+                packageName = "/";
+            }
             Enumeration<URL> resources = classResourcesOn(path);
-            List<URI> dirs = new ArrayList<URI>();
+            List<URI> dirs = new ArrayList<>();
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 dirs.add(resource.toURI());
             }
-            List<Class<?>> classes = Lists.newArrayList();
+            List<Class<?>> classes = new ArrayList<>();
             for (URI directory : dirs) {
                 classes.addAll(findClasses(directory, packageName));
             }
@@ -95,7 +89,7 @@ public class ClassFinder {
                 new MethodAnnotationsScanner(),
                 new ResourcesScanner(), getClassLoader());
 
-        Set<Class<?>> matchingClasses = Sets.newHashSet();
+        Set<Class<?>> matchingClasses = new HashSet<>();
         for (Class<? extends Annotation> expectedAnnotation : expectedAnnotations) {
             matchingClasses.addAll(reflections.getTypesAnnotatedWith(expectedAnnotation));
             matchingClasses.addAll(classesFrom(reflections.getMethodsAnnotatedWith(expectedAnnotation)));
@@ -105,16 +99,10 @@ public class ClassFinder {
     }
 
     private Collection<Class<?>> classesFrom(Set<Method> annotatedMethods) {
-        return convert(annotatedMethods, toDeclaringCasses());
-    }
 
-    private Converter<Method, Class<?>> toDeclaringCasses() {
-        return new Converter<Method, Class<?>>() {
-
-            public Class convert(Method from) {
-                return from.getDeclaringClass();
-            }
-        };
+        return annotatedMethods.stream()
+                .map(Method::getDeclaringClass)
+                .collect(Collectors.toList());
     }
 
     private Enumeration<URL> classResourcesOn(String path) {
@@ -147,7 +135,7 @@ public class ClassFinder {
         } catch (Exception e) {
             throw new RuntimeException(
                     "failed to find classes" +
-                    "in directory=[" + directory + "], with packageName=[" + packageName + "]",
+                            "in directory=[" + directory + "], with packageName=[" + packageName + "]",
                     e
             );
         }
@@ -157,16 +145,16 @@ public class ClassFinder {
     private List<Class<?>> findClassesInJar(URI jarDirectory, String packageName) throws IOException {
         final String schemeSpecificPart = jarDirectory.getSchemeSpecificPart();
 
-        List<Class<?>> classes = Lists.newArrayList();
-        String [] split = schemeSpecificPart.split("!");
+        List<Class<?>> classes = new ArrayList<>();
+        String[] split = schemeSpecificPart.split("!");
         URL jar = new URL(split[0]);
-        try(ZipInputStream zip = new ZipInputStream(jar.openStream())) {
+        try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null) {
                 if (entry.getName().endsWith(".class")) {
                     String className = classNameFor(entry);
                     if (className.startsWith(packageName) && isNotAnInnerClass(className)) {
-                        classes.add(loadClassWithName(className));
+                        loadClassWithName(className).ifPresent(classes::add);
                     }
                 }
             }
@@ -176,7 +164,7 @@ public class ClassFinder {
     }
 
     private List<Class<?>> findClassesInFileSystemDirectory(URI jarDirectory, String packageName) {
-        List<Class<?>> classes = Lists.newArrayList();
+        List<Class<?>> classes = new ArrayList<>();
 
         File directory = new File(jarDirectory);
 
@@ -189,7 +177,7 @@ public class ClassFinder {
                 if (file.isDirectory()) {
                     classes.addAll(findClasses(file.toURI(), packageName + "." + file.getName()));
                 } else if (file.getName().endsWith(".class") && isNotAnInnerClass(file.getName())) {
-                    classes.add(correspondingClass(packageName, file));
+                    correspondingClass(packageName, file).ifPresent(classes::add);
                 }
             }
         }
@@ -201,17 +189,24 @@ public class ClassFinder {
         return entry.getName().replaceAll("[$].*", "").replaceAll("[.]class", "").replace('/', '.');
     }
 
-    private Class<?> loadClassWithName(String className){
+    private Optional<? extends Class<?>> loadClassWithName(String className) {
         try {
-            return getClassLoader().loadClass(className);
+            return Optional.of(getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Could not find or access class for " + className, e);
+//            throw new IllegalArgumentException("Could not find or access class for " + className, e);
+            return Optional.empty();
+        } catch (NoClassDefFoundError noClassDefFoundError) {
+            return Optional.empty();
         }
-     }
+    }
 
-    private Class<?> correspondingClass(String packageName, File file) {
-        String fullyQualifiedClassName = packageName + '.' + simpleClassNameOf(file);
+    private Optional<? extends Class<?>> correspondingClass(String packageName, File file) {
+        String fullyQualifiedClassName = packagePrefixFor(packageName) + simpleClassNameOf(file);
         return loadClassWithName(fullyQualifiedClassName);
+    }
+
+    private String packagePrefixFor(String packageName) {
+        return (packageName.isEmpty() || packageName.equals("/")) ? "" : packageName + '.';
     }
 
     private static ClassLoader getDefaultClassLoader() {

@@ -1,19 +1,13 @@
 package net.serenitybdd.jbehave;
 
-import net.serenitybdd.jbehave.converters.DateListConverter;
-import net.serenitybdd.jbehave.converters.DateTimeConverter;
-import net.serenitybdd.jbehave.converters.DateTimeListConverter;
-import net.serenitybdd.jbehave.converters.TimeConverter;
-import net.serenitybdd.jbehave.converters.TimeListConverter;
-import net.serenitybdd.jbehave.converters.YearMonthConverter;
-import net.serenitybdd.jbehave.converters.YearMonthListConverter;
+import net.serenitybdd.jbehave.converters.*;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.failures.FailureStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
-import org.jbehave.core.reporters.CrossReference;
+import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
@@ -28,7 +22,7 @@ import java.util.Properties;
  */
 public class SerenityJBehave {
 
-    private static final CrossReference xref = new CrossReference();
+//    private static final CrossReference xref = new CrossReference();
 
     /**
      * Returns a default JBehave configuration object suitable for ThucydidesWebdriverIntegration tests.
@@ -42,10 +36,12 @@ public class SerenityJBehave {
         Properties viewResources = new Properties();
         viewResources.put("decorateNonHtml", "true");
 
-        new ParameterConverters.DateConverter();
+        TableTransformers tableTransformers = new TableTransformers();
+        UTF8StoryLoader utf8StoryLoader = new UTF8StoryLoader();
         return new ParanamerConfiguration()
+                .useTableTransformers(tableTransformers)
                 .useParameterConverters(
-                        new ParameterConverters().addConverters(
+                        new ParameterConverters(utf8StoryLoader, tableTransformers).addConverters(
                                 new ParameterConverters.DateConverter(),
                                 new DateListConverter(),
                                 new DateTimeConverter(),
@@ -60,13 +56,13 @@ public class SerenityJBehave {
                         new StoryReporterBuilder()
                                 .withDefaultFormats()
                                 .withFormats((Format[]) formats.toArray())
-                                .withCrossReference(xref)
+//                                .withCrossReference(xref)
                                 .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                                 .withViewResources(viewResources)
                                 .withPathResolver(new FilePrintStreamFactory.ResolveToPackagedName())
                                 .withFailureTrace(true).withFailureTraceCompression(true)
                                 .withReporters(new SerenityReporter(systemConfiguration)))
-                .useStoryLoader(new UTF8StoryLoader())
+                .useStoryLoader(utf8StoryLoader)
                 .useFailureStrategy(new IgnoreAssumptionViolations());
     }
 

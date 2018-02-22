@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5'
-        classpath 'org.ajoberstar:gradle-git:1.4.0-rc.1'
+        classpath 'org.ajoberstar:gradle-git:1.6.0-rc.1'
     }
 }
 
@@ -28,8 +28,8 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 group = 'net.serenity-bdd'
 
 repositories {
@@ -45,11 +45,6 @@ ext {
     bintrayRepository = 'maven'
     bintrayPackage = 'serenity-jbehave'
     projectDescription = 'Serenity JBehave integration'
-    groovyVersion = '2.4.4'
-    junitVersion = '4.12'
-    reflectionsVersion = '0.9.10'
-    mockitoCoreVersion = '1.10.19'
-    jbehaveCoreVersion = '4.0.5'
 
     if (!project.hasProperty("bintrayUsername")) {
         bintrayUsername = 'wakaleo'
@@ -57,7 +52,6 @@ ext {
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
     }
-    serenityCoreVersion = '1.1.31'
 
     if (!project.hasProperty("bintrayApiKey")) {
         bintrayApiKey = ''
@@ -65,7 +59,7 @@ ext {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = "${gradleVersion}"
 }
 
 test {
@@ -105,40 +99,40 @@ artifacts {
 
 configurations.all {
     resolutionStrategy {
-        failOnVersionConflict()
+        //failOnVersionConflict()
         force "junit:junit:${junitVersion}",
-            "org.mockito:mockito-core:${mockitoCoreVersion}",
-            "commons-collections:commons-collections:3.2.2",
-            "com.thoughtworks.xstream:xstream:1.4.9",
-            "xml-apis:xml-apis:1.4.01",
-            "commons-codec:commons-codec:1.10"
+                "org.mockito:mockito-core:${mockitoCoreVersion}",
+                "commons-collections:commons-collections:3.2.2",
+                "com.thoughtworks.xstream:xstream:1.4.9",
+                "xml-apis:xml-apis:1.4.01",
+                "commons-codec:commons-codec:1.10",
+                "org.objenesis:objenesis:2.6",
+                "cglib:cglib-nodep:3.2.4",
+                "org.seleniumhq.selenium:selenium-api:${seleniumVersion}",
+                "org.springframework:spring-core:${springVersion}",
+                "org.springframework:spring-beans:${springVersion}",
+                "org.springframework:spring-context:${springVersion}"
     }
 }
 
 dependencies {
-    compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}")
+    compile("net.serenity-bdd:serenity-core:${project.serenityCoreVersion}") {
+        exclude group:"org.seleniumhq.selenium", module:"htmlunit-driver"
+    }
 
-    compile 'commons-logging:commons-logging:1.2'
+    compile "commons-logging:commons-logging:${commonsLoggingVersion}"
 
-    compile 'com.thoughtworks.paranamer:paranamer:2.8'
+    compile "com.thoughtworks.paranamer:paranamer:${paranamerVersion}"
 
     compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
         exclude group: 'org.freemarker', module: 'freemarker'
         exclude group: 'junit', module: 'junit'
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
         exclude group: 'commons-collections', module: 'commons-collections'
-        exclude group: 'com.thoughtworks.paranamer', module : 'paranamer'
+        exclude group: 'com.thoughtworks.paranamer', module: 'paranamer'
     }
 
-    compile("org.jbehave:jbehave-core:${jbehaveCoreVersion}") {
-        exclude group: 'org.freemarker', module: 'freemarker'
-        exclude group: 'junit', module: 'junit'
-        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
-        exclude group: 'commons-collections', module: 'commons-collections'
-        exclude group: 'com.thoughtworks.paranamer', module : 'paranamer'
-    }
-
-    compile('de.codecentric:jbehave-junit-runner:1.2.0') {
+    compile ("com.github.valfirst:jbehave-junit-runner:${jbehaveJUnitRunner}") {
         exclude group: 'org.mockito', module: 'mockito-core'
         exclude group: 'junit', module: 'junit'
     }
@@ -146,21 +140,18 @@ dependencies {
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'xml-apis', module: 'xml-apis'
     }
-    compile('com.googlecode.lambdaj:lambdaj:2.3.3') {
-        exclude group: 'org.objenesis', module: 'objenesis'
-        exclude group: 'org.hamcrest', module: 'hamcrest-all'
-    }
     compile("org.codehaus.groovy:groovy-all:${groovyVersion}")
     compile "junit:junit:${junitVersion}"
 
-    testCompile ("ch.qos.logback:logback-classic:1.0.13") {
+    testCompile("net.serenity-bdd:serenity-screenplay:${project.serenityCoreVersion}")
+    testCompile("ch.qos.logback:logback-classic:${logbackVersion}") {
         exclude module: 'slf4j-api'
     }
-    testCompile 'org.easytesting:fest-assert:1.4'
+    testCompile "org.assertj:assertj-core:${assertjVersion}"
     testCompile("net.serenity-bdd:serenity-spring:${project.serenityCoreVersion}") {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
-    testCompile ("net.serenity-bdd:serenity-test-utils:${project.serenityCoreVersion}") {
+    testCompile("net.serenity-bdd:serenity-test-utils:${project.serenityCoreVersion}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.jbehave', module: 'jbehave-core'
     }
@@ -168,8 +159,8 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.jbehave', module: 'jbehave-core'
     }
-    testCompile ("org.mockito:mockito-core:${mockitoCoreVersion}") {
-        exclude group: 'org.hamcrest', module:'hamcrest-core'
+    testCompile("org.mockito:mockito-core:${mockitoCoreVersion}") {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
         exclude group: 'org.objenesis', module: 'objenesis'
     }
 }
@@ -282,5 +273,5 @@ if (JavaVersion.current().isJava8Compatible()) {
 
 task copyDeps(type: Copy) {
     from configurations.runtime + configurations.testCompile
-    into project.projectDir.path+"/lib"
+    into project.projectDir.path + "/lib"
 }

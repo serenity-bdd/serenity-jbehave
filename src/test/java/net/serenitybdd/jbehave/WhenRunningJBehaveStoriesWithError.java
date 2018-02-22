@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
-import static net.thucydides.core.model.TestResult.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -26,7 +24,7 @@ public class WhenRunningJBehaveStoriesWithError extends AbstractJBehaveStory {
     }
 
     @Test
-    public void stories_with_errors_should_be_reported_as_failing() throws Throwable {
+    public void stories_with_errors_should_be_reported_as_failing() {
 
         // Given
         SerenityStories failingStory = newStory("aBehaviorThrowingAnException.story");
@@ -40,12 +38,27 @@ public class WhenRunningJBehaveStoriesWithError extends AbstractJBehaveStory {
         assertThat(outcomes.get(0).getResult(), is(TestResult.ERROR));
     }
 
-    private void runStories(SerenityStories stories) throws Throwable {
+    @Test
+    public void stories_with_undefined_steps_should_be_reported_as_pending() {
+
+        // Given
+        SerenityStories failingStory = newStory("aBehaviorWithAnUndefinedStep.story");
+
+        // When
+        run(failingStory);
+
+        // Then
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.PENDING));
+    }
+
+    private void runStories(SerenityStories stories) {
         run(stories);
     }
 
     @Test
-    public void errored_stories_should_be_reported_as_having_an_error() throws Throwable {
+    public void errored_stories_should_be_reported_as_having_an_error() {
 
         // Given
         SerenityStories failingStory = newStory("aBehaviorWithAnError.story");
@@ -60,44 +73,14 @@ public class WhenRunningJBehaveStoriesWithError extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_running_a_failing_story_should_fail() throws Throwable {
-        SerenityStories stories = new AFailingBehavior();
+    public void a_test_running_a_failing_story_should_fail() {
+        SerenityStories stories = newStory("aFailingBehavior.story");
         stories.setSystemConfiguration(systemConfiguration);
         runStories(stories);
 
-        assert !raisedErrors.isEmpty();
+        List<TestOutcome> outcomes = loadTestOutcomes();
+        assertThat(outcomes.size(), is(1));
+        assertThat(outcomes.get(0).getResult(), is(TestResult.FAILURE));
     }
 
-    @Test
-    public void a_test_running_a_failing_story_among_several_should_fail() throws Throwable {
-        SerenityStories stories = new ASetOfBehaviorsContainingFailures();
-        stories.setSystemConfiguration(systemConfiguration);
-        runStories(stories);
-
-        assert !raisedErrors.isEmpty();
-    }
-
-    @Test
-    public void failing_stories_run_in_junit_should_fail() throws Throwable {
-
-        // Given
-        SerenityStories failingStory = newStory("aFailingBehavior.story");
-
-        // When
-        runStories(failingStory);
-
-        assert !raisedErrors.isEmpty();
-    }
-
-    @Test
-    public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
-
-        // Given
-        SerenityStories failingStory = newStory("aBehaviorThrowingAnException.story");
-
-        // When
-        runStories(failingStory);
-
-        assert !raisedErrors.isEmpty();
-    }
 }

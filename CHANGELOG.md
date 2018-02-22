@@ -1,5 +1,34 @@
 ## Serenity BDD JBehave change Log
 
+### upcoming (2016/06/29 15:36 +00:00)
+ 
+**Pull requests:**
+ 
+- [#91](https://github.com/serenity-bdd/serenity-jbehave/pull/91) Tagging strategies tests ([@YamStranger](https://github.com/YamStranger))
+ 
+**Commits:**
+ 
+- [5f4ffed](https://github.com/serenity-bdd/serenity-jbehave/commit/5f4ffed6b44e896b1af648236e3b8f1da438acd8) chore: core updated ([@YamStranger](https://github.com/YamStranger))
+ 
+### v1.13.0 (2016/06/03 06:23 +00:00)
+ 
+**Pull requests:**
+ 
+ 
+### v1.12.0 (2016/05/20 09:25 +00:00)
+ 
+ 
+### v1.11.0 (2016/05/18 17:24 +00:00)
+ 
+**Pull requests:**
+ 
+- [#88](https://github.com/serenity-bdd/serenity-jbehave/pull/88) Update build.gradle for working with java 8 and lambdas ([@mykolap](https://github.com/mykolap))
+- [#80](https://github.com/serenity-bdd/serenity-jbehave/pull/80) Fixed foreign keyword support in story files ([@YamStranger](https://github.com/YamStranger))
+ 
+**Commits:**
+ 
+- [2e2cc85](https://github.com/serenity-bdd/serenity-jbehave/commit/2e2cc858bdc0107a9cbbe1b738e2a6e7b366b5a2) fix: fixed foreign keyword support in story files ([@YamStranger](https://github.com/YamStranger))
+ 
 ### v1.10.0 (2016/04/20 05:49 +00:00)
  
 **Pull requests:**
@@ -961,44 +990,26 @@
  
 **Commits:**
  
-- [1f98fcf](https://github.com/serenity-bdd/serenity-jbehave/commit/1f98fcf1f50f9176a2f39fa6afa763f644ca5d7d) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0 ([@wakaleo](https://github.com/wakaleo))
-- [b5f179b](https://github.com/serenity-bdd/serenity-jbehave/commit/b5f179b593143d45b9fdde5665a1b3fccfe51d7c) Updating to 0.9.0 ([@wakaleo](https://github.com/wakaleo))
-- [b93ada4](https://github.com/serenity-bdd/serenity-jbehave/commit/b93ada4f12094b242259bf1c14015d60246b5b4f) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
-- [c354b6b](https://github.com/serenity-bdd/serenity-jbehave/commit/c354b6b9f41cef3137684198e4e83dfbc568ffb8) Updating to 0.9.0 ([@wakaleo](https://github.com/wakaleo))
-- [d2de071](https://github.com/serenity-bdd/serenity-jbehave/commit/d2de07161d0689979d3c20d966f8a494be7c8069) Removed an error in the tests and modified the default step loader to not load inner classes (with names containing a '$'). When using Groovy, trying to load the inner classes that represent closures caused the tests to fail. ([@wakaleo](https://github.com/wakaleo))
- 
-### thucydides-jbehave-plugin-0.9.0-RC4 (2012/07/18 03:33 +00:00)
- 
- 
-**Commits:**
- 
-- [64ef9bd](https://github.com/serenity-bdd/serenity-jbehave/commit/64ef9bda0bfc8646e197a06858d89e7986a4baaa) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
-- [b3e137b](https://github.com/serenity-bdd/serenity-jbehave/commit/b3e137b7c9d98930e1621457c8c5a511f402e146) Integrated a better JUnit runner for nicer IDE integration ([@wakaleo](https://github.com/wakaleo))
-- [d446806](https://github.com/serenity-bdd/serenity-jbehave/commit/d446806b7dba89ecb56828a3e9fc6b7de10fb098) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC4 ([@wakaleo](https://github.com/wakaleo))
-- [e2b174c](https://github.com/serenity-bdd/serenity-jbehave/commit/e2b174cd7611e15087799227305840384164c263) Fixed issue with closing the browser after a test failure ([@wakaleo](https://github.com/wakaleo))
-- [e432d12](https://github.com/serenity-bdd/serenity-jbehave/commit/e432d121b0486dbb21fa9147332df55717ddde8a) Fixing issue which leaves a browser open after a failing web test ([@wakaleo](https://github.com/wakaleo))
- 
-### thucydides-jbehave-plugin-0.9.0-RC3 (2012/07/12 13:41 +00:00)
- 
- 
-**Commits:**
- 
-- [61e331a](https://github.com/serenity-bdd/serenity-jbehave/commit/61e331ae2fa6d749010d94a0da0740fd6b9debf7) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
-- [7c03144](https://github.com/serenity-bdd/serenity-jbehave/commit/7c031445b2345cb36fd9b10197e298e92545f73c) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC3 ([@wakaleo](https://github.com/wakaleo))
-- [9e10df3](https://github.com/serenity-bdd/serenity-jbehave/commit/9e10df3f13258e9fb5aacc74afb010f7cdcdf454) Fixed an issue managing state between steps ([@wakaleo](https://github.com/wakaleo))
- 
-### thucydides-jbehave-plugin-0.9.0-RC2 (2012/07/12 02:34 +00:00)
- 
- 
-**Commits:**
- 
 - [13eb79c](https://github.com/serenity-bdd/serenity-jbehave/commit/13eb79c95a2f8f78c0613990948666919d657f21) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC1 ([@wakaleo](https://github.com/wakaleo))
+- [1f98fcf](https://github.com/serenity-bdd/serenity-jbehave/commit/1f98fcf1f50f9176a2f39fa6afa763f644ca5d7d) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0 ([@wakaleo](https://github.com/wakaleo))
 - [369fe28](https://github.com/serenity-bdd/serenity-jbehave/commit/369fe28f3ee6b905e6db70b0395be5c4600c2356) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
 - [39468fa](https://github.com/serenity-bdd/serenity-jbehave/commit/39468fa548f5cede2bae37cde9f44e8e0326ce91) Updated versions ([@wakaleo](https://github.com/wakaleo))
 - [5227ad8](https://github.com/serenity-bdd/serenity-jbehave/commit/5227ad86692cea92393f11150bfd7825e920f9dc) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
+- [61e331a](https://github.com/serenity-bdd/serenity-jbehave/commit/61e331ae2fa6d749010d94a0da0740fd6b9debf7) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
+- [64ef9bd](https://github.com/serenity-bdd/serenity-jbehave/commit/64ef9bda0bfc8646e197a06858d89e7986a4baaa) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
 - [671dda7](https://github.com/serenity-bdd/serenity-jbehave/commit/671dda755daa3194c5b7ef5ebac90120fa4dca18) Fixed an issue with taking screenshots in nested steps ([@wakaleo](https://github.com/wakaleo))
+- [7c03144](https://github.com/serenity-bdd/serenity-jbehave/commit/7c031445b2345cb36fd9b10197e298e92545f73c) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC3 ([@wakaleo](https://github.com/wakaleo))
+- [9e10df3](https://github.com/serenity-bdd/serenity-jbehave/commit/9e10df3f13258e9fb5aacc74afb010f7cdcdf454) Fixed an issue managing state between steps ([@wakaleo](https://github.com/wakaleo))
 - [affeaa2](https://github.com/serenity-bdd/serenity-jbehave/commit/affeaa2bdfccd2ddda81ea5f757fc540bd84fb77) Preparing release ([@wakaleo](https://github.com/wakaleo))
+- [b3e137b](https://github.com/serenity-bdd/serenity-jbehave/commit/b3e137b7c9d98930e1621457c8c5a511f402e146) Integrated a better JUnit runner for nicer IDE integration ([@wakaleo](https://github.com/wakaleo))
+- [b5f179b](https://github.com/serenity-bdd/serenity-jbehave/commit/b5f179b593143d45b9fdde5665a1b3fccfe51d7c) Updating to 0.9.0 ([@wakaleo](https://github.com/wakaleo))
+- [b93ada4](https://github.com/serenity-bdd/serenity-jbehave/commit/b93ada4f12094b242259bf1c14015d60246b5b4f) [maven-release-plugin] prepare for next development iteration ([@wakaleo](https://github.com/wakaleo))
+- [c354b6b](https://github.com/serenity-bdd/serenity-jbehave/commit/c354b6b9f41cef3137684198e4e83dfbc568ffb8) Updating to 0.9.0 ([@wakaleo](https://github.com/wakaleo))
 - [cf6168b](https://github.com/serenity-bdd/serenity-jbehave/commit/cf6168b7abfcc2cc3d8e25404478ee3df0bc0c98) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC2 ([@wakaleo](https://github.com/wakaleo))
+- [d2de071](https://github.com/serenity-bdd/serenity-jbehave/commit/d2de07161d0689979d3c20d966f8a494be7c8069) Removed an error in the tests and modified the default step loader to not load inner classes (with names containing a '$'). When using Groovy, trying to load the inner classes that represent closures caused the tests to fail. ([@wakaleo](https://github.com/wakaleo))
+- [d446806](https://github.com/serenity-bdd/serenity-jbehave/commit/d446806b7dba89ecb56828a3e9fc6b7de10fb098) [maven-release-plugin] prepare release thucydides-jbehave-plugin-0.9.0-RC4 ([@wakaleo](https://github.com/wakaleo))
+- [e2b174c](https://github.com/serenity-bdd/serenity-jbehave/commit/e2b174cd7611e15087799227305840384164c263) Fixed issue with closing the browser after a test failure ([@wakaleo](https://github.com/wakaleo))
+- [e432d12](https://github.com/serenity-bdd/serenity-jbehave/commit/e432d121b0486dbb21fa9147332df55717ddde8a) Fixing issue which leaves a browser open after a failing web test ([@wakaleo](https://github.com/wakaleo))
  
 ### thucydides-jbehave-plugin-0.9.0-beta-6 (2012/07/10 10:42 +00:00)
  
