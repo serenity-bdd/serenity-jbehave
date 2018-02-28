@@ -7,3 +7,7 @@ target
 *.log
 /serenity-jbehave.ipr
 /serenity-jbehave.iws
+/bin
+.project
+.settings
+.classpath
