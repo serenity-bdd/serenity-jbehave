@@ -1,6 +1,5 @@
 package net.serenitybdd.jbehave;
 
-import com.google.common.collect.Lists;
 import net.serenitybdd.core.di.DependencyInjector;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.steps.PageObjectDependencyInjector;
@@ -12,6 +11,7 @@ import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.steps.AbstractStepsFactory;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.InjectableStepsFactory;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 public class SerenityStepFactory extends AbstractStepsFactory {
 
-    private static final ThreadLocal<SerenityStepContext> context = new ThreadLocal<SerenityStepContext>();
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SerenityStepFactory.class);
+    private static final ThreadLocal<SerenityStepContext> context = new ThreadLocal<>();
+    private static final Logger logger = LoggerFactory.getLogger(SerenityStepFactory.class);
 
     private final String rootPackage;
     private ClassLoader classLoader;
@@ -44,7 +44,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
 
     @Override
     protected List<Class<?>> stepsTypes() {
-        List<Class<?>> types = new ArrayList<Class<?>>();
+        List<Class<?>> types = new ArrayList<>();
         for (Class candidateClass : getCandidateClasses() ){
             if (hasAnnotatedMethods(candidateClass)) {
                 types.add(candidateClass);
@@ -56,7 +56,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
     private List<Class> getCandidateClasses() {
 
         List<Class<?>> allClassesUnderRootPackage = ClassFinder.loadClasses().withClassLoader(classLoader).fromPackage(rootPackage);
-        List<Class> candidateClasses = Lists.newArrayList();
+        List<Class> candidateClasses = new ArrayList<>();
         for(Class<?> classUnderRootPackage : allClassesUnderRootPackage) {
             if (hasAnnotatedMethods(classUnderRootPackage)) {
                 candidateClasses.add(classUnderRootPackage);

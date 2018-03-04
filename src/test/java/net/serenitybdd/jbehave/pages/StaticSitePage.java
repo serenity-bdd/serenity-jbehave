@@ -131,27 +131,15 @@ public class StaticSitePage extends PageObject {
     }
 
     public ExpectedCondition<Boolean> firstNameIsVisibleAndDisabled() {
-        return new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver driver) {
-                return (firstName.isDisplayed() && firstName.isEnabled());
-            }
-        };
+        return driver -> (firstName.isDisplayed() && firstName.isEnabled());
     }
 
     public ExpectedCondition<Boolean> firstAndLastNameAreEnabled() {
-        return new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver driver) {
-                return (firstName.isEnabled() && lastName.isEnabled());
-            }
-        };
+        return driver -> (firstName.isEnabled() && lastName.isEnabled());
     }
 
     public ExpectedCondition<Boolean> twoFieldsAreDisabled() {
-        return new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver driver) {
-                return (!buttonThatIsInitiallyEnabled.isEnabled() && !readonlyField.isEnabled());
-            }
-        };
+        return driver -> (!buttonThatIsInitiallyEnabled.isEnabled() && !readonlyField.isEnabled());
     }
 
 }

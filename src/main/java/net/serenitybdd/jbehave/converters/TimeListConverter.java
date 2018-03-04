@@ -42,7 +42,7 @@ public class TimeListConverter implements ParameterConverters.ParameterConverter
     public Object convertValue(String value, Type type) {
         Type argumentType = argumentType(type);
         List<String> values = trim(asList(value.split(valueSeparator)));
-        List<LocalTime> times = new ArrayList<LocalTime>();
+        List<LocalTime> times = new ArrayList<>();
         for (String string : values) {
             times.add((LocalTime) timeConverter.convertValue(string, argumentType));
         }

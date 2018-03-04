@@ -28,7 +28,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void all_stories_on_the_classpath_should_be_run_by_default() throws Throwable {
+    public void all_stories_on_the_classpath_should_be_run_by_default() {
 
         // Given
         SerenityStories first = new SerenityStorySampleForFistLevel();
@@ -48,7 +48,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void a_subset_of_the_stories_can_be_run_individually() throws Throwable {
+    public void a_subset_of_the_stories_can_be_run_individually() {
 
         // Given
         SerenityStories stories = new StoriesInTheSubsetFolderSample(environmentVariables);
@@ -63,7 +63,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void stories_with_a_matching_name_can_be_run() throws Throwable {
+    public void stories_with_a_matching_name_can_be_run() {
 
         // Given
         SerenityStories stories = newStory("*PassingBehavior.story");
@@ -77,7 +77,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void environment_specific_stories_should_be_executed_if_the_corresponding_environment_variable_is_set() throws Throwable {
+    public void environment_specific_stories_should_be_executed_if_the_corresponding_environment_variable_is_set() {
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat");
@@ -96,7 +96,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
 
 
     @Test
-    public void should_be_possible_to_define_multiple_metafilters() throws Throwable {
+    public void should_be_possible_to_define_multiple_metafilters() {
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
@@ -113,7 +113,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void should_be_possible_to_define_metafilters_in_annotations() throws Throwable {
+    public void should_be_possible_to_define_metafilters_in_annotations() {
 
         // Given
         SerenityStories allStories = new WithAnAnnotatedMetafilter();
@@ -129,7 +129,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void system_property_metafilters_should_override_annotations() throws Throwable {
+    public void system_property_metafilters_should_override_annotations() {
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "+environment uat, +speed fast");
@@ -146,7 +146,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void should_be_possible_to_define_groovy_metafilters() throws Throwable {
+    public void should_be_possible_to_define_groovy_metafilters() {
 
         // Given
         systemConfiguration.getEnvironmentVariables().setProperty("webdriver.driver", "htmlunit");
@@ -164,7 +164,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void environment_specific_stories_should_not_be_executed_if_a_filter_excludes_it() throws Throwable {
+    public void environment_specific_stories_should_not_be_executed_if_a_filter_excludes_it() {
 
         systemConfiguration.getEnvironmentVariables().setProperty("metafilter", "-environment uat");
 
@@ -188,7 +188,7 @@ public class WhenRunningASelectionOfJBehaveStories extends AbstractJBehaveStory 
     }
 
     @Test
-    public void test_should_run_stories_in_a_specified_place() throws Throwable {
+    public void test_should_run_stories_in_a_specified_place() {
 
         // Given
         SerenityStories story = new AnotherStorySample();

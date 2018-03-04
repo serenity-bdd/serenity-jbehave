@@ -1,7 +1,6 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestResult;
 import net.thucydides.core.model.TestStep;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class WhenRunningWebJBehaveStoriesUsingDataDriven extends AbstractJBehave
     }
 
     @Test
-    public void data_driven_steps_should_appear_as_nested_steps() throws Throwable {
+    public void data_driven_steps_should_appear_as_nested_steps() {
 
         // Given
         SerenityStories story = newStory("dataDrivenBehavior.story");

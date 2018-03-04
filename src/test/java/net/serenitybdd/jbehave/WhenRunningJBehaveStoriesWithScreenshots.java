@@ -1,8 +1,7 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.model.TestStep;
-import net.thucydides.core.util.EnvironmentVariables;
+
 import org.junit.Test;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     }
 
     @Test
-    public void web_tests_should_take_screenshots() throws Throwable {
+    public void web_tests_should_take_screenshots() {
         // Given
         SerenityStories story = newStory("aPassingBehaviorWithSeleniumAndFirefox.story");
 
@@ -36,7 +35,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     }
 
     @Test
-    public void web_tests_should_take_screenshots_with_multiple_scenarios() throws Throwable {
+    public void web_tests_should_take_screenshots_with_multiple_scenarios() {
 
         // Given
         SerenityStories story = newStory("aPassingBehaviorWithSeleniumAndSeveralScenarios.story");
@@ -52,7 +51,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
 
 
     @Test
-    public void web_tests_should_take_screenshots_for_multiple_tests() throws Throwable {
+    public void web_tests_should_take_screenshots_for_multiple_tests() {
 
         // Given
         SerenityStories story = newStory("*PassingBehaviorWithSeleniumAndSeveralScenarios.story");
@@ -69,7 +68,7 @@ public class WhenRunningJBehaveStoriesWithScreenshots extends AbstractJBehaveSto
     }
 
     @Test
-    public void web_tests_should_take_screenshots_with_nested_step_libraries() throws Throwable {
+    public void web_tests_should_take_screenshots_with_nested_step_libraries() {
 
         // Given
         SerenityStories story = newStory("**/aPassingWebTestSampleWithNestedSteps.story");

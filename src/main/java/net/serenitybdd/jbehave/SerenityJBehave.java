@@ -4,13 +4,10 @@ import net.serenitybdd.jbehave.converters.*;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.ParanamerConfiguration;
-import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.failures.FailureStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
-import org.jbehave.core.io.StoryLoader;
 import org.jbehave.core.model.TableTransformers;
-import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
@@ -58,7 +55,7 @@ public class SerenityJBehave {
                 .useStoryReporterBuilder(
                         new StoryReporterBuilder()
                                 .withDefaultFormats()
-                                .withFormats((Format[]) formats.toArray())
+                                .withFormats(formats.toArray(new Format[0]))
 //                                .withCrossReference(xref)
                                 .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                                 .withViewResources(viewResources)

@@ -11,7 +11,7 @@ public enum SerenityJBehaveSystemProperties {
     IGNORE_FAILURES_IN_STORIES,
 
     /**
-     * @Deprecated use story.timeout instead
+     * @deprecated use story.timeout instead
      * How long before the JBehave stories time out (defaults to 300 seconds, or 5 minutes).
      * Note that this applies to ALL of the JBehave stories as a whole (i.e. the total test
      * time for all of the tests), not the individual tests.

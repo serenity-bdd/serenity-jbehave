@@ -45,10 +45,7 @@ public class DateTimeConverter implements ParameterConverters.ParameterConverter
     }
 
     public boolean accept(Type type) {
-        if (type instanceof Class<?>) {
-            return DateTime.class.isAssignableFrom((Class<?>) type);
-        }
-        return false;
+        return type instanceof Class<?> && DateTime.class.isAssignableFrom((Class<?>) type);
     }
 
     public Object convertValue(String value, Type type) {

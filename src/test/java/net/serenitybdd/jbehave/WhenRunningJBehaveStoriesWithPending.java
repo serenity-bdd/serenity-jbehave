@@ -13,7 +13,6 @@ import static net.serenitybdd.jbehave.TestOutcomeFinder.theScenarioCalled;
 import static net.thucydides.core.matchers.PublicThucydidesMatchers.containsResults;
 import static net.thucydides.core.model.TestResult.PENDING;
 import static net.thucydides.core.model.TestResult.SUCCESS;
-import static net.thucydides.core.reports.matchers.TestOutcomeMatchers.withResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -31,7 +30,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void pending_stories_should_be_reported_as_pending() throws Throwable {
+    public void pending_stories_should_be_reported_as_pending() {
 
         // Given
         SerenityStories pendingStory = newStory("aPendingBehavior.story");
@@ -46,7 +45,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void pending_stories_should_report_the_given_when_then_steps() throws Throwable {
+    public void pending_stories_should_report_the_given_when_then_steps() {
 
         // Given
         SerenityStories pendingStory = newStory("aPendingBehavior.story");
@@ -61,7 +60,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void implemented_pending_stories_should_be_reported_as_pending() throws Throwable {
+    public void implemented_pending_stories_should_be_reported_as_pending() {
 
         // Given
         SerenityStories pendingStory = newStory("aPendingImplementedBehavior.story");
@@ -76,7 +75,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_test_with_a_pending_step_should_be_pending() throws Throwable {
+    public void a_test_with_a_pending_step_should_be_pending() {
 
         // Given
         SerenityStories story = newStory("aBehaviorWithAPendingStep.story");
@@ -96,7 +95,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_be_able_to_declare_a_story_as_pending_using_a_tag() throws Throwable {
+    public void should_be_able_to_declare_a_story_as_pending_using_a_tag() {
 
         // Given
         SerenityStories passingStory = newStory("aTaggedPendingBehaviorWithSeveralScenarios.story");
@@ -112,7 +111,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void should_be_able_to_declare_a_scenario_as_pending_or_skipped_using_a_tag() throws Throwable {
+    public void should_be_able_to_declare_a_scenario_as_pending_or_skipped_using_a_tag() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -135,7 +134,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_tagged_pending_outcome_should_have_pending_steps() throws Throwable {
+    public void a_tagged_pending_outcome_should_have_pending_steps() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -155,7 +154,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
     }
 
     @Test
-    public void a_tagged_ignored_outcome_should_be_ignored() throws Throwable {
+    public void a_tagged_ignored_outcome_should_be_ignored() {
 
         // Given
         SerenityStories passingStory = newStory("aBehaviorWithATaggedPendingAndSkippedScenarios.story");
@@ -176,7 +175,7 @@ public class WhenRunningJBehaveStoriesWithPending extends AbstractJBehaveStory {
 
 
     @Test
-    public void should_be_able_to_report_pending_and_skipped_results() throws Throwable {
+    public void should_be_able_to_report_pending_and_skipped_results() {
 
         // Given
         SerenityStories passingStory = newStory("when_skipping_scenarios.story");

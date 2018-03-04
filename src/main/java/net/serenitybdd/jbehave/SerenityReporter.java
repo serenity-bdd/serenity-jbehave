@@ -1,10 +1,8 @@
 package net.serenitybdd.jbehave;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
@@ -62,7 +60,7 @@ public class SerenityReporter implements StoryReporter {
         this.systemConfiguration = systemConfiguration;
         serenityListenersThreadLocal = new ThreadLocal<>();
         reportServiceThreadLocal = new ThreadLocal<>();
-        baseStepListeners = Lists.newArrayList();
+        baseStepListeners = new ArrayList<>();
         givenStoryMonitor = new GivenStoryMonitor();
     }
 
@@ -99,7 +97,7 @@ public class SerenityReporter implements StoryReporter {
     private Stack<Story> storyStack = new Stack<>();
 
     private Stack<String> activeScenarios = new Stack<>();
-    private List<String> givenStories = Lists.newArrayList();
+    private List<String> givenStories = new ArrayList<>();
     private Map<String, Meta> scenarioMeta = new ConcurrentHashMap<>();
     private Set<String> scenarioMetaProcessed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
@@ -213,12 +211,9 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Optional<Scenario> currentScenario() {
-        for (Scenario scenario : currentStory().getScenarios()) {
-            if (scenario.getTitle().equals(currentScenarioTitle())) {
-                return Optional.of(scenario);
-            }
-        }
-        return Optional.absent();
+        return currentStory().getScenarios().stream()
+                .filter(scenario -> scenario.getTitle().equals(currentScenarioTitle()))
+                .findFirst();
     }
 
     private void startNewStep(String scenarioTitle) {
@@ -398,7 +393,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private List<TestTag> featureAndEpicTags(Meta metaData) {
-        List<TestTag> featuresAndEpics = Lists.newArrayList();
+        List<TestTag> featuresAndEpics = new ArrayList<>();
         featuresAndEpics.addAll(getFeatureOrFeaturesPropertyValues(metaData));
         featuresAndEpics.addAll(getEpicOrEpicsPropertyValues(metaData));
         return featuresAndEpics;
@@ -421,7 +416,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private Map<String, String> getMetadataFrom(Meta metaData) {
-        Map<String, String> metadataValues = Maps.newHashMap();
+        Map<String, String> metadataValues = new HashMap<>();
         if (metaData == null) {
             return metadataValues;
         }
@@ -508,7 +503,7 @@ public class SerenityReporter implements StoryReporter {
 
         return baseStepListeners.stream()
                 .map(BaseStepListener::getTestOutcomes)
-                .flatMap(outcomes -> outcomes.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -589,21 +584,15 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isPending(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(PENDING));
+        return metaData != null && (metaData.hasProperty(PENDING));
     }
 
     private boolean isManual(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(MANUAL));
+        return metaData != null && (metaData.hasProperty(MANUAL));
     }
 
     private boolean isSkipped(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(WIP) || metaData.hasProperty(SKIP));
+        return metaData != null && (metaData.hasProperty(WIP) || metaData.hasProperty(SKIP));
     }
 
     private boolean isCandidateToBeExecuted(Meta metaData) {
@@ -611,9 +600,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private boolean isIgnored(Meta metaData) {
-        if (metaData == null) return false;
-
-        return (metaData.hasProperty(IGNORE));
+        return metaData != null && (metaData.hasProperty(IGNORE));
     }
 
     public void afterScenario() {
@@ -657,7 +644,7 @@ public class SerenityReporter implements StoryReporter {
     }
 
     private DataTable serenityTableFrom(ExamplesTable table) {
-        String scenarioOutline = scenarioOutlineFrom(currentScenario());
+        String scenarioOutline = currentScenario().map(this::scenarioOutlineFrom).orElse(null);
         return DataTable.withHeaders(table.getHeaders())
                 .andScenarioOutline(scenarioOutline)
                 .andMappedRows(table.getRows())
@@ -665,12 +652,9 @@ public class SerenityReporter implements StoryReporter {
 
     }
 
-    private String scenarioOutlineFrom(Optional<Scenario> scenario) {
-        if (!scenario.isPresent()) {
-            return null;
-        }
+    private String scenarioOutlineFrom(Scenario scenario) {
         StringBuilder outline = new StringBuilder();
-        for (String step : scenario.get().getSteps()) {
+        for (String step : scenario.getSteps()) {
             outline.append(step.trim()).append(System.lineSeparator());
         }
         return outline.toString();
@@ -900,10 +884,10 @@ public class SerenityReporter implements StoryReporter {
         return false;
     }
 
-    private java.util.Optional<TestOutcome> latestTestOutcome() {
+    private Optional<TestOutcome> latestTestOutcome() {
         List<TestOutcome> recordedOutcomes = StepEventBus.getEventBus().getBaseStepListener().getTestOutcomes();
-        return (recordedOutcomes.isEmpty()) ? java.util.Optional.<TestOutcome>empty()
-                : java.util.Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
+        return recordedOutcomes.isEmpty() ? Optional.empty()
+                : Optional.of(recordedOutcomes.get(recordedOutcomes.size() - 1));
     }
 
 }

@@ -8,13 +8,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5'
-        classpath 'org.ajoberstar:gradle-git:1.6.0-rc.1'
+        classpath 'org.ajoberstar:gradle-git:1.7.2'
     }
 }
 
 apply plugin: 'org.ajoberstar.release-base'
 release {
-    grgit = Grgit.open()
+    grgit = Grgit.open(currentDir: file('.'))
     versionStrategy Strategies.FINAL
     versionStrategy Strategies.PRE_RELEASE
     defaultVersionStrategy Strategies.SNAPSHOT

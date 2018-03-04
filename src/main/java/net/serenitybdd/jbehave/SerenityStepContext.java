@@ -1,12 +1,12 @@
 package net.serenitybdd.jbehave;
 
-import com.google.common.collect.Maps;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,7 +16,7 @@ public class SerenityStepContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SerenityStepContext.class);
 
-    private Map<Class<?>, Object> stepInstances = Maps.newHashMap();
+    private Map<Class<?>, Object> stepInstances = new HashMap<>();
 
     public SerenityStepContext() {
     }
