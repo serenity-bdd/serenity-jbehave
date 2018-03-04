@@ -221,47 +221,62 @@ publishing {
     }
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            pom.artifactId = 'serenity-jbehave'
-            pom.project {
-                name = project.name
-                description = projectDescription
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-                url 'https://github.com/serenity-bdd/$project.name'
-                scm {
-                    url 'scm:git:git@github.com:serenity-bdd/$project.name.git'
-                    connection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
-                    developerConnection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
-                }
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/license/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'johnsmart'
-                        name 'John Ferguson Smart'
-                        email 'john.smart@wakaleo.com'
-                    }
-                }
-            }
-            repository(url: bintrayBaseUrl + '/serenity/maven/serenity-jbehave') {
-                authentication(userName: bintrayUsername, password: bintrayApiKey)
-            }
-        }
+bintray {
+    user = bintrayUsername //this usually comes form gradle.properties file in ~/.gradle
+    key = bintrayApiKey //this usually comes form gradle.properties file in ~/.gradle
+    publications = ['mavenJava'] // see publications closure
+    publish = true
+    pkg {
+        repo = 'maven'
+        userOrg = 'serenity'
+        name = 'serenity-jbehave'
+        desc = 'Serenity JBehave integration'
+        licenses = ['Apache-2.0']
+        labels = ['serenity','bdd','jbehave']
     }
 }
+
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            pom.artifactId = 'serenity-jbehave'
+//            pom.project {
+//                name = project.name
+//                description = projectDescription
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                        distribution 'repo'
+//                    }
+//                }
+//                url 'https://github.com/serenity-bdd/$project.name'
+//                scm {
+//                    url 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+//                    connection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+//                    developerConnection 'scm:git:git@github.com:serenity-bdd/$project.name.git'
+//                }
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/license/LICENSE-2.0.txt'
+//                        distribution 'repo'
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        id 'johnsmart'
+//                        name 'John Ferguson Smart'
+//                        email 'john.smart@wakaleo.com'
+//                    }
+//                }
+//            }
+//            repository(url: bintrayBaseUrl + '/serenity/maven/serenity-jbehave') {
+//                authentication(userName: bintrayUsername, password: bintrayApiKey)
+//            }
+//        }
+//    }
+//}
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
