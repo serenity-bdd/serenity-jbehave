@@ -58,8 +58,9 @@ ext {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = "${gradleVersion}"
+wrapper {
+    gradleVersion = project.gradleVersion
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 test {
