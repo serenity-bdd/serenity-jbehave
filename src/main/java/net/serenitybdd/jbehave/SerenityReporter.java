@@ -21,7 +21,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Keywords;
 import org.jbehave.core.model.*;
 import org.jbehave.core.model.Story;
-import org.jbehave.core.reporters.StoryReporter;
+import org.jbehave.core.reporters.NullStoryReporter;
 import org.junit.internal.AssumptionViolatedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import static net.thucydides.core.ThucydidesSystemProperty.WEBDRIVER_DRIVER;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class SerenityReporter implements StoryReporter {
+public class SerenityReporter extends NullStoryReporter {
 
     private static final Logger logger = LoggerFactory.getLogger(SerenityReporter.class);
 
