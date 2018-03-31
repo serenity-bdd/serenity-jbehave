@@ -44,10 +44,12 @@ public class DateTimeConverter implements ParameterConverters.ParameterConverter
         return Splitter.on(CharMatcher.anyOf("-/")).splitToList(value);
     }
 
+    @Override
     public boolean accept(Type type) {
         return type instanceof Class<?> && DateTime.class.isAssignableFrom((Class<?>) type);
     }
 
+    @Override
     public Object convertValue(String value, Type type) {
         DateTimeFormatter formatter = getBestFormatterFor(value);
         return DateTime.parse(normalized(value), formatter);

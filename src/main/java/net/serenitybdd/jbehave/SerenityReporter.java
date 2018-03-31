@@ -86,10 +86,12 @@ public class SerenityReporter extends NullStoryReporter {
         return SerenityReports.getReportService(systemConfiguration);
     }
 
+    @Override
     public void storyNotAllowed(Story story, String filter) {
         logger.debug("not allowed story ".concat(story.getName()));
     }
 
+    @Override
     public void storyCancelled(Story story, StoryDuration storyDuration) {
         logger.debug("cancelled story ".concat(story.getName()));
     }
@@ -124,6 +126,7 @@ public class SerenityReporter extends NullStoryReporter {
         }
     }
 
+    @Override
     public void beforeStory(Story story, boolean givenStory) {
         logger.debug("before story ".concat(story.getName()));
         prepareSerenityListeners();
@@ -174,6 +177,7 @@ public class SerenityReporter extends NullStoryReporter {
         shouldNestScenarios(true);
     }
 
+    @Override
     public void beforeScenario(String scenarioTitle) {
         logger.debug("before scenario started ".concat(scenarioTitle));
 
@@ -473,6 +477,7 @@ public class SerenityReporter extends NullStoryReporter {
         return (name.contains(".")) ? name.substring(0, name.indexOf(".")) : name;
     }
 
+    @Override
     public void afterStory(boolean given) {
         logger.debug("afterStory " + given);
         shouldNestScenarios(false);
@@ -507,14 +512,17 @@ public class SerenityReporter extends NullStoryReporter {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public void narrative(Narrative narrative) {
         logger.debug("narrative ".concat(narrative.toString()));
     }
 
+    @Override
     public void lifecyle(Lifecycle lifecycle) {
         logger.debug("lifecyle ".concat(lifecycle.toString()));
     }
 
+    @Override
     public void scenarioNotAllowed(Scenario scenario, String s) {
         logger.debug("scenarioNotAllowed ".concat(scenario.getTitle()));
         StepEventBus.getEventBus().testIgnored();
@@ -533,6 +541,7 @@ public class SerenityReporter extends NullStoryReporter {
 
     List<String> scenarioTags;
 
+    @Override
     public void scenarioMeta(Meta meta) {
 
         scenarioTags = new ArrayList<>(meta.getPropertyNames());
@@ -603,6 +612,7 @@ public class SerenityReporter extends NullStoryReporter {
         return metaData != null && (metaData.hasProperty(IGNORE));
     }
 
+    @Override
     public void afterScenario() {
         final String scenarioTitle = activeScenarios.peek();
         logger.debug("afterScenario : " + activeScenarios.peek());
@@ -622,17 +632,20 @@ public class SerenityReporter extends NullStoryReporter {
         ThucydidesWebDriverSupport.clearStepLibraries();
     }
 
+    @Override
     public void givenStories(GivenStories givenStories) {
         logger.debug("givenStories " + givenStories);
         givenStoryMonitor.enteringGivenStory();
     }
 
+    @Override
     public void givenStories(List<String> strings) {
         logger.debug("givenStories " + strings);
     }
 
     int exampleCount = 0;
 
+    @Override
     public void beforeExamples(List<String> steps, ExamplesTable table) {
         logger.debug("beforeExamples " + steps + " " + table);
         if (givenStoryMonitor.isInGivenStory()) {
@@ -660,6 +673,7 @@ public class SerenityReporter extends NullStoryReporter {
         return outline.toString();
     }
 
+    @Override
     public void example(Map<String, String> tableRow) {
         StepEventBus.getEventBus().clearStepFailures();
 
@@ -686,6 +700,7 @@ public class SerenityReporter extends NullStoryReporter {
         return (exampleCount > 0);
     }
 
+    @Override
     public void afterExamples() {
         if (givenStoryMonitor.isInGivenStory()) {
             return;
@@ -694,10 +709,12 @@ public class SerenityReporter extends NullStoryReporter {
         finishExample();
     }
 
+    @Override
     public void beforeStep(String stepTitle) {
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(stepTitle));
     }
 
+    @Override
     public void successful(String title) {
         if (annotatedResultTakesPriority()) {
             processAnnotatedResult();
@@ -729,6 +746,7 @@ public class SerenityReporter extends NullStoryReporter {
         return StepEventBus.getEventBus().getForcedResult().isPresent();
     }
 
+    @Override
     public void ignorable(String title) {
         StepEventBus.getEventBus().updateCurrentStepTitle(normalized(title));
         StepEventBus.getEventBus().stepIgnored();
@@ -740,17 +758,20 @@ public class SerenityReporter extends NullStoryReporter {
         StepEventBus.getEventBus().stepIgnored();
     }
 
+    @Override
     public void pending(String stepTitle) {
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepPending();
 
     }
 
+    @Override
     public void notPerformed(String stepTitle) {
         StepEventBus.getEventBus().stepStarted(ExecutedStepDescription.withTitle(normalized(stepTitle)));
         StepEventBus.getEventBus().stepIgnored();
     }
 
+    @Override
     public void failed(String stepTitle, Throwable cause) {
         if (!StepEventBus.getEventBus().testSuiteHasStarted()) {
             declareOutOfSuiteFailure();
@@ -845,10 +866,12 @@ public class SerenityReporter extends NullStoryReporter {
         return story.getPath().concat(scenario.getTitle());
     }
 
+    @Override
     public void failedOutcomes(String s, OutcomesTable outcomesTable) {
         logger.debug("failedOutcomes");
     }
 
+    @Override
     public void restarted(String s, Throwable throwable) {
         logger.debug("restarted");
     }
@@ -858,10 +881,12 @@ public class SerenityReporter extends NullStoryReporter {
         logger.debug("restartedStory");
     }
 
+    @Override
     public void dryRun() {
         logger.debug("dryRun");
     }
 
+    @Override
     public void pendingMethods(List<String> strings) {
         logger.debug("pendingMethods");
     }

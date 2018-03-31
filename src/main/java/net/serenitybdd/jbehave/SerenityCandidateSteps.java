@@ -16,6 +16,7 @@ public class SerenityCandidateSteps implements CandidateSteps {
         this.candidateSteps = candidateSteps;
     }
 
+    @Override
     public List<StepCandidate> listCandidates() {
 
         return candidateSteps.listCandidates().parallelStream()
@@ -23,18 +24,22 @@ public class SerenityCandidateSteps implements CandidateSteps {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public List<BeforeOrAfterStep> listBeforeOrAfterStories() {
         return candidateSteps.listBeforeOrAfterStories();
     }
 
+    @Override
     public List<BeforeOrAfterStep> listBeforeOrAfterStory(boolean givenStory) {
         return candidateSteps.listBeforeOrAfterStory(givenStory);
     }
 
+    @Override
     public List<BeforeOrAfterStep> listBeforeOrAfterScenario(ScenarioType type) {
         return candidateSteps.listBeforeOrAfterScenario(type);
     }
 
+    @Override
     public Configuration configuration() {
         return candidateSteps.configuration();
     }

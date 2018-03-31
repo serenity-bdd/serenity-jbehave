@@ -38,6 +38,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
         return ThucydidesWebDriverSupport.getStepFactory();
     }
 
+    @Override
     public List<CandidateSteps> createCandidateSteps() {
         return super.createCandidateSteps().stream().map(SerenityCandidateSteps::new).collect(Collectors.toList());
     }
@@ -66,6 +67,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
         return candidateClasses;
     }
 
+    @Override
     public Object createInstanceOfType(Class<?> type) {
         Object stepsInstance = getContext().newInstanceOf(type);
         StepAnnotations.injector().injectScenarioStepsInto(stepsInstance, getStepFactory());
