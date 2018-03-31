@@ -9,12 +9,13 @@ import java.io.InputStream;
 
 public class UTF8StoryLoader extends LoadFromClasspath {
 
-	public String loadResourceAsText(String resourcePath) {
+    @Override
+    public String loadResourceAsText(String resourcePath) {
         InputStream stream = resourceAsStream(resourcePath);
-		try {
-			return IOUtils.toString(stream, "UTF-8");
-		} catch (IOException e) {
-			throw new InvalidStoryResource(resourcePath, stream, e);
-		}
-	}
+        try {
+            return IOUtils.toString(stream, "UTF-8");
+        } catch (IOException e) {
+            throw new InvalidStoryResource(resourcePath, stream, e);
+        }
+    }
 }

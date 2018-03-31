@@ -30,6 +30,7 @@ public class TimeListConverter implements ParameterConverters.ParameterConverter
         this.valueSeparator = valueSeparator;
     }
 
+    @Override
     public boolean accept(Type type) {
         if (type instanceof ParameterizedType) {
             Type rawType = rawType(type);
@@ -39,6 +40,7 @@ public class TimeListConverter implements ParameterConverters.ParameterConverter
         return false;
     }
 
+    @Override
     public Object convertValue(String value, Type type) {
         Type argumentType = argumentType(type);
         List<String> values = trim(asList(value.split(valueSeparator)));

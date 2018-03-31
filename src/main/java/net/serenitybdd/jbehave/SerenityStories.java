@@ -95,6 +95,7 @@ public class SerenityStories extends JUnitStories {
         return Thread.currentThread().getContextClassLoader();
     }
 
+    @Override
     public List<String> storyPaths() {
         Set<String> storyPaths = new HashSet<>();
 
