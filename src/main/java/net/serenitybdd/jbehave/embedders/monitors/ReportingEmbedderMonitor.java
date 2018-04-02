@@ -170,10 +170,10 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningStory(String path) {
-        logger.info(this.hashCode() + "story running with path " + path);
+        logger.info("{}story running with path {}", this.hashCode(), path);
         final Story story = embedder.findStory(path);
         if (story == null) {
-            logger.error("can not find any story by path " + path);
+            logger.error("can not find any story by path {}", path);
         } else {
             includeInReportSkippedAndIgnoredAndWip(story);
         }
@@ -182,7 +182,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storiesNotAllowed(List<Story> notAllowed, MetaFilter filter) {
-        logger.debug("processing stories Not Allowed " + notAllowed);
+        logger.debug("processing stories Not Allowed {}", notAllowed);
         for (final Story story : notAllowed) {
             includeInReportSkippedAndIgnoredAndWip(story);
         }
@@ -190,7 +190,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storiesNotAllowed(List<Story> notAllowed, MetaFilter filter, boolean verbose) {
-        logger.debug("processing stories Not Allowed " + notAllowed);
+        logger.debug("processing stories Not Allowed {}", notAllowed);
         for (final Story story : notAllowed) {
             includeInReportSkippedAndIgnoredAndWip(story);
         }
