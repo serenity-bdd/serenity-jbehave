@@ -7,7 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.lang.reflect.Type;
 
-public class YearMonthConverter implements ParameterConverters.ParameterConverter {
+public class YearMonthConverter extends ParameterConverters.AbstractParameterConverter<YearMonth> {
     public static final DateTimeFormatter MONTH_YEAR_FORMAT_WITH_DASH = DateTimeFormat.forPattern("MM-yyyy");
     public static final DateTimeFormatter MONTH_YEAR_FORMAT_WITH_SLASH = DateTimeFormat.forPattern("MM/yyyy");
     public static final DateTimeFormatter YEAR_MONTH_FORMAT_WITH_DASH = DateTimeFormat.forPattern("yyyy-MM");
@@ -15,35 +15,20 @@ public class YearMonthConverter implements ParameterConverters.ParameterConverte
 
 
     @Override
-    public boolean accept(Type type) {
-        return type instanceof Class<?> && YearMonth.class.isAssignableFrom((Class<?>) type);
+    public YearMonth convertValue(String value, Type type) {
+        DateTimeFormatter formatter = hasDash(value) ? getFormatterWithDash(value) : getFormatterWithSlash(value);
+        return YearMonth.parse(value, formatter);
     }
 
-    @Override
-    public Object convertValue(String value, Type type) {
-        if (thereIsADashIn(value)) {
-            return parseWithDash(value);
-        }
-        return parseWithSlash(value);
+    private DateTimeFormatter getFormatterWithSlash(String value) {
+        return value.trim().charAt(2) == '/' ? MONTH_YEAR_FORMAT_WITH_SLASH : YEAR_MONTH_FORMAT_WITH_SLASH;
     }
 
-    private YearMonth parseWithSlash(String value) {
-        if (value.trim().substring(2,3).equals("/")) {
-            return YearMonth.parse(value, MONTH_YEAR_FORMAT_WITH_SLASH);
-        } else {
-            return YearMonth.parse(value, YEAR_MONTH_FORMAT_WITH_SLASH);
-        }
+    private DateTimeFormatter getFormatterWithDash(String value) {
+        return value.trim().charAt(2) == '-' ? MONTH_YEAR_FORMAT_WITH_DASH : YEAR_MONTH_FORMAT_WITH_DASH;
     }
 
-    private YearMonth parseWithDash(String value) {
-        if (value.trim().substring(2,3).equals("-")) {
-            return YearMonth.parse(value, MONTH_YEAR_FORMAT_WITH_DASH);
-        } else {
-            return YearMonth.parse(value, YEAR_MONTH_FORMAT_WITH_DASH);
-        }
-    }
-
-    private boolean thereIsADashIn(String value) {
-        return value.contains("-");
+    private boolean hasDash(String value) {
+        return value.indexOf('-') > -1;
     }
 }
