@@ -87,12 +87,12 @@ public class SerenityReporter extends NullStoryReporter {
 
     @Override
     public void storyNotAllowed(Story story, String filter) {
-        logger.debug("not allowed story ".concat(story.getName()));
+        logger.debug("not allowed story {}", story.getName());
     }
 
     @Override
     public void storyCancelled(Story story, StoryDuration storyDuration) {
-        logger.debug("cancelled story ".concat(story.getName()));
+        logger.debug("cancelled story {}", story.getName());
     }
 
     private Stack<Story> storyStack = new Stack<>();
@@ -116,7 +116,7 @@ public class SerenityReporter extends NullStoryReporter {
 
     @Override
     public void beforeStory(Story story, boolean givenStory) {
-        logger.debug("before story ".concat(story.getName()));
+        logger.debug("before story {}", story.getName());
         prepareSerenityListeners();
 
         currentStoryIs(story);
@@ -166,7 +166,7 @@ public class SerenityReporter extends NullStoryReporter {
     @Override
     public void beforeScenario(Scenario scenario) {
         String scenarioTitle = scenario.getTitle();
-        logger.debug("before scenario started ".concat(scenarioTitle));
+        logger.debug("before scenario started {}", scenarioTitle);
 
         if (shouldResetStepsBeforeEachScenario()) {
             SerenityStepFactory.resetContext();
@@ -186,8 +186,8 @@ public class SerenityReporter extends NullStoryReporter {
 
         Meta meta = scenario.getMeta();
 
-        logger.debug("scenario:\"" + (StringUtils.isEmpty(scenarioTitle) ? " don't know name " : scenarioTitle)
-                + "\" registering metadata for" + meta);
+        logger.debug("scenario:\"{}\" registering metadata for {}",
+                StringUtils.isEmpty(scenarioTitle) ? " don't know name " : scenarioTitle, meta);
         registerIssues(meta);
         registerFeaturesAndEpics(meta);
         registerTags(meta);
@@ -476,7 +476,7 @@ public class SerenityReporter extends NullStoryReporter {
 
     @Override
     public void afterStory(boolean given) {
-        logger.debug("afterStory " + given);
+        logger.debug("afterStory {}", given);
         shouldNestScenarios(false);
         if (given) {
             givenStoryMonitor.exitingGivenStory();
@@ -511,17 +511,17 @@ public class SerenityReporter extends NullStoryReporter {
 
     @Override
     public void narrative(Narrative narrative) {
-        logger.debug("narrative ".concat(narrative.toString()));
+        logger.debug("narrative {}", narrative);
     }
 
     @Override
     public void lifecyle(Lifecycle lifecycle) {
-        logger.debug("lifecyle ".concat(lifecycle.toString()));
+        logger.debug("lifecyle {}", lifecycle);
     }
 
     @Override
     public void scenarioNotAllowed(Scenario scenario, String s) {
-        logger.debug("scenarioNotAllowed ".concat(scenario.getTitle()));
+        logger.debug("scenarioNotAllowed {}", scenario.getTitle());
         StepEventBus.getEventBus().testIgnored();
     }
 
@@ -593,7 +593,7 @@ public class SerenityReporter extends NullStoryReporter {
     @Override
     public void afterScenario() {
         Scenario scenario = currentScenario();
-        logger.debug("afterScenario : " + scenario.getTitle());
+        logger.debug("afterScenario : {}", scenario.getTitle());
         List<String> scenarioTags = scenarioTags(scenario);
         markAsSkippedOrPendingIfAnnotatedAsSuchIn(scenarioTags);
 
@@ -611,20 +611,20 @@ public class SerenityReporter extends NullStoryReporter {
 
     @Override
     public void givenStories(GivenStories givenStories) {
-        logger.debug("givenStories " + givenStories);
+        logger.debug("givenStories {}", givenStories);
         givenStoryMonitor.enteringGivenStory();
     }
 
     @Override
     public void givenStories(List<String> strings) {
-        logger.debug("givenStories " + strings);
+        logger.debug("givenStories {}", strings);
     }
 
     int exampleCount = 0;
 
     @Override
     public void beforeExamples(List<String> steps, ExamplesTable table) {
-        logger.debug("beforeExamples " + steps + " " + table);
+        logger.debug("beforeExamples {} {}", steps, table);
         if (givenStoryMonitor.isInGivenStory()) {
             return;
         }

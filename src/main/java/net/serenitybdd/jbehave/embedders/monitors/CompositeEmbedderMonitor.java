@@ -43,13 +43,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningEmbeddable(final String name) {
-        logger.debug("runningEmbeddable" + name);
+        logger.debug("runningEmbeddable {}", name);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.runningEmbeddable(name);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#runningEmbeddable", suppressed);
+                logger.error("exception during calling {}#runningEmbeddable", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -58,13 +58,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void embeddableFailed(final String name, final Throwable cause) {
-        logger.debug("embeddableFailed" + name);
+        logger.debug("embeddableFailed {}", name);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.embeddableFailed(name, cause);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#embeddableFailed", suppressed);
+                logger.error("exception during calling {}#embeddableFailed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -73,14 +73,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void embeddableNotConfigurable(final String name) {
-        logger.debug("embeddableNotConfigurable" + name);
+        logger.debug("embeddableNotConfigurable {}", name);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.embeddableNotConfigurable(name);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#embeddableNotConfigurable"
-                        , suppressed);
+                logger.error("exception during calling {}#embeddableNotConfigurable", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -89,13 +88,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void embeddablesSkipped(final List<String> classNames) {
-        logger.debug("embeddablesSkipped" + classNames.size());
+        logger.debug("embeddablesSkipped {}", classNames.size());
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.embeddablesSkipped(classNames);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#embeddablesSkipped", suppressed);
+                logger.error("exception during calling {}#embeddablesSkipped", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -104,13 +103,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void metaNotAllowed(final Meta meta, final MetaFilter filter) {
-        logger.debug("metaNotAllowed" + meta + filter);
+        logger.debug("metaNotAllowed {} {}", meta, filter);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.metaNotAllowed(meta, filter);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#metaNotAllowed", suppressed);
+                logger.error("exception during calling {}#metaNotAllowed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -119,13 +118,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningStory(final String path) {
-        logger.debug("runningStory" + path);
+        logger.debug("runningStory {}", path);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.runningStory(path);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#runningStory", suppressed);
+                logger.error("exception during calling {}#runningStory", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -134,13 +133,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storyFailed(final String path, final Throwable cause) {
-        logger.debug("storyFailed" + path);
+        logger.debug("storyFailed {}", path);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.storyFailed(path, cause);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#storyFailed", suppressed);
+                logger.error("exception during calling {}#storyFailed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -149,13 +148,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storiesSkipped(final List<String> storyPaths) {
-        logger.debug("storiesSkipped" + storyPaths);
+        logger.debug("storiesSkipped{}", storyPaths);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.storiesSkipped(storyPaths);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#storiesSkipped", suppressed);
+                logger.error("exception during calling {}#storiesSkipped", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -165,13 +164,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     @Deprecated
     public void storiesNotAllowed(final List<Story> notAllowed, final MetaFilter filter) {
-        logger.debug("storiesNotAllowed" + notAllowed + filter);
+        logger.debug("storiesNotAllowed {} {}", notAllowed, filter);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.storiesNotAllowed(notAllowed, filter);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#storiesNotAllowed", suppressed);
+                logger.error("exception during calling {}#storiesNotAllowed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -181,13 +180,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     @Deprecated
     public void storiesNotAllowed(final List<Story> notAllowed, final MetaFilter filter, final boolean verbose) {
-        logger.debug("storiesNotAllowed" + notAllowed + filter + verbose);
+        logger.debug("storiesNotAllowed {} {} {}", notAllowed, filter, verbose);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.storiesNotAllowed(notAllowed, filter, verbose);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#storiesNotAllowed", suppressed);
+                logger.error("exception during calling {}#storiesNotAllowed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -196,13 +195,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void scenarioNotAllowed(final Scenario scenario, final MetaFilter filter) {
-        logger.debug("scenarioNotAllowed" + scenario + filter + filter);
+        logger.debug("scenarioNotAllowed {} {}", scenario, filter);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.scenarioNotAllowed(scenario, filter);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#scenarioNotAllowed", suppressed);
+                logger.error("exception during calling {}#scenarioNotAllowed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -211,13 +210,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void batchFailed(final BatchFailures failures) {
-        logger.debug("batchFailed" + failures);
+        logger.debug("batchFailed {}", failures);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.batchFailed(failures);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#batchFailed", suppressed);
+                logger.error("exception during calling {}#batchFailed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -232,8 +231,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
             try {
                 monitor.beforeOrAfterStoriesFailed();
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#beforeOrAfterStoriesFailed"
-                        , suppressed);
+                logger.error("exception during calling {}#beforeOrAfterStoriesFailed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -243,13 +241,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void generatingReportsView(final File outputDirectory, final List<String> formats,
                                       final Properties viewProperties) {
-        logger.debug("generatingReportsView" + outputDirectory + formats + viewProperties);
+        logger.debug("generatingReportsView {} {} {}", outputDirectory, formats, viewProperties);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.generatingReportsView(outputDirectory, formats, viewProperties);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#generatingReportsView", suppressed);
+                logger.error("exception during calling {}#generatingReportsView", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -259,14 +257,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void reportsViewGenerationFailed(final File outputDirectory, final List<String> formats,
                                             final Properties viewProperties, final Throwable cause) {
-        logger.debug("reportsViewGenerationFailed" + outputDirectory + formats + viewProperties + cause);
+        logger.debug("reportsViewGenerationFailed {} {} {} {}", outputDirectory, formats, viewProperties, cause);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.reportsViewGenerationFailed(outputDirectory, formats, viewProperties, cause);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#reportsViewGenerationFailed"
-                        , suppressed);
+                logger.error("exception during calling {}#reportsViewGenerationFailed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -275,13 +272,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void reportsViewGenerated(final ReportsCount count) {
-        logger.debug("reportsViewGenerated" + count);
+        logger.debug("reportsViewGenerated {}", count);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.reportsViewGenerated(count);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#reportsViewGenerated", suppressed);
+                logger.error("exception during calling {}#reportsViewGenerated", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -290,13 +287,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void reportsViewFailures(final ReportsCount count) {
-        logger.debug("reportsViewFailures" + count);
+        logger.debug("reportsViewFailures {}", count);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.reportsViewFailures(count);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#reportsViewFailures", suppressed);
+                logger.error("exception during calling {}#reportsViewFailures", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -311,7 +308,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
             try {
                 monitor.reportsViewNotGenerated();
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#reportsViewNotGenerated", suppressed);
+                logger.error("exception during calling {}#reportsViewNotGenerated", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -320,14 +317,14 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void runningWithAnnotatedEmbedderRunner(final String className) {
-        logger.debug("runningWithAnnotatedEmbedderRunner" + className);
+        logger.debug("runningWithAnnotatedEmbedderRunner {}", className);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.runningWithAnnotatedEmbedderRunner(className);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#runningWithAnnotatedEmbedderRunner"
-                        , suppressed);
+                logger.error("exception during calling {}#runningWithAnnotatedEmbedderRunner", monitor.getClass(),
+                        suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -336,14 +333,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void annotatedInstanceNotOfType(final Object annotatedInstance, final Class<?> type) {
-        logger.debug("annotatedInstanceNotOfType" + annotatedInstance + type);
+        logger.debug("annotatedInstanceNotOfType {} {}", annotatedInstance, type);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.annotatedInstanceNotOfType(annotatedInstance, type);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#annotatedInstanceNotOfType"
-                        , suppressed);
+                logger.error("exception during calling {}#annotatedInstanceNotOfType", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -352,13 +348,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void mappingStory(final String storyPath, final List<String> metaFilters) {
-        logger.debug("mappingStory" + storyPath + metaFilters);
+        logger.debug("mappingStory {} {}", storyPath, metaFilters);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.mappingStory(storyPath, metaFilters);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#mappingStory", suppressed);
+                logger.error("exception during calling {}#mappingStory", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -368,13 +364,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void generatingMapsView(final File outputDirectory, final StoryMaps storyMaps,
                                    final Properties viewProperties) {
-        logger.debug("generatingMapsView" + outputDirectory + storyMaps);
+        logger.debug("generatingMapsView {} {}", outputDirectory, storyMaps);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.generatingMapsView(outputDirectory, storyMaps, viewProperties);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#generatingMapsView", suppressed);
+                logger.error("exception during calling {}#generatingMapsView", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -384,14 +380,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void mapsViewGenerationFailed(final File outputDirectory, final StoryMaps storyMaps,
                                          final Properties viewProperties, final Throwable cause) {
-        logger.debug("mapsViewGenerationFailed" + outputDirectory + storyMaps + viewProperties + cause);
+        logger.debug("mapsViewGenerationFailed {} {} {} {}", outputDirectory, storyMaps, viewProperties, cause);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.mapsViewGenerationFailed(outputDirectory, storyMaps, viewProperties, cause);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#mapsViewGenerationFailed"
-                        , suppressed);
+                logger.error("exception during calling {}#mapsViewGenerationFailed", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -400,13 +395,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void generatingNavigatorView(final File outputDirectory, final Properties viewResources) {
-        logger.debug("generatingNavigatorView" + outputDirectory + viewResources);
+        logger.debug("generatingNavigatorView {} {}", outputDirectory, viewResources);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.generatingNavigatorView(outputDirectory, viewResources);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#generatingNavigatorView", suppressed);
+                logger.error("exception during calling {}#generatingNavigatorView", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -416,14 +411,14 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
     @Override
     public void navigatorViewGenerationFailed(final File outputDirectory, final Properties viewResources,
                                               final Throwable cause) {
-        logger.debug("navigatorViewGenerationFailed" + outputDirectory + viewResources + cause);
+        logger.debug("navigatorViewGenerationFailed {} {} {}", outputDirectory, viewResources, cause);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.navigatorViewGenerationFailed(outputDirectory, viewResources, cause);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#navigatorViewGenerationFailed"
-                        , suppressed);
+                logger.error("exception during calling {}#navigatorViewGenerationFailed", monitor.getClass(),
+                        suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -438,8 +433,7 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
             try {
                 monitor.navigatorViewNotGenerated();
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#navigatorViewNotGenerated"
-                        , suppressed);
+                logger.error("exception during calling {}#navigatorViewNotGenerated", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -448,14 +442,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void processingSystemProperties(final Properties properties) {
-        logger.debug("processingSystemProperties" + properties);
+        logger.debug("processingSystemProperties {}", properties);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.processingSystemProperties(properties);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#processingSystemProperties"
-                        , suppressed);
+                logger.error("exception during calling {}#processingSystemProperties", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -464,13 +457,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void systemPropertySet(final String name, final String value) {
-        logger.debug("systemPropertySet" + name + value);
+        logger.debug("systemPropertySet {} {}", name, value);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.systemPropertySet(name, value);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#systemPropertySet", suppressed);
+                logger.error("exception during calling {}#systemPropertySet", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -479,13 +472,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void storyTimeout(final Story story, final StoryDuration storyDuration) {
-        logger.debug("storyTimeout" + story + storyDuration);
+        logger.debug("storyTimeout {} {}", story, storyDuration);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.storyTimeout(story, storyDuration);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#storyTimeout", suppressed);
+                logger.error("exception during calling {}#storyTimeout", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -494,13 +487,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingThreads(final int threads) {
-        logger.debug("usingThreads" + threads);
+        logger.debug("usingThreads {}", threads);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.usingThreads(threads);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#usingThreads", suppressed);
+                logger.error("exception during calling {}#usingThreads", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -509,13 +502,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingExecutorService(final ExecutorService executorService) {
-        logger.debug("usingExecutorService" + executorService);
+        logger.debug("usingExecutorService {}", executorService);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.usingExecutorService(executorService);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#usingExecutorService", suppressed);
+                logger.error("exception during calling {}#usingExecutorService", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -524,13 +517,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingControls(final EmbedderControls embedderControls) {
-        logger.debug("usingControls" + embedderControls);
+        logger.debug("usingControls{}", embedderControls);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.usingControls(embedderControls);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#usingControls", suppressed);
+                logger.error("exception during calling {}#usingControls", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -539,13 +532,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void invalidTimeoutFormat(final String path) {
-        logger.debug("invalidTimeoutFormat" + path);
+        logger.debug("invalidTimeoutFormat {}", path);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.invalidTimeoutFormat(path);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#invalidTimeoutFormat", suppressed);
+                logger.error("exception during calling {}#invalidTimeoutFormat", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }
@@ -554,13 +547,13 @@ public class CompositeEmbedderMonitor implements EmbedderMonitor {
 
     @Override
     public void usingTimeout(final String path, final long timeout) {
-        logger.debug("usingTimeout" + path + timeout);
+        logger.debug("usingTimeout {} {}", path, timeout);
         final LinkedList<Exception> exceptions = new LinkedList<>();
         for (final EmbedderMonitor monitor : this.monitors) {
             try {
                 monitor.usingTimeout(path, timeout);
             } catch (final Exception suppressed) {
-                logger.error("exception during calling " + monitor.getClass() + "#usingTimeout", suppressed);
+                logger.error("exception during calling {}#usingTimeout", monitor.getClass(), suppressed);
                 exceptions.add(suppressed);
             }
         }

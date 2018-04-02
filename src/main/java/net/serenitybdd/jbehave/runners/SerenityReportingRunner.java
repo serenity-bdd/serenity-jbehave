@@ -137,7 +137,7 @@ public class SerenityReportingRunner extends Runner {
                 Optional<Object> storyFilterValue = Optional.ofNullable(getStoryFilter.get().invoke(embedder));
                 return storyFilterValue.orElse(defaultStoryFilter).toString();
             } catch (IllegalAccessException | InvocationTargetException e) {
-                LOGGER.warn("Could not invoke getStoryFilter() method on " + embedder, e);
+                LOGGER.warn("Could not invoke getStoryFilter() method on {}", embedder, e);
             }
         }
         return defaultStoryFilter;
