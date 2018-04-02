@@ -43,13 +43,9 @@ public class SerenityJBehave {
                 .useParameterConverters(
                         new ParameterConverters(utf8StoryLoader, tableTransformers).addConverters(
                                 new ParameterConverters.DateConverter(),
-                                new DateListConverter(),
                                 new DateTimeConverter(),
-                                new DateTimeListConverter(),
                                 new YearMonthConverter(),
-                                new YearMonthListConverter(),
                                 new TimeConverter(),
-                                new TimeListConverter(),
                                 new ParameterConverters.EnumConverter(),
                                 new ParameterConverters.EnumListConverter()))
                 .useStoryReporterBuilder(
