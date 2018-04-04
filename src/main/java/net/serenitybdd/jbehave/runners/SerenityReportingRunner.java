@@ -1,5 +1,6 @@
 package net.serenitybdd.jbehave.runners;
 
+import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitReportingRunner;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
 import com.google.common.base.Splitter;
