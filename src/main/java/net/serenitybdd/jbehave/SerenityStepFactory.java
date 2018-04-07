@@ -54,7 +54,7 @@ public class SerenityStepFactory extends AbstractStepsFactory {
         return types;
     }
 
-    private List<Class> getCandidateClasses() {
+    protected List<Class> getCandidateClasses() {
 
         List<Class<?>> allClassesUnderRootPackage = ClassFinder.loadClasses().withClassLoader(classLoader).fromPackage(rootPackage);
         List<Class> candidateClasses = new ArrayList<>();
