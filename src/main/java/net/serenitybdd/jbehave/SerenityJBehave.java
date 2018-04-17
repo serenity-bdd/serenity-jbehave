@@ -7,6 +7,7 @@ import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.failures.FailureStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
+import org.jbehave.core.io.LoadFromClasspath;
 import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
@@ -14,6 +15,7 @@ import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.ParameterConverters;
 import org.junit.internal.AssumptionViolatedException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,7 +39,7 @@ public class SerenityJBehave {
         viewResources.put("decorateNonHtml", "true");
 
         TableTransformers tableTransformers = new TableTransformers();
-        UTF8StoryLoader utf8StoryLoader = new UTF8StoryLoader();
+        LoadFromClasspath utf8StoryLoader = new LoadFromClasspath(StandardCharsets.UTF_8);
         return new ParanamerConfiguration()
                 .useTableTransformers(tableTransformers)
                 .useParameterConverters(
