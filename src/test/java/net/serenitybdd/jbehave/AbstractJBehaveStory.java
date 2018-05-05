@@ -1,11 +1,11 @@
 package net.serenitybdd.jbehave;
 
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
-import net.thucydides.core.configuration.SystemPropertiesConfiguration;
+import net.thucydides.core.configuration.WebDriverConfiguration;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.reports.TestOutcomeLoader;
 import net.thucydides.core.util.MockEnvironmentVariables;
-import net.thucydides.core.webdriver.Configuration;
+import net.thucydides.core.webdriver.DriverConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -20,7 +20,7 @@ import java.util.List;
 public class AbstractJBehaveStory {
 
     protected MockEnvironmentVariables environmentVariables;
-    protected Configuration systemConfiguration;
+    protected DriverConfiguration systemConfiguration;
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -37,7 +37,7 @@ public class AbstractJBehaveStory {
         outputDirectory = temporaryFolder.newFolder("output");
         environmentVariables.setProperty("thucydides.outputDirectory", outputDirectory.getAbsolutePath());
         environmentVariables.setProperty("webdriver.driver", "phantomjs");
-        systemConfiguration = new SystemPropertiesConfiguration(environmentVariables);
+        systemConfiguration = new WebDriverConfiguration(environmentVariables);
         raisedErrors.clear();
     }
 

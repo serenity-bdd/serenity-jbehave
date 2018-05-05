@@ -2,8 +2,7 @@ package net.serenitybdd.jbehave;
 
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
-import net.thucydides.core.webdriver.Configuration;
-
+import net.thucydides.core.webdriver.DriverConfiguration;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class SerenityStory extends SerenityStories {
         findStoriesCalled(storynamesDerivedFromClassName());
     }
 
-    protected SerenityStory(Configuration configuration) {
+    protected SerenityStory(DriverConfiguration configuration) {
         super(configuration);
         findStoriesCalled(storynamesDerivedFromClassName());
     }

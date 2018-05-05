@@ -1,11 +1,11 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.model.TestOutcome;
-import net.thucydides.core.steps.StepEventBus;
 import org.junit.Test;
 
 import java.util.List;
 
+import static net.thucydides.core.steps.TestSourceType.TEST_SOURCE_JBEHAVE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -23,6 +23,6 @@ public class WhenRunningJBehaveStories extends AbstractJBehaveStory {
         // Then
         List<TestOutcome> outcomes = loadTestOutcomes();
         assertThat(outcomes.size(),is(1));
-        assertThat(outcomes.get(0).getTestSource(),is(StepEventBus.TEST_SOURCE_JBEHAVE));
+        assertThat(outcomes.get(0).getTestSource(),is(TEST_SOURCE_JBEHAVE.getValue()));
     }
 }

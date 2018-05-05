@@ -1,9 +1,11 @@
 package net.serenitybdd.jbehave.embedders.monitors;
 
+import net.serenitybdd.core.di.WebDriverInjectors;
 import net.serenitybdd.jbehave.SerenityReporter;
 import net.serenitybdd.jbehave.embedders.ExtendedEmbedder;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.webdriver.DriverConfiguration;
 import org.jbehave.core.embedder.EmbedderControls;
 import org.jbehave.core.embedder.EmbedderMonitor;
 import org.jbehave.core.embedder.MetaFilter;
@@ -14,11 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-
-import net.thucydides.core.webdriver.Configuration;
 
 /**
  * User: YamStranger
@@ -29,7 +32,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
     private static final Logger logger = LoggerFactory.getLogger(ReportingEmbedderMonitor.class);
     private SerenityReporter reporter;
     private ExtendedEmbedder embedder;
-    private final Configuration configuration;
+    private final DriverConfiguration configuration;
     private final Set<String> processedStories=Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
 
@@ -37,7 +40,7 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
         this(configuration(), embedder);
     }
 
-    public ReportingEmbedderMonitor(final Configuration configuration,
+    public ReportingEmbedderMonitor(final DriverConfiguration configuration,
                                     final ExtendedEmbedder embedder) {
         this.configuration = configuration;
         this.embedder = embedder;
@@ -211,9 +214,9 @@ public class ReportingEmbedderMonitor implements EmbedderMonitor {
     }
 
 
-    private static Configuration configuration() {
-        Configuration configuration =
-                Injectors.getInjector().getInstance(Configuration.class);
+    private static DriverConfiguration configuration() {
+        DriverConfiguration<DriverConfiguration> configuration =
+                WebDriverInjectors.getInjector().getInstance(DriverConfiguration.class);
         EnvironmentVariables variables =
                 Injectors.getInjector().getProvider(EnvironmentVariables.class).get().copy();
         if (variables != null) {
