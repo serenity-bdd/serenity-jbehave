@@ -1,7 +1,7 @@
 package net.serenitybdd.jbehave;
 
 import net.thucydides.core.ThucydidesSystemProperty;
-import net.thucydides.core.webdriver.Configuration;
+import net.thucydides.core.webdriver.DriverConfiguration;
 
 import static org.jbehave.core.reporters.Format.HTML;
 import static org.jbehave.core.reporters.Format.TXT;
@@ -10,7 +10,7 @@ import static org.jbehave.core.reporters.Format.XML;
 public class APassingWebTestSampleWithThucydidesPropertiesDefined extends SerenityStories {
 
 
-    public APassingWebTestSampleWithThucydidesPropertiesDefined(Configuration systemConfiguration) {
+    public APassingWebTestSampleWithThucydidesPropertiesDefined(DriverConfiguration systemConfiguration) {
         setSystemConfiguration(systemConfiguration);
         findStoriesCalled("aBehaviorWithSeleniumUsingADifferentBrowser.story");
         useFormats(TXT, XML, HTML);

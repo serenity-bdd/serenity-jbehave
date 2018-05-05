@@ -29,7 +29,7 @@ public class SerenityJBehave {
     /**
      * Returns a default JBehave configuration object suitable for ThucydidesWebdriverIntegration tests.
      */
-    public static Configuration defaultConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration,
+    public static Configuration defaultConfiguration(net.thucydides.core.webdriver.DriverConfiguration systemConfiguration,
                                                      List<Format> formats,
                                                      Embeddable embeddable) {
 

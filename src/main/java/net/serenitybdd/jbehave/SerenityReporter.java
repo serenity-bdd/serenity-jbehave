@@ -15,7 +15,7 @@ import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.steps.StepFailure;
 import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
-import net.thucydides.core.webdriver.Configuration;
+import net.thucydides.core.webdriver.DriverConfiguration;
 import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Keywords;
@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.thucydides.core.ThucydidesSystemProperty.WEBDRIVER_DRIVER;
+import static net.thucydides.core.steps.TestSourceType.TEST_SOURCE_JBEHAVE;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class SerenityReporter extends NullStoryReporter {
@@ -41,7 +42,7 @@ public class SerenityReporter extends NullStoryReporter {
     private ThreadLocal<ReportService> reportServiceThreadLocal;
     private final List<BaseStepListener> baseStepListeners;
 
-    private final Configuration systemConfiguration;
+    private final DriverConfiguration systemConfiguration;
     private static final String OPEN_PARAM_CHAR = "\uff5f";
     private static final String CLOSE_PARAM_CHAR = "\uff60";
 
@@ -55,7 +56,7 @@ public class SerenityReporter extends NullStoryReporter {
 
     private GivenStoryMonitor givenStoryMonitor;
 
-    public SerenityReporter(Configuration systemConfiguration) {
+    public SerenityReporter(DriverConfiguration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
         serenityListenersThreadLocal = new ThreadLocal<>();
         reportServiceThreadLocal = new ThreadLocal<>();
@@ -526,7 +527,7 @@ public class SerenityReporter extends NullStoryReporter {
     }
 
     private void startScenarioCalled(Scenario scenario, Story story) {
-        StepEventBus.getEventBus().setTestSource(StepEventBus.TEST_SOURCE_JBEHAVE);
+        StepEventBus.getEventBus().setTestSource(TEST_SOURCE_JBEHAVE.getValue());
         StepEventBus.getEventBus().testStarted(scenario.getTitle(), story.getPath() + ";" + scenario.getTitle());
         activeScenarios.add(scenario);
     }
