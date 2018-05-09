@@ -5,10 +5,12 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.serenitybdd.core.Serenity;
+import net.serenitybdd.core.di.WebDriverInjectors;
 import net.serenitybdd.jbehave.runners.SerenityReportingRunner;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.webdriver.DriverConfiguration;
 import org.codehaus.plexus.util.StringUtils;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.io.StoryFinder;
@@ -41,7 +43,7 @@ public class SerenityStories extends JUnitStories {
     public static final List<String> DEFAULT_GIVEN_STORY_PREFIX
             = ImmutableList.of("Given", "Precondition", "preconditions");
 
-    private net.thucydides.core.webdriver.Configuration systemConfiguration;
+    private net.thucydides.core.webdriver.DriverConfiguration systemConfiguration;
     private EnvironmentVariables environmentVariables;
 
     private String storyFolder = "";
@@ -58,7 +60,7 @@ public class SerenityStories extends JUnitStories {
         this.environmentVariables = environmentVariables.copy();
     }
 
-    protected SerenityStories(net.thucydides.core.webdriver.Configuration configuration) {
+    protected SerenityStories(net.thucydides.core.webdriver.DriverConfiguration configuration) {
         this.setSystemConfiguration(configuration);
     }
 
@@ -72,7 +74,7 @@ public class SerenityStories extends JUnitStories {
     @Override
     public Configuration configuration() {
         if (configuration == null) {
-            net.thucydides.core.webdriver.Configuration thucydidesConfiguration = getSystemConfiguration();
+            net.thucydides.core.webdriver.DriverConfiguration<DriverConfiguration> thucydidesConfiguration = getSystemConfiguration();
             if (environmentVariables != null) {
                 thucydidesConfiguration = thucydidesConfiguration.withEnvironmentVariables(environmentVariables);
             }
@@ -95,6 +97,7 @@ public class SerenityStories extends JUnitStories {
         return Thread.currentThread().getContextClassLoader();
     }
 
+    @Override
     public List<String> storyPaths() {
         Set<String> storyPaths = new HashSet<>();
 
@@ -259,7 +262,7 @@ public class SerenityStories extends JUnitStories {
     /**
      * Use this to override the default ThucydidesWebdriverIntegration configuration - for testing purposes only.
      */
-    protected void setSystemConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration) {
+    protected void setSystemConfiguration(net.thucydides.core.webdriver.DriverConfiguration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
     }
 
@@ -267,9 +270,9 @@ public class SerenityStories extends JUnitStories {
         this.environmentVariables = environmentVariables;
     }
 
-    public net.thucydides.core.webdriver.Configuration getSystemConfiguration() {
+    public net.thucydides.core.webdriver.DriverConfiguration getSystemConfiguration() {
         if (systemConfiguration == null) {
-            systemConfiguration = Injectors.getInjector().getInstance(net.thucydides.core.webdriver.Configuration.class);
+            systemConfiguration = WebDriverInjectors.getInjector().getInstance(net.thucydides.core.webdriver.DriverConfiguration.class);
         }
         return systemConfiguration;
     }

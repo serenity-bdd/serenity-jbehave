@@ -10,7 +10,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class DateTimeConverter implements ParameterConverters.ParameterConverter {
+public class DateTimeConverter extends ParameterConverters.AbstractParameterConverter<DateTime> {
 
     public static final DateTimeFormatter CONVENTIONAL_FORMAT = DateTimeFormat.forPattern("ddMMyyyy");
     public static final DateTimeFormatter ISO_FORMAT = DateTimeFormat.forPattern("yyyyMMdd");
@@ -44,11 +44,8 @@ public class DateTimeConverter implements ParameterConverters.ParameterConverter
         return Splitter.on(CharMatcher.anyOf("-/")).splitToList(value);
     }
 
-    public boolean accept(Type type) {
-        return type instanceof Class<?> && DateTime.class.isAssignableFrom((Class<?>) type);
-    }
-
-    public Object convertValue(String value, Type type) {
+    @Override
+    public DateTime convertValue(String value, Type type) {
         DateTimeFormatter formatter = getBestFormatterFor(value);
         return DateTime.parse(normalized(value), formatter);
     }

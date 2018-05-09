@@ -7,6 +7,7 @@ import org.jbehave.core.configuration.ParanamerConfiguration;
 import org.jbehave.core.failures.FailureStrategy;
 import org.jbehave.core.failures.UUIDExceptionWrapper;
 import org.jbehave.core.io.CodeLocations;
+import org.jbehave.core.io.LoadFromClasspath;
 import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.reporters.FilePrintStreamFactory;
 import org.jbehave.core.reporters.Format;
@@ -14,6 +15,7 @@ import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.ParameterConverters;
 import org.junit.internal.AssumptionViolatedException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,7 +29,7 @@ public class SerenityJBehave {
     /**
      * Returns a default JBehave configuration object suitable for ThucydidesWebdriverIntegration tests.
      */
-    public static Configuration defaultConfiguration(net.thucydides.core.webdriver.Configuration systemConfiguration,
+    public static Configuration defaultConfiguration(net.thucydides.core.webdriver.DriverConfiguration systemConfiguration,
                                                      List<Format> formats,
                                                      Embeddable embeddable) {
 
@@ -37,19 +39,15 @@ public class SerenityJBehave {
         viewResources.put("decorateNonHtml", "true");
 
         TableTransformers tableTransformers = new TableTransformers();
-        UTF8StoryLoader utf8StoryLoader = new UTF8StoryLoader();
+        LoadFromClasspath utf8StoryLoader = new LoadFromClasspath(StandardCharsets.UTF_8);
         return new ParanamerConfiguration()
                 .useTableTransformers(tableTransformers)
                 .useParameterConverters(
                         new ParameterConverters(utf8StoryLoader, tableTransformers).addConverters(
                                 new ParameterConverters.DateConverter(),
-                                new DateListConverter(),
                                 new DateTimeConverter(),
-                                new DateTimeListConverter(),
                                 new YearMonthConverter(),
-                                new YearMonthListConverter(),
                                 new TimeConverter(),
-                                new TimeListConverter(),
                                 new ParameterConverters.EnumConverter(),
                                 new ParameterConverters.EnumListConverter()))
                 .useStoryReporterBuilder(

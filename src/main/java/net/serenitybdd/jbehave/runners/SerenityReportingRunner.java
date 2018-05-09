@@ -1,5 +1,6 @@
 package net.serenitybdd.jbehave.runners;
 
+import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitReportingRunner;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
 import com.google.common.base.Splitter;
@@ -137,7 +138,7 @@ public class SerenityReportingRunner extends Runner {
                 Optional<Object> storyFilterValue = Optional.ofNullable(getStoryFilter.get().invoke(embedder));
                 return storyFilterValue.orElse(defaultStoryFilter).toString();
             } catch (IllegalAccessException | InvocationTargetException e) {
-                LOGGER.warn("Could not invoke getStoryFilter() method on " + embedder, e);
+                LOGGER.warn("Could not invoke getStoryFilter() method on {}", embedder, e);
             }
         }
         return defaultStoryFilter;

@@ -5,12 +5,13 @@ import com.google.common.collect.ImmutableSet;
 import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.requirements.FileSystemRequirementsTagProvider;
-import net.thucydides.core.statistics.service.InjectedTagProvider;
 import net.thucydides.core.statistics.service.ContextTagProvider;
+import net.thucydides.core.statistics.service.InjectedTagProvider;
 import net.thucydides.core.statistics.service.TagProvider;
 import net.thucydides.core.statistics.service.TagProviderStrategy;
-import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.util.EnvironmentVariables;
+
+import static net.thucydides.core.steps.TestSourceType.TEST_SOURCE_JBEHAVE;
 
 public class JBehaveTagProviderStrategy implements TagProviderStrategy {
 
@@ -26,7 +27,7 @@ public class JBehaveTagProviderStrategy implements TagProviderStrategy {
 
     @Override
     public boolean canHandleTestSource(String testType) {
-        return StepEventBus.TEST_SOURCE_JBEHAVE.equalsIgnoreCase(testType);
+        return TEST_SOURCE_JBEHAVE.getValue().equalsIgnoreCase(testType);
     }
 
     @Override
