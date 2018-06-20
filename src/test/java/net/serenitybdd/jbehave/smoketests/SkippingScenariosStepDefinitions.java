@@ -26,7 +26,7 @@ public class SkippingScenariosStepDefinitions {
         @FindBy(id="search_button_homepage")
         WebElementFacade searchButton;
 
-        @FindBy(className = "result__title")
+        @FindBy(css = "#links .result__title")
         List<WebElementFacade> results;
 
         public void enterSearchTerm(String searchTerm) {
