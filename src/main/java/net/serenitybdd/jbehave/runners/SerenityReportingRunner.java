@@ -3,6 +3,7 @@ package net.serenitybdd.jbehave.runners;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitDescriptionGenerator;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitReportingRunner;
 import com.github.valfirst.jbehave.junit.monitoring.JUnitScenarioReporter;
+import com.github.valfirst.jbehave.junit.monitoring.StoryPathsExtractor;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import net.serenitybdd.core.exceptions.SerenityManagedException;
@@ -21,9 +22,6 @@ import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.PerformableTree;
 import org.jbehave.core.embedder.PerformableTree.RunContext;
 import org.jbehave.core.failures.BatchFailures;
-import org.jbehave.core.io.StoryPathResolver;
-import org.jbehave.core.junit.JUnitStories;
-import org.jbehave.core.junit.JUnitStory;
 import org.jbehave.core.model.Story;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.CandidateSteps;
@@ -105,13 +103,7 @@ public class SerenityReportingRunner extends Runner {
 
     private List<String> storyPathsFromRunnerClass() {
         try {
-            List<String> storyPaths = new ArrayList<>();
-
-            if (configurableEmbedder instanceof JUnitStory) {
-                storyPaths = getStoryPathsFromJUnitStory();
-            } else if (configurableEmbedder instanceof JUnitStories) {
-                storyPaths = getStoryPathsFromJUnitStories(testClass);
-            }
+            List<String> storyPaths = new StoryPathsExtractor(configurableEmbedder).getStoryPaths();
 
             String storyFilter = getStoryFilterFrom(configurableEmbedder);
 
@@ -121,7 +113,7 @@ public class SerenityReportingRunner extends Runner {
 
         } catch (Throwable e) {
             LOGGER.error("Could not load story paths", e);
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -247,33 +239,6 @@ public class SerenityReportingRunner extends Runner {
         StepMonitor usedStepMonitor = getConfiguration().stepMonitor();
         createCandidateStepsWith(new NullStepMonitor());
         return usedStepMonitor;
-    }
-
-    private List<String> getStoryPathsFromJUnitStory() {
-        StoryPathResolver resolver = getConfiguredEmbedder().configuration().storyPathResolver();
-        return Arrays.asList(resolver.resolve(configurableEmbedder.getClass()));
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<String> getStoryPathsFromJUnitStories(
-            Class<? extends ConfigurableEmbedder> testClass)
-            throws NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException {
-        Method method = makeStoryPathsMethodPublic(testClass);
-        return ((List<String>) method.invoke(configurableEmbedder, (Object[]) null));
-    }
-
-    private Method makeStoryPathsMethodPublic(
-            Class<? extends ConfigurableEmbedder> testClass)
-            throws NoSuchMethodException {
-        Method method;
-        try {
-            method = testClass.getDeclaredMethod("storyPaths", (Class[]) null);
-        } catch (NoSuchMethodException e) {
-            method = testClass.getMethod("storyPaths", (Class[]) null);
-        }
-        method.setAccessible(true);
-        return method;
     }
 
     private List<CandidateSteps> buildCandidateSteps() {
