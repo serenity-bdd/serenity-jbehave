@@ -96,16 +96,6 @@ public class SerenityStepCandidate extends StepCandidate {
     }
 
     @Override
-    public boolean isAndStep(String stepAsString) {
-        return stepCandidate.isAndStep(stepAsString);
-    }
-
-    @Override
-    public boolean isIgnorableStep(String stepAsString) {
-        return stepCandidate.isIgnorableStep(stepAsString);
-    }
-
-    @Override
     public String toString() {
         return stepCandidate.toString();
     }
