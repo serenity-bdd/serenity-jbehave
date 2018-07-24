@@ -291,20 +291,11 @@ public class SerenityReportingRunner extends Runner {
         ExtendedEmbedder configuredEmbedder = this.getConfiguredEmbedder();
         configuredEmbedder.useMetaFilters(getMetaFilters());
         BatchFailures failures = new BatchFailures(configuredEmbedder.embedderControls().verboseFailures());
-        PerformableTree performableTree = new PerformableTree();
+        PerformableTree performableTree = configuredEmbedder.performableTree();
         RunContext context = performableTree.newRunContext(getConfiguration(), candidateSteps,
                 configuredEmbedder.embedderMonitor(), configuredEmbedder.metaFilter(), failures);
-        performableTree.addStories(context, storiesOf(performableTree, storyPaths));
+        performableTree.addStories(context, configuredEmbedder.storyManager().storiesOfPaths(storyPaths));
         return performableTree;
-    }
-
-    private List<Story> storiesOf(PerformableTree performableTree, List<String> storyPaths) {
-
-        final Configuration configuration = getConfiguration();
-
-        return storyPaths.parallelStream().map(
-                storyPath -> performableTree.storyOfPath(configuration, storyPath)
-        ).collect(Collectors.toList());
     }
 
     private void addSuite(List<Description> storyDescriptions, String name) {
