@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.SerenityListeners;
 import net.serenitybdd.core.SerenityReports;
+import net.thucydides.core.guice.Injectors;
 import net.thucydides.core.model.*;
 import net.thucydides.core.model.stacktrace.RootCauseAnalyzer;
 import net.thucydides.core.reports.ReportService;
@@ -13,6 +14,7 @@ import net.thucydides.core.steps.BaseStepListener;
 import net.thucydides.core.steps.ExecutedStepDescription;
 import net.thucydides.core.steps.StepEventBus;
 import net.thucydides.core.steps.StepFailure;
+import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.Inflector;
 import net.thucydides.core.util.NameConverter;
 import net.thucydides.core.webdriver.DriverConfiguration;
@@ -30,6 +32,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static net.serenitybdd.jbehave.SerenityJBehaveSystemProperties.STORY_DIRECTORY;
 import static net.thucydides.core.ThucydidesSystemProperty.WEBDRIVER_DRIVER;
 import static net.thucydides.core.steps.TestSourceType.TEST_SOURCE_JBEHAVE;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -56,12 +59,15 @@ public class SerenityReporter extends NullStoryReporter {
 
     private GivenStoryMonitor givenStoryMonitor;
 
+    private final EnvironmentVariables environmentVariables;
+
     public SerenityReporter(DriverConfiguration systemConfiguration) {
         this.systemConfiguration = systemConfiguration;
         serenityListenersThreadLocal = new ThreadLocal<>();
         reportServiceThreadLocal = new ThreadLocal<>();
         baseStepListeners = new ArrayList<>();
         givenStoryMonitor = new GivenStoryMonitor();
+        this.environmentVariables = Injectors.getInjector().getInstance(EnvironmentVariables.class);
     }
 
 
@@ -236,10 +242,16 @@ public class SerenityReporter extends NullStoryReporter {
         String storyTitle = (isNotEmpty(story.getDescription().asString())) ? story.getDescription().asString() : NameConverter.humanize(storyName);
 
         net.thucydides.core.model.Story userStory
-                = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, story.getPath())
+                = net.thucydides.core.model.Story.withIdAndPath(storyName, storyTitle, stripStoriesFolderFrom(story.getPath()))
                 .withNarrative(getNarrativeFrom(story));
         StepEventBus.getEventBus().testSuiteStarted(userStory);
         registerTags(story);
+    }
+
+    private String stripStoriesFolderFrom(String path) {
+        String storyDirectory = environmentVariables.getProperty(STORY_DIRECTORY,"stories");
+
+        return (path.toLowerCase().startsWith(storyDirectory + "/")) ? path.substring(storyDirectory.length() + 1) : path;
     }
 
     private String getNarrativeFrom(Story story) {
