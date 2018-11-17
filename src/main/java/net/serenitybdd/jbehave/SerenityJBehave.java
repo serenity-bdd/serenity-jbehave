@@ -70,12 +70,8 @@ public class SerenityJBehave {
             if (throwable instanceof AssumptionViolatedException) {
                 return;
             }
-            if ( throwable instanceof UUIDExceptionWrapper){
-                if (throwable.getCause() instanceof AssumptionViolatedException) {
-                    return;
-                } else {
-                    throw throwable.getCause();
-                }
+            if (throwable instanceof UUIDExceptionWrapper) {
+                this.handleFailure(throwable.getCause());
             }
             throw throwable;
         }
