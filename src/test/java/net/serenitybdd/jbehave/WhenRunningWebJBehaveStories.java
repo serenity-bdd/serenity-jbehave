@@ -37,7 +37,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test(expected = Throwable.class)
-    public void a_failing_story_should_fail_in_junit() throws Throwable {
+    public void a_failing_story_should_fail_in_junit() {
 
         SerenityStories story = newStory("aFailingBehaviorWithSelenium.story");
 
@@ -63,7 +63,7 @@ public class WhenRunningWebJBehaveStories extends AbstractJBehaveStory {
     }
 
     @Test(expected = Throwable.class)
-    public void stories_with_errors_run_in_junit_should_fail() throws Throwable {
+    public void stories_with_errors_run_in_junit_should_fail() {
 
         // Given
         SerenityStories failingStory = newStory("aFailingBehaviorWithSelenium.story");

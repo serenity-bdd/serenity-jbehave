@@ -30,7 +30,7 @@ public class SerenityStory extends SerenityStories {
     }
 
     @Override
-    public void run() throws Throwable {
+    public void run() {
         super.run();
     }
 
