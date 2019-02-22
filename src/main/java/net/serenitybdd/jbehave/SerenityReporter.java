@@ -664,7 +664,7 @@ public class SerenityReporter extends NullStoryReporter {
     }
 
     @Override
-    public void example(Map<String, String> tableRow) {
+    public void example(Map<String, String> tableRow, int exampleIndex) {
         StepEventBus.getEventBus().clearStepFailures();
 
         if (givenStoryMonitor.isInGivenStory()) {
