@@ -44,7 +44,7 @@ public class WhenRunningJBehaveStoriesWithTitle extends AbstractJBehaveStory {
         assertThat(outcomes.size(),is(1));
         assertThat(outcomes.get(0).getTags().size(),is(1));
         TestTag[] testTags = outcomes.get(0).getTags().toArray(new TestTag[0]);
-        assertThat(testTags[0].getName(),is("A behavior with no title"));
+        assertThat(testTags[0].getName(),is("A Behavior With No Title"));
         assertThat(testTags[0].getType(),is("story"));
     }
 }

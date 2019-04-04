@@ -59,8 +59,12 @@ public class SerenityStepFactory extends AbstractStepsFactory {
         List<Class<?>> allClassesUnderRootPackage = ClassFinder.loadClasses().withClassLoader(classLoader).fromPackage(rootPackage);
         List<Class> candidateClasses = new ArrayList<>();
         for(Class<?> classUnderRootPackage : allClassesUnderRootPackage) {
-            if (hasAnnotatedMethods(classUnderRootPackage)) {
-                candidateClasses.add(classUnderRootPackage);
+            try {
+                if (hasAnnotatedMethods(classUnderRootPackage)) {
+                    candidateClasses.add(classUnderRootPackage);
+                }
+            } catch(NoClassDefFoundError libraryConflict) {
+                logger.warn("Potential library conflict: " + libraryConflict.getMessage());
             }
         }
 
