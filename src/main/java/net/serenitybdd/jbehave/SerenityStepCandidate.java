@@ -12,6 +12,7 @@ import org.jbehave.core.steps.StepType;
 import org.jbehave.core.steps.context.StepsContext;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 public class SerenityStepCandidate extends StepCandidate {
@@ -91,8 +92,8 @@ public class SerenityStepCandidate extends StepCandidate {
     }
 
     @Override
-    public Step createMatchedStep(String stepAsString, Map<String, String> namedParameters) {
-        return stepCandidate.createMatchedStep(stepAsString, namedParameters);
+    public Step createMatchedStep(String stepAsString, Map<String, String> namedParameters, List<Step> composedSteps) {
+        return stepCandidate.createMatchedStep(stepAsString, namedParameters, composedSteps);
     }
 
     @Override
