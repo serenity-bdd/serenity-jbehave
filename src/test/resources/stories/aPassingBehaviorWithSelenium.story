@@ -1,5 +1,5 @@
-Meta:
-@driver chrome
+!-- Meta:
+!-- @driver chrome
 
 Scenario: A scenario that uses selenium
 

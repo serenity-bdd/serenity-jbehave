@@ -614,7 +614,7 @@ public class SerenityReporter extends NullStoryReporter {
             StepEventBus.getEventBus().stepFinished();
         } else {
             if (!(isPending(scenarioTags) || isSkipped(scenarioTags) || isIgnored(scenarioTags))) {
-                StepEventBus.getEventBus().testFinished();
+                StepEventBus.getEventBus().testFinished(executingExamples());
             }
             activeScenarios.pop();
         }
