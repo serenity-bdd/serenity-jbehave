@@ -25,7 +25,8 @@ public class ExtendedEmbedder extends Embedder {
 
     public ExtendedEmbedder(Embedder embedder) {
         this.embedder = embedder;
-        this.embedder.useEmbedderMonitor(new CompositeEmbedderMonitor(embedderMonitor));
+        this.embedder.useEmbedderMonitor(new CompositeEmbedderMonitor(
+            embedder.embedderMonitor()!=null?embedder.embedderMonitor():embedderMonitor));
     }
 
     public CompositeEmbedderMonitor getEmbedderMonitor() {
