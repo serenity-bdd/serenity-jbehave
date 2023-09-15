@@ -1,4 +1,4 @@
-#NOTE:JBehave is no longer currently supported in Serenity BDD - we advise migrating to Cucumber instead#
+# NOTE:JBehave is no longer currently supported in Serenity BDD - we advise migrating to Cucumber instead
 
 ## Serenity JBehave Integration
 
