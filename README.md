@@ -1,3 +1,5 @@
+#NOTE:JBehave is no longer currently supported in Serenity BDD - we advise migrating to Cucumber instead#
+
 ## Serenity JBehave Integration
 
 Serenity (previously known as 'Thucydides') is a library designed to make writing automated acceptance tests easier, 
