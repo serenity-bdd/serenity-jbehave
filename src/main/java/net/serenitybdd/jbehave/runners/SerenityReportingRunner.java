@@ -176,6 +176,8 @@ public class SerenityReportingRunner extends Runner {
         getConfiguredEmbedder().embedderControls().useStoryTimeouts(getStoryTimeout());
         getConfiguredEmbedder().embedderControls().useThreads(getThreadCount());
 
+        getConfiguration().storyControls().doIgnoreMetaFiltersIfGivenStory(getIgnoreMetaFiltersIfGivenStory());
+
         if (metaFiltersAreDefined()) {
             getConfiguredEmbedder().useMetaFilters(getMetaFilters());
         }
@@ -363,6 +365,12 @@ public class SerenityReportingRunner extends Runner {
     protected boolean getIgnoreFailuresInView() {
         return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.IGNORE_FAILURES_IN_VIEW.getName(), true);
     }
+
+    protected boolean getIgnoreMetaFiltersIfGivenStory() {
+        return environmentVariables.getPropertyAsBoolean(SerenityJBehaveSystemProperties.STORYCONTROL_IGNORE_METAFILTERS_IF_GIVEN_STORY.getName(),
+                getConfiguration().storyControls().ignoreMetaFiltersIfGivenStory());
+    }
+
 
     public boolean isRunningInMaven() {
         return Stream.of(new Exception().getStackTrace()).anyMatch(elt -> elt.getClassName().contains("maven"));

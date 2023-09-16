@@ -70,7 +70,13 @@ public enum SerenityJBehaveSystemProperties {
     /**
      * The number of threads to run stories in.
      */
-    JBEHAVE_THREADS;
+    JBEHAVE_THREADS,
+
+    /**
+     * Set story control property.
+     * https://jbehave.org/reference/latest/javadoc/core/org/jbehave/core/embedder/StoryControls.html
+     */
+    STORYCONTROL_IGNORE_METAFILTERS_IF_GIVEN_STORY;
 
     public String getName() {return toString().toLowerCase().replaceAll("_",".");}
 
